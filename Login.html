@@ -221,6 +221,17 @@
         .forgot-password-link:hover {
             text-decoration: underline;
         }
+        /* New style for the direct reset button */
+        .btn-direct-reset {
+            background-color: #f0f0f0; /* Light gray background */
+            color: #4a60f2; /* Blue text to match links */
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .btn-direct-reset:hover {
+            background-color: #e0e0e0;
+            color: #3542c6;
+        }
     </style>
 </head>
 <body>
@@ -260,6 +271,9 @@
 
         <button class="toggle" onclick="alternarFormulario()">¿No tienes cuenta? Regístrate</button>
         <a href="#" class="forgot-password-link" id="forgotPasswordLink" onclick="mostrarRestablecerContrasena(); return false;">¿Olvidaste tu contraseña?</a>
+        
+        <button class="btn-direct-reset" onclick="window.location.href = 'Restablecer Contraseña.html';">Restablecer Contraseña (Directo)</button>
+
 
         <div class="social-row" id="socialLoginRow">
             <button class="social-btn google" onclick="loginSocial('Google')">
@@ -354,7 +368,8 @@
             const claveWrapper = document.getElementById("claveWrapper");
             const confirmClaveWrapper = document.getElementById("confirmClaveWrapper");
             const claveInput = document.getElementById("clave");
-            
+            const directResetButton = document.querySelector(".btn-direct-reset"); // Get the new button
+
             // Oculta los campos de registro por defecto
             document.querySelectorAll(".campo-registro").forEach(input => {
                 input.classList.remove("mostrar");
@@ -379,7 +394,8 @@
                 socialLoginRow.style.display = "none";
                 claveWrapper.style.display = 'block';
                 if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'block'; // Mostrar confirmación de clave
-                
+                directResetButton.style.display = 'none'; // Hide the direct reset button
+
                 // Hace los campos de registro requeridos
                 document.getElementById('regNombre').required = true;
                 document.getElementById('regApellido').required = true;
@@ -401,6 +417,7 @@
                 claveWrapper.style.display = 'none'; // Ocultar campo de clave
                 claveInput.required = false; // Quitar el requisito
                 if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'none'; // Asegurarse de que también esté oculto
+                directResetButton.style.display = 'none'; // Hide the direct reset button
 
             } else { // Modo Iniciar Sesión
                 formTitle.innerText = "Iniciar Sesión";
@@ -411,6 +428,7 @@
                 socialLoginRow.style.display = "flex";
                 claveWrapper.style.display = 'block'; // Mostrar campo de clave
                 claveInput.required = true; // Hacer la clave requerida
+                directResetButton.style.display = 'block'; // Show the direct reset button
             }
 
             // Restablecer visibilidad de contraseñas

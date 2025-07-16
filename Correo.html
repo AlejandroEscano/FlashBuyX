@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solicitar Restablecimiento de Contraseña - FlashBuyX</title>
+    <style>
+        /* Estilos CSS (copiados de tus otros archivos para consistencia) */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+            background-color: white; /* Fondo blanco */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 480px; /* Tamaño consistente */
+            max-width: 95vw;
+            text-align: center;
+            position: relative;
+        }
+        #flechaVolver {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ffffffd9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+            z-index: 10;
+        }
+        #flechaVolver:hover { background: #4a60f2; }
+        #flechaVolver svg {
+            width: 18px;
+            height: 18px;
+            fill: #4a60f2;
+            transition: fill 0.3s;
+        }
+        #flechaVolver:hover svg { fill: white; }
+        h2 { margin-bottom: 20px; color: #333; }
+
+        /* Estilos para campos de entrada y botón */
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        input.error-input {
+            border-color: #e74c3c;
+            background-color: #ffe6e6;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            background-color: #4a60f2;
+            color: white;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #3542c6; }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px;
+            border-radius: 5px;
+            display: none;
+        }
+        .message.error {
+            color: #e74c3c;
+            background-color: #fce6e6;
+            border: 1px solid #e74c3c;
+        }
+        .message.success {
+            color: #388e3c;
+            background-color: #e6fae6;
+            border: 1px solid #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="flechaVolver" onclick="handleBackArrowClick()">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </div>
+
+        <h2>Restablecer Contraseña</h2>
+        <form onsubmit="solicitarRestablecimiento(); return false;">
+            <p>Ingresa tu correo electrónico asociado a tu cuenta.</p>
+            <input type="email" id="correoRestablecer" placeholder="Correo Electrónico" required />
+            <button type="submit">Enviar Enlace de Restablecimiento</button>
+        </form>
+
+        <div class="message" id="mensaje"></div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            try {
+                emailjs.init("DC68SiTk8JF2M4x_a"); 
+                console.log("EmailJS inicializado correctamente.");
+            } catch (e) {
+                console.error("Error al inicializar EmailJS:", e);
+            }
+        })();
+    </script>
+    <script>
+        // *** CONFIGURACIÓN - ¡REEMPLAZA TU_URL_BASE_AQUI con tu URL real! ***
+        // Por ejemplo: "https://flash-buy-x.vercel.app"
+        // O: "https://alejandroescano.github.io/FlashBuyX"
+        const YOUR_SITE_BASE_URL = "TU_URL_BASE_AQUI"; 
+
+        const EMAILJS_SERVICE_ID = "service_kz355xk"; 
+        // Este debería ser el ID de tu plantilla de EmailJS para el correo de restablecimiento
+        // Si no tienes una plantilla específica para esto, usa la que ya tenías: "template_8tu2f1r"
+        // O el nuevo ID si creaste una plantilla específica para restablecimiento en EmailJS.
+        const EMAILJS_TEMPLATE_ID = "template_8tu2f1r"; 
+
+        // Funciones auxiliares (copiadas de tus otros archivos)
+        function handleBackArrowClick() {
+            window.location.href = "login.html"; // Vuelve a la página de login
+        }
+
+        function getUsuariosRegistrados() {
+            try {
+                const usuarios = localStorage.getItem("usuariosRegistrados");
+                return usuarios ? JSON.parse(usuarios) : {};
+            } catch (e) {
+                console.error("Error al leer usuariosRegistrados de localStorage:", e);
+                return {};
+            }
+        }
+
+        function mostrarMensaje(msg, type) {
+            const mensajeDiv = document.getElementById("mensaje");
+            mensajeDiv.textContent = msg;
+            mensajeDiv.className = `message ${type}`;
+            mensajeDiv.style.display = 'block';
+            setTimeout(() => {
+                mensajeDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function validarCorreo(correo) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!regex.test(correo)) {
+                return false;
+            }
+            const dominio = correo.split('@')[1].toLowerCase();
+            const dominiosPermitidos = ['gmail.com', 'icloud.com', 'hotmail.com'];
+            const correccionesDominio = {
+                'gamil.com': 'gmail.com', 'gmial.com': 'gmail.com', 'gmailcom': 'gmail.com',
+                'iclud.com': 'icloud.com', 'icloudcom': 'icloud.com',
+                'homail.com': 'hotmail.com', 'hotmial.com': 'hotmail.com', 'hotmailcom': 'hotmail.com', 'hotmal.com': 'hotmail.com'
+            };
+            const dominioCorregido = correccionesDominio[dominio] || dominio;
+            return dominiosPermitidos.includes(dominioCorregido);
+        }
+
+        function marcarError(input, cond) {
+            if (cond) {
+                input.classList.add("error-input");
+            } else {
+                input.classList.remove("error-input");
+            }
+        }
+
+        // Función principal para solicitar el restablecimiento
+        async function solicitarRestablecimiento() {
+            const correoInput = document.getElementById("correoRestablecer");
+            const email = correoInput.value.trim();
+
+            // Limpiar errores y mensajes previos
+            marcarError(correoInput, false);
+            mostrarMensaje('', '');
+
+            // Validar correo
+            if (!email) {
+                marcarError(correoInput, true);
+                mostrarMensaje("Por favor, ingresa tu correo electrónico.", "error");
+                return;
+            }
+            if (!validarCorreo(email)) {
+                marcarError(correoInput, true);
+                mostrarMensaje("Por favor, ingresa un correo electrónico válido.", "error");
+                return;
+            }
+
+            // Verificar si el correo existe en localStorage (simulación de base de datos)
+            const usuariosRegistrados = getUsuariosRegistrados();
+            if (!usuariosRegistrados[email]) {
+                marcarError(correoInput, true);
+                mostrarMensaje("El correo electrónico no está registrado.", "error");
+                return;
+            }
+
+            // Si el correo es válido y está registrado, proceder a enviar el enlace
+            mostrarMensaje("Enviando enlace de restablecimiento...", "success");
+
+            // Guardar el correo en localStorage para que Restablecer Contrasena.html sepa de quién es
+            localStorage.setItem("emailParaRestablecer", email);
+
+            const reset_link = `${YOUR_SITE_BASE_URL}/Restablecer%20Contrasena.html?email=${encodeURIComponent(email)}`;
+            
+            const templateParams = {
+                to_email: email, 
+                reset_link: reset_link
+            };
+
+            console.log("Intentando enviar correo con EmailJS:", templateParams);
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+                mostrarMensaje("Se ha enviado un enlace para restablecer tu contraseña a tu correo electrónico.", "success");
+                
+                // Opcional: Redirigir al login después de un éxito
+                setTimeout(() => {
+                    window.location.href = "login.html"; 
+                }, 3000); // Redirige después de 3 segundos
+            } catch (error) {
+                console.error("Error al enviar el correo con EmailJS:", error);
+                mostrarMensaje("No se pudo enviar el correo de restablecimiento. Intenta de nuevo.", "error");
+            }
+        }
+    </script>
+</body>
+</html>
