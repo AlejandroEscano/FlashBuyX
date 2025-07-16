@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Restablecer Contraseña - FlashBuyX</title>
+    <style>
+        /* Estilos CSS (similares a tu Login.html para consistencia) */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+            background-color: white; /* Fondo blanco */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 480px; /* Tamaño consistente con el login */
+            max-width: 95vw;
+            text-align: center;
+            position: relative;
+        }
+        #flechaVolver {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ffffffd9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+            z-index: 10;
+        }
+        #flechaVolver:hover { background: #4a60f2; }
+        #flechaVolver svg {
+            width: 18px;
+            height: 18px;
+            fill: #4a60f2;
+            transition: fill 0.3s;
+        }
+        #flechaVolver:hover svg { fill: white; }
+        h2 { margin-bottom: 20px; color: #333; }
+
+        /* Estilos para campos de entrada y botón */
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .password-input-wrapper {
+            position: relative;
+            margin: 10px 0;
+        }
+        .password-input-wrapper input {
+            padding-right: 45px; /* Espacio para el icono del ojo */
+        }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            fill: #888;
+        }
+        .toggle-password:hover {
+            color: #4a60f2;
+        }
+        .toggle-password:hover svg {
+            fill: #4a60f2;
+        }
+
+        input.error-input {
+            border-color: #e74c3c;
+            background-color: #ffe6e6;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            background-color: #4a60f2;
+            color: white;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #3542c6; }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px;
+            border-radius: 5px;
+            display: none;
+        }
+        .message.error {
+            color: #e74c3c;
+            background-color: #fce6e6;
+            border: 1px solid #e74c3c;
+        }
+        .message.success {
+            color: #388e3c;
+            background-color: #e6fae6;
+            border: 1px solid #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="flechaVolver" onclick="handleBackArrowClick()">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </div>
+
+        <h2>Restablecer Contraseña</h2>
+
+        <form onsubmit="restablecerContrasena(); return false;">
+            <p>Ingresa y confirma tu nueva contraseña.</p>
+            <div class="password-input-wrapper">
+                <input type="password" id="nuevaClave" placeholder="Nueva Contraseña" required />
+                <span class="toggle-password" onclick="togglePasswordVisibility('nuevaClave')">
+                    <svg id="eyeIconNuevaClave" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                </span>
+            </div>
+
+            <div class="password-input-wrapper">
+                <input type="password" id="confirmarClave" placeholder="Confirmar Nueva Contraseña" required />
+                <span class="toggle-password" onclick="togglePasswordVisibility('confirmarClave')">
+                    <svg id="eyeIconConfirmarClave" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                </span>
+            </div>
+            
+            <button type="submit">Guardar Nueva Contraseña</button>
+        </form>
+
+        <div class="message" id="mensaje"></div>
+    </div>
+
+    <script>
+        const MIN_PASSWORD_LENGTH = 8;
+        const EYE_OPEN_SVG_PATH = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39 6-7.5 11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
+
+        function handleBackArrowClick() {
+            window.location.href = "login.html"; // Vuelve a la página de login
+        }
+
+        function getUsuariosRegistrados() {
+            try {
+                const usuarios = localStorage.getItem("usuariosRegistrados");
+                return usuarios ? JSON.parse(usuarios) : {};
+            } catch (e) {
+                console.error("Error al leer usuariosRegistrados de localStorage:", e);
+                return {};
+            }
+        }
+
+        function guardarUsuariosRegistrados(usuarios) {
+            try {
+                localStorage.setItem("usuariosRegistrados", JSON.stringify(usuarios));
+            } catch (e) {
+                console.error("Error al guardar usuariosRegistrados en localStorage:", e);
+            }
+        }
+
+        function mostrarMensaje(msg, type) {
+            const mensajeDiv = document.getElementById("mensaje");
+            mensajeDiv.textContent = msg;
+            mensajeDiv.className = `message ${type}`;
+            mensajeDiv.style.display = 'block';
+            setTimeout(() => {
+                mensajeDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function validarContrasena(password) {
+            return password.length >= MIN_PASSWORD_LENGTH;
+        }
+
+        function marcarError(input, cond) {
+            if (cond) {
+                input.classList.add("error-input");
+                return true;
+            } else {
+                input.classList.remove("error-input");
+                return false;
+            }
+        }
+
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById('eyeIcon' + inputId.charAt(0).toUpperCase() + inputId.slice(1)); 
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.innerHTML = EYE_CLOSED_SVG_PATH;
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.innerHTML = EYE_OPEN_SVG_PATH;
+            }
+        }
+
+        function restablecerContrasena() {
+            const nuevaClaveInput = document.getElementById("nuevaClave");
+            const confirmarClaveInput = document.getElementById("confirmarClave");
+
+            // Limpiar errores anteriores y mensajes
+            document.querySelectorAll("input").forEach(input => input.classList.remove("error-input"));
+            mostrarMensaje('', '');
+
+            let hasErrors = false;
+            let firstErrorMessage = "";
+
+            if (!validarContrasena(nuevaClaveInput.value.trim())) {
+                marcarError(nuevaClaveInput, true);
+                hasErrors = true;
+                if (!firstErrorMessage) firstErrorMessage = `La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`;
+            }
+
+            if (nuevaClaveInput.value.trim() !== confirmarClaveInput.value.trim()) {
+                marcarError(nuevaClaveInput, true);
+                marcarError(confirmarClaveInput, true);
+                hasErrors = true;
+                if (!firstErrorMessage) firstErrorMessage = "Las contraseñas no coinciden.";
+            }
+
+            if (hasErrors) {
+                mostrarMensaje(firstErrorMessage, "error");
+                return;
+            }
+            
+            // Lógica para actualizar la contraseña del usuario actualmente "activo"
+            // ESTO ES UNA SIMULACIÓN. EN UN SISTEMA REAL, LA IDENTIDAD ESTARÍA VERIFICADA.
+            const usuarioActivoCorreo = localStorage.getItem("usuarioActivo");
+            let usuariosRegistrados = getUsuariosRegistrados();
+
+            if (usuarioActivoCorreo && usuariosRegistrados[usuarioActivoCorreo]) {
+                usuariosRegistrados[usuarioActivoCorreo].clave = nuevaClaveInput.value.trim(); // Actualiza la contraseña
+                guardarUsuariosRegistrados(usuariosRegistrados);
+                mostrarMensaje("Contraseña restablecida con éxito para el usuario activo. Redirigiendo al login...", "success");
+                
+                // Redirigir al login después de un breve retraso
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 2000);
+            } else {
+                // Si no hay un usuario activo o no se encuentra,
+                // significa que no podemos saber de quién es la contraseña
+                mostrarMensaje("No hay un usuario activo para restablecer la contraseña. Por favor, inicia sesión o regístrate.", "error");
+                // Podrías redirigir al login si no hay usuario activo
+                // setTimeout(() => { window.location.href = "login.html"; }, 3000);
+            }
+        }
+
+        window.onload = () => {
+            // Asegurar que las contraseñas estén ocultas por defecto al cargar y los iconos sean de ojo abierto
+            document.getElementById("nuevaClave").type = "password";
+            document.getElementById("eyeIconNuevaClave").innerHTML = EYE_OPEN_SVG_PATH;
+            document.getElementById("confirmarClave").type = "password";
+            document.getElementById("eyeIconConfirmarClave").innerHTML = EYE_OPEN_SVG_PATH;
+        };
+    </script>
+</body>
+</html>
