@@ -16,18 +16,20 @@
             align-items: center;
             padding: 1rem 2rem;
             gap: 1rem;
-            flex-wrap: wrap;
-            position: relative; /* Esencial para el posicionamiento del menú de cuenta */
+            flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+            position: relative;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        /* *** CAMBIO REALIZADO AQUÍ PARA AJUSTAR EL LOGO *** */
+
+        /* Logo - Default (Desktop) */
         header img {
-            max-height: 50px; /* Establece una altura máxima de 50px */
-            height: auto;      /* Permite que la altura se ajuste automáticamente */
-            width: auto;       /* Permite que el ancho se ajuste automáticamente, manteniendo la proporción */
+            max-height: 100px;
+            height: auto;
+            width: auto;
+            cursor: pointer;
         }
 
-        /* NAVEGACIÓN */
+        /* Navegación - Default (Desktop) */
         nav { display: flex; gap: 1rem; }
         nav a {
             color: #000000;
@@ -41,21 +43,23 @@
             border-radius: 4px;
         }
 
-        /* BARRA DE BÚSQUEDA */
+        /* Barra de búsqueda - Default (Desktop) */
         .search-bar {
             position: relative;
             flex: 1 1 500px;
             max-width: 600px;
             display: flex;
+            align-items: center; /* Align items vertically */
         }
         .search-bar input {
             flex: 1;
             padding: 0.5rem 1rem;
-            border: 1px solid #ddd; /* Añadido borde para mejor visualización */
+            border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
             font-size: 1rem;
         }
-        .search-bar button {
+        /* Desktop search button */
+        #desktopSearchBtn {
             padding: 0.5rem 1.5rem;
             background: #ff0101;
             color: #fff;
@@ -64,11 +68,224 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
+            display: block; /* Show on desktop */
         }
-        .search-bar button:hover {
+        #desktopSearchBtn:hover {
             background: #b30000;
         }
+        /* Mobile search icon inside the bar */
+        #mobileSearchIconInBar {
+            display: none; /* Hidden on desktop */
+        }
 
+        /* Iconos derecha - Default (Desktop) */
+        .header-right {
+            /* margin-left: auto; REMOVED THIS LINE */
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Base para botones redondeados (Carrito y Cuenta/Usuario) */
+        .btn-rounded {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 0, 0, 0.89);
+            color: #000000;
+            font-weight: bold;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn-rounded:hover {
+            background: #cc0000;
+            color: white;
+        }
+        .btn-rounded svg {
+            width: 20px;
+            height: 20px;
+            fill: #000000;
+        }
+        .btn-rounded:hover svg {
+            fill: white;
+        }
+
+        /* --- MENÚ HAMBURGUESA Y BÚSQUEDA MÓVIL --- */
+        .hamburger-menu-btn {
+            display: none; /* Hidden by default on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .hamburger-menu-btn svg {
+            width: 28px; /* Larger icon for mobile */
+            height: 28px;
+            fill: #333;
+        }
+
+        /* Media Queries for Mobile Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8rem 1rem; /* Adjust padding for smaller screens */
+                flex-wrap: nowrap; /* Prevent wrapping in header on mobile */
+                justify-content: space-between; /* Distribute items */
+                gap: 0.5rem; /* Reduce gap between items */
+            }
+
+            /* Hide logo on mobile to prioritize hamburger and search */
+            header img {
+                display: none;
+            }
+
+            /* Show hamburger menu button */
+            .hamburger-menu-btn {
+                display: block;
+                order: 1; /* Place it first */
+            }
+
+            /* Hide main navigation and move to off-canvas */
+            nav {
+                display: none; /* Hide on mobile by default */
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: -100%; /* Off-screen */
+                width: 250px;
+                height: 100%;
+                background-color: #fff;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+                padding-top: 60px; /* Space for fixed header */
+                z-index: 999;
+                transition: left 0.3s ease-in-out;
+            }
+            nav.active { /* Class to show the menu */
+                left: 0;
+            }
+            nav a {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid #eee;
+                font-size: 1.1rem;
+                width: 100%; /* Full width links */
+            }
+            nav a:last-child {
+                border-bottom: none;
+            }
+
+            /* Adjust search bar for mobile */
+            .search-bar {
+                flex: 1; /* Allow it to grow */
+                max-width: none; /* Remove max-width constraint */
+                order: 2; /* Place in the middle */
+                position: static; /* Remove absolute positioning if it was there */
+                margin: 0 10px; /* Add some margin */
+                display: flex; /* Ensure it's a flex container */
+                align-items: center;
+                border: 1px solid #ddd; /* Add border to the whole bar */
+                border-radius: 999px; /* Rounded corners for the bar */
+                background: #f9f9f9; /* Light background for the input area */
+            }
+            .search-bar input {
+                display: block; /* Show input field on mobile */
+                flex: 1;
+                padding: 0.5rem 1rem;
+                border: none; /* Remove individual input border */
+                border-radius: 999px; /* Rounded corners for input */
+                font-size: 1rem;
+                background: transparent; /* Transparent background */
+            }
+            /* Hide desktop search button */
+            #desktopSearchBtn {
+                display: none;
+            }
+            /* Show mobile search icon inside the bar */
+            #mobileSearchIconInBar {
+                display: block; /* Show on mobile */
+                background: none;
+                border: none;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+            #mobileSearchIconInBar svg {
+                fill: #333;
+                width: 24px;
+                height: 24px;
+            }
+
+            /* Buttons on the right */
+            .header-right {
+                order: 3; /* Place last */
+                gap: 0.5rem; /* Smaller gap */
+            }
+            .btn-rounded {
+                padding: 0.3rem 0.8rem; /* Smaller padding */
+                font-size: 0.8rem; /* Smaller font */
+            }
+            .btn-rounded svg {
+                width: 18px; /* Smaller icons */
+                height: 18px;
+            }
+            /* Reduce button text for smaller screens */
+            .btn-rounded span {
+                display: none; /* Hide text on small screen */
+            }
+            /* Only show icon for account and cart buttons on very small screens */
+            @media (max-width: 480px) {
+                .btn-rounded span {
+                    display: none;
+                }
+                .btn-rounded {
+                    padding: 0.5rem; /* Make it square */
+                    border-radius: 50%; /* Make it circular */
+                }
+            }
+
+            /* Adjust dropdown for search results */
+            .dropdown {
+                width: 100%; /* Take full width on mobile */
+                left: 0;
+                right: auto; /* Clear right positioning */
+                margin-top: 0.5rem; /* Space below header */
+                border-radius: 0; /* No rounded corners */
+                top: 55px; /* Position below header */
+            }
+
+            /* Adjust container padding for mobile */
+            .container {
+                padding: 0 1rem;
+            }
+
+            /* Products grid on mobile (two columns) */
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); /* Adjusted for two columns, min width for small screens */
+                gap: 1rem; /* Smaller gap for mobile */
+            }
+            @media (max-width: 480px) { /* For very small screens, go back to 1 column */
+                .products {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Show bottom navigation bar */
+            .bottom-nav {
+                display: flex; /* Show on mobile */
+            }
+            /* Add padding to the body to prevent content from being hidden by the bottom nav */
+            body {
+                padding-bottom: 60px; /* Height of bottom nav */
+            }
+            /* Hide the desktop footer on mobile if bottom nav is present */
+            footer {
+                display: none;
+            }
+        }
+
+        /* Rest of your existing CSS (not directly affected by mobile header changes) */
         /* DROPDOWN DE BÚSQUEDA */
         .dropdown {
             position: absolute;
@@ -81,7 +298,7 @@
             z-index: 10;
             display: none;
             font-size: 0.9rem;
-            border-radius: 0 0 4px 4px; /* Añadido border-radius */
+            border-radius: 0 0 4px 4px;
         }
         .dropdown .heading {
             padding: 0.5rem 1rem;
@@ -120,91 +337,47 @@
             cursor: pointer;
             border-bottom: 1px solid #eee;
             color: #333;
-            display: flex; /* Make it a flex container */
-            justify-content: space-between; /* Space out content and arrow */
-            align-items: center; /* Vertically center content */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .dropdown .item.suggestion:hover {
             background: #f0f0f0;
         }
         .suggestion-arrow {
-            width: 16px; /* Tamaño revertido a 16px */
-            height: 16px; /* Tamaño revertido a 16px */
-            fill: #999; /* Grey color for the arrow */
-            transform: rotate(-45deg); /* Rotate to point up-right */
-            margin-left: 10px; /* Space between text and arrow */
+            width: 16px;
+            height: 16px;
+            fill: #999;
+            transform: rotate(-45deg);
+            margin-left: 10px;
             transition: fill 0.2s, transform 0.2s;
         }
         .dropdown .item.suggestion:hover .suggestion-arrow {
-            fill: #ff0101; /* Change color on hover */
-            transform: rotate(-45deg) scale(1.1); /* Slightly enlarge on hover */
+            fill: #ff0101;
+            transform: rotate(-45deg) scale(1.1);
         }
         .search-suggestion-icon {
             width: 16px;
             height: 16px;
-            fill: #999; /* Grey color for the icon */
-        }
-
-        /* ICONOS DERECHA GENERAL */
-        .header-right {
-            margin-left: auto; /* Empuja los elementos a la derecha en el header */
-            display: flex;
-            gap: 1rem; /* Espacio entre los botones de cuenta y carrito */
-            align-items: center;
-        }
-
-        /* Base para botones redondeados (Carrito y Cuenta/Usuario) */
-        .btn-rounded {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 0, 0, 0.89);
-            color: #000000;
-            font-weight: bold;
-            border: none;
-            padding: 0.4rem 1rem;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: background 0.2s;
-            white-space: nowrap; /* Evita que el texto se rompa */
-        }
-        .btn-rounded:hover {
-            background: #cc0000; /* Hover más oscuro para coherencia */
-            color: white; /* Texto blanco al hacer hover */
-        }
-        .btn-rounded svg {
-            width: 20px;
-            height: 20px;
-            fill: #000000;
-            transition: fill 0.2s;
-        }
-        .btn-rounded:hover svg {
-            fill: white; /* Ícono blanco al hacer hover */
+            fill: #999;
         }
 
         /* --- ESTILOS DEL MENÚ DE CUENTA DESPLEGABLE --- */
-        /* Contenedor del botón de usuario y su menú */
         .user-menu-container {
-            position: relative; /* Crucial para posicionar el dropdown respecto a este contenedor */
-            display: inline-block; /* Ocupa solo el espacio necesario */
+            position: relative;
+            display: inline-block;
         }
-
-        /* Contenido del menú desplegable (las opciones) */
         .account-dropdown-content {
-            display: none; /* Oculto por defecto */
+            display: none;
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 20; /* Mayor z-index para que aparezca encima de todo */
+            z-index: 20;
             border-radius: 5px;
-            right: 0; /* Alinea el menú a la derecha del botón */
-            top: calc(100% + 5px); /* Coloca el menú justo debajo del botón, con un pequeño espacio */
+            right: 0;
+            top: calc(100% + 5px);
         }
-
-        /* Estilo de los enlaces dentro del menú desplegable */
         .account-dropdown-content a {
             color: black;
             padding: 12px 16px;
@@ -213,12 +386,9 @@
             text-align: left;
             transition: background-color 0.2s ease;
         }
-
         .account-dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-
-        /* Bordes redondeados para el primer y último elemento del menú */
         .account-dropdown-content a:first-child {
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
@@ -227,8 +397,6 @@
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
         }
-
-        /* Clase para mostrar el menú (activada por JavaScript) */
         .account-dropdown-content.show {
             display: block;
         }
@@ -337,9 +505,9 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            padding: 0; /* Resetear padding del header específico del carrito */
-            background: none; /* Resetear background */
-            box-shadow: none; /* Resetear box-shadow */
+            padding: 0;
+            background: none;
+            box-shadow: none;
         }
         #cerrarCarrito {
             font-size: 24px;
@@ -359,25 +527,83 @@
             border-bottom: none;
             margin-bottom: 0;
         }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: none; /* Hidden by default on desktop */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            z-index: 100;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            font-size: 0.75rem;
+            flex: 1;
+            padding: 0.3rem 0;
+            transition: color 0.2s;
+        }
+
+        .bottom-nav .nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 3px;
+            fill: #666;
+            transition: fill 0.2s;
+        }
+
+        .bottom-nav .nav-item.active,
+        .bottom-nav .nav-item:hover {
+            color: #ff0101;
+        }
+
+        .bottom-nav .nav-item.active svg,
+        .bottom-nav .nav-item:hover svg {
+            fill: #ff0101;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="https://i.imgur.com/luW5dMU.png" alt="FlashBuyX Logo" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
+        <button class="hamburger-menu-btn" aria-label="Abrir menú" tabindex="0">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </button>
+
+        <img src="https://i.imgur.com/pdZ8WNX.png" alt="FlashBuyX Logo" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
 
         <nav>
             <a onclick="location.reload()" tabindex="0">Inicio</a>
             <a href="#" tabindex="0">Productos</a>
-            <a href="#" tabindex="0">Contacto</a>
             <a href="#" tabindex="0">Ofertas</a>
+            <a href="#" tabindex="0">Contacto</a>
         </nav>
         <div class="search-bar">
             <input id="searchInput" type="text" placeholder="Buscar productos…" autocomplete="off" />
-            <button id="searchBtn" aria-label="Buscar">
+            
+            <button id="desktopSearchBtn" aria-label="Buscar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#fff" viewBox="0 0 24 24">
                     <circle cx="10" cy="10" r="6" stroke="#fff" stroke-width="2" fill="none"/>
                     <line x1="14" y1="14" x2="20" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            
+            <button id="mobileSearchIconInBar" aria-label="Buscar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#333" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 </svg>
             </button>
             <div id="dropdown" class="dropdown"></div>
@@ -389,7 +615,7 @@
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
-                Cuenta
+                <span>Cuenta</span>
             </a>
 
             <div id="userMenuContainer" class="user-menu-container" style="display:none;">
@@ -397,7 +623,8 @@
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
-                    </button>
+                    <span></span>
+                </button>
                 <div id="userDropdown" class="account-dropdown-content">
                     <a href="configuracion.html" tabindex="0">Configuración</a>
                     <a href="#" id="logoutButton" tabindex="0">Cerrar Sesión</a>
@@ -411,7 +638,7 @@
                     c.8 0 1.5-.5 1.8-1.3l2.5-6.1c.1-.2.1-.4.1-.6 0-.6-.4-1-1-1H5.2
                     L4.3 2H1v2h2l3.6 7.6-1.4 2.4C5 14.2 5.8 15 6.7 15h12v-2H7.2z"/>
                 </svg>
-                Carrito
+                <span>Carrito</span>
             </a>
         </div>
     </header>
@@ -437,6 +664,25 @@
 
     <footer>© 2025 FlashBuyX. Todos los derechos reservados.</footer>
 
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <span>Buscar</span>
+        </a>
+        <a href="Login.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Cuenta</span>
+        </a>
+        <a href="#" id="bottomCartBtn" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14l.9-2h7.5c.8 0 1.5-.5 1.8-1.3l2.5-6.1c.1-.2.1-.4.1-.6 0-.6-.4-1-1-1H5.2L4.3 2H1v2h2l3.6 7.6-1.4 2.4C5 14.2 5.8 15 6.7 15h12v-2H7.2z"/></svg>
+            <span>Carrito</span>
+        </a>
+    </nav>
+
     <script>
         const productos = Array.from(document.querySelectorAll('.product')).map(p => p.querySelector('h3').textContent);
         const input = document.getElementById('searchInput');
@@ -454,6 +700,35 @@
         const btnAbrirCarrito = document.getElementById('abrirCarrito');
         const cajitaCarrito = document.getElementById('cajita-carrito');
         const btnCerrarCarrito = document.getElementById('cerrarCarrito');
+
+        const hamburgerBtn = document.querySelector('.hamburger-menu-btn');
+        const mainNav = document.querySelector('nav');
+        const desktopSearchBtn = document.getElementById('desktopSearchBtn');
+        const mobileSearchIconInBar = document.getElementById('mobileSearchIconInBar');
+        const bottomCartBtn = document.getElementById('bottomCartBtn');
+
+
+        // --- Functions for Hamburger Menu ---
+        hamburgerBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            // Close other open menus
+            userDropdown.classList.remove('show');
+            cajitaCarrito.style.right = '-100%';
+        });
+
+        // Close hamburger menu when a link is clicked
+        mainNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+            });
+        });
+
+        // Close hamburger menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!mainNav.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                mainNav.classList.remove('active');
+            }
+        });
 
 
         // --- Funciones para Historial de Búsqueda ---
@@ -531,7 +806,13 @@
         }
 
         // Eventos para la barra de búsqueda
-        input.addEventListener('focus', () => renderDropdown(getHistorial(), 'Historial'));
+        input.addEventListener('focus', () => {
+            renderDropdown(getHistorial(), 'Historial');
+            // Close other open menus
+            mainNav.classList.remove('active');
+            userDropdown.classList.remove('show');
+            cajitaCarrito.style.right = '-100%';
+        });
         input.addEventListener('input', () => {
             const term = input.value.trim().toLowerCase();
             if (term) {
@@ -556,7 +837,13 @@
             dd.style.display = 'none';
             input.blur();
         }
-        document.getElementById('searchBtn').addEventListener('click', e => {
+        // Desktop search button event listener
+        desktopSearchBtn.addEventListener('click', e => {
+            e.preventDefault();
+            buscar();
+        });
+        // Mobile search icon event listener
+        mobileSearchIconInBar.addEventListener('click', e => {
             e.preventDefault();
             buscar();
         });
@@ -679,17 +966,27 @@
                 const cajita = document.getElementById('cajita-carrito');
                 cajita.style.right = '0';
                 userDropdown.classList.remove('show');
+                mainNav.classList.remove('active'); // Close hamburger menu
             });
         });
 
         // --- Carrito lateral toggle ---
         btnAbrirCarrito.addEventListener('click', () => {
             cajitaCarrito.style.right = '0';
+            // Close other open menus
             userDropdown.classList.remove('show');
+            mainNav.classList.remove('active');
         });
 
         btnCerrarCarrito.addEventListener('click', () => {
             cajitaCarrito.style.right = '-100%';
+        });
+
+        // Bottom nav cart button
+        bottomCartBtn.addEventListener('click', () => {
+            cajitaCarrito.style.right = '0';
+            userDropdown.classList.remove('show');
+            mainNav.classList.remove('active');
         });
 
         // --- Manejo de la interfaz de cuenta (el nuevo comportamiento dinámico) ---
@@ -703,77 +1000,73 @@
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
-                    ${sesionData.nombre}
+                    <span>${sesionData.nombre}</span>
                 `;
-
-                usuarioActivo = sesionData.nombre;
-
             } else {
-                loginRegisterButton.style.display = 'flex';
+                loginRegisterButton.style.display = 'inline-block';
                 userMenuContainer.style.display = 'none';
-                userDropdown.classList.remove('show');
-                usuarioActivo = null;
             }
         }
 
-        // --- Event listeners para el menú de cuenta ---
-        userNameButton.addEventListener('click', (event) => {
-            event.stopPropagation();
+        userNameButton.addEventListener('click', () => {
             userDropdown.classList.toggle('show');
+            // Close other open menus
+            mainNav.classList.remove('active');
             cajitaCarrito.style.right = '-100%';
         });
 
-        logoutButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            cerrarSesion();
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('sesionIniciada');
+            localStorage.removeItem('usuarioActivo');
+            usuarioActivo = null; // Reset current active user
+            carrito = {}; // Clear cart for logged out user
+            guardarCarrito(); // Save empty cart
+            renderizarCarrito(); // Update cart display
+            updateAccountButton(); // Update account button state
+            userDropdown.classList.remove('show');
+            window.location.href = 'Login.html'; // Redirect to login page
         });
 
-        // Cerrar el desplegable si se hace clic fuera de él
+        // Close dropdown if clicked outside
         document.addEventListener('click', (event) => {
-            if (!userMenuContainer.contains(event.target)) {
-                if (userDropdown.classList.contains('show')) {
-                    userDropdown.classList.remove('show');
-                }
+            if (!userMenuContainer.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('show');
             }
         });
 
-        function cerrarSesion() {
-            if (usuarioActivo) {
-                guardarCarrito();
+        // Mejoras de accesibilidad con teclado
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                mainNav.classList.remove('active');
+                userDropdown.classList.remove('show');
+                cajitaCarrito.style.right = '-100%';
             }
 
-            localStorage.removeItem("sesionIniciada");
-            localStorage.removeItem("usuarioActivo");
-
-            usuarioActivo = null;
-            carrito = {};
-
-            cargarCarrito();
-
-            updateAccountButton();
-        }
-
-        // --- Manejo global de la tecla Enter ---
-        document.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 const activeElement = document.activeElement;
 
-                // Trigger click for buttons
-                if (activeElement && activeElement.tagName === 'BUTTON') {
-                    activeElement.click();
-                    event.preventDefault(); // Prevent default form submission if button is inside a form
-                }
-
-                // Trigger click for links (<a> tags) that act as buttons
-                // Ensure they have tabindex="0" to be focusable
-                if (activeElement && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
+                // Handle Enter on hamburger menu button
+                if (activeElement === hamburgerBtn) {
                     activeElement.click();
                     event.preventDefault();
                 }
 
-                // Specific case for the logo image (if it's focused via tabindex)
-                if (activeElement && activeElement.tagName === 'IMG' && activeElement.alt === 'FlashBuyX Logo' && activeElement.hasAttribute('tabindex')) {
+                // Handle Enter on account button
+                if (activeElement === userNameButton) {
                     activeElement.click();
+                    event.preventDefault();
+                }
+
+                // Handle Enter on account dropdown links
+                if (activeElement && activeElement.parentElement === userDropdown && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+
+                // Handle Enter on FlashBuyX Logo to reload page
+                if (activeElement && activeElement.tagName === 'IMG' && activeElement.alt === 'FlashBuyX Logo' && activeElement.hasAttribute('tabindex')) {
+                    activeElement.click(); 
                     event.preventDefault();
                 }
 
@@ -788,23 +1081,23 @@
         // --- Inicializar al cargar la página ---
         window.onload = () => {
             const sesionData = JSON.parse(localStorage.getItem('sesionIniciada'));
-            const usuarioActivoLS = localStorage.getItem('usuarioActivo');
+            const usuarioActivoLS = localStorage.getItem('usuarioActivo'); 
 
             if (sesionData && sesionData.nombre) {
                 usuarioActivo = sesionData.nombre;
             } else {
-                usuarioActivo = null;
+                usuarioActivo = null; 
             }
-
-            updateAccountButton();
-            cargarCarrito();
+            
+            updateAccountButton(); 
+            cargarCarrito(); 
         };
 
         // Escucha el evento 'storage' para reaccionar a cambios en localStorage desde Login.html
         window.addEventListener('storage', (event) => {
             if (event.key === 'sesionIniciada' || event.key === 'usuarioActivo') {
                 updateAccountButton();
-                cargarCarrito();
+                cargarCarrito(); 
             }
         });
 
