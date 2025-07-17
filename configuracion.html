@@ -360,8 +360,6 @@
 
         <h2 id="mainTitle">Configuración de Cuenta</h2>
 
-        <div id="messageDisplay" class="message"></div>
-
         <section id="userProfileSection" class="section">
             <h3 class="section-title">Información de Perfil</h3>
             <div class="form-group">
@@ -371,10 +369,6 @@
             <div class="form-group">
                 <label for="displayApellido">Apellido:</label>
                 <input type="text" id="displayApellido" readonly>
-            </div>
-            <div class="form-group">
-                <label for="displayEmail">Correo Electrónico:</label>
-                <input type="email" id="displayEmail" readonly>
             </div>
             <button class="btn-primary" onclick="showProfileEditSection()" tabindex="0">Editar Perfil</button>
         </section>
@@ -388,10 +382,6 @@
             <div class="form-group">
                 <label for="editApellido">Apellido:</label>
                 <input type="text" id="editApellido">
-            </div>
-            <div class="form-group">
-                <label for="editEmail">Correo Electrónico:</label>
-                <input type="email" id="editEmail">
             </div>
             <button class="btn-primary" onclick="saveProfileChanges()" tabindex="0">Guardar Cambios</button>
             <button class="btn-secondary" onclick="cancelProfileEdit()" tabindex="0">Cancelar</button>
@@ -486,6 +476,8 @@
             <button class="btn-secondary" onclick="cerrarSesion()" tabindex="0">Cerrar Sesión</button>
             <button class="btn-primary" style="background-color: var(--error-color);" onclick="eliminarCuenta()" tabindex="0">Eliminar Cuenta</button>
         </section>
+        
+        <div id="messageDisplay" class="message"></div>
 
         <div id="confirmDialog" class="dialog-overlay">
             <div class="dialog-box">
@@ -513,14 +505,16 @@
     </script>
     <script>
         const MIN_PASSWORD_LENGTH = 8;
+        // const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos - ya no es necesario
+
         let usuarioActivo = localStorage.getItem("usuarioActivo");
         let usuariosRegistrados = getUsuariosRegistrados();
         let emailParaVerificacion = ''; // Usado para el flujo de verificación de correo
         let usernameParaCambio = ''; // Usado para el flujo de cambio de nombre de usuario
 
         const EMAILJS_SERVICE_ID = "service_kz355xk"; // Asegúrate de que este sea tu Service ID
-        const EMAILJS_TEMPLATE_CODE_VERIFICATION_ID = "template_8tu2f1r"; // Plantilla para códigos de verificación
-        const EMAILJS_TEMPLATE_EMAIL_CHANGE_CONFIRM_ID = "template_yq4j08i"; // Plantilla para confirmación de cambio de email
+        // Simplificado: Solo se mantiene la plantilla general de código de verificación
+        const EMAILJS_TEMPLATE_CODE_VERIFICATION_ID = "template_o3n0xqw"; // Plantilla para códigos de verificación (para verificación de correo existente o cambio de username)
 
         // Cargar datos del usuario al iniciar
         document.addEventListener('DOMContentLoaded', () => {
@@ -557,9 +551,7 @@
             msgDisplay.textContent = msg;
             msgDisplay.className = `message ${type}`;
             msgDisplay.style.display = 'block';
-            setTimeout(() => {
-                msgDisplay.style.display = 'none';
-            }, 5000);
+            // ELIMINADO: setTimeout para ocultar el mensaje automáticamente
         }
 
         function hideAllSections() {
@@ -575,13 +567,17 @@
                 const usuario = usuariosRegistrados[usuarioActivo];
                 document.getElementById('displayNombre').value = usuario.nombre;
                 document.getElementById('displayApellido').value = usuario.apellido;
-                document.getElementById('displayEmail').value = usuario.email;
-                document.getElementById('currentUsernameDisplay').textContent = usuario.nombre || usuario.email; // Muestra nombre o email como usuario actual
+                // document.getElementById('displayEmail').value = usuario.email; // Muestra el correo activo actual - ELIMINADO
+                document.getElementById('currentUsernameDisplay').textContent = usuario.nombre || usuario.email;
+
+                // Lógica para aplicar cambio de email pendiente eliminada
             } else {
                 showMessage("No hay sesión activa. Por favor, inicie sesión.", "error");
                 setTimeout(() => window.location.href = 'Login.html', 2000);
             }
         }
+
+        // Función applyPendingEmailChange eliminada
 
         function showProfileEditSection() {
             hideAllSections();
@@ -591,7 +587,7 @@
             // Precargar valores actuales para edición
             document.getElementById('editNombre').value = document.getElementById('displayNombre').value;
             document.getElementById('editApellido').value = document.getElementById('displayApellido').value;
-            document.getElementById('editEmail').value = document.getElementById('displayEmail').value;
+            // Campo de email ya no se precarga aquí
         }
 
         function cancelProfileEdit() {
@@ -600,47 +596,31 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
-            cargarDatosUsuario(); // Recargar para asegurar que los campos muestren los datos originales
+            
+            // Lógica de cambio de email pendiente eliminada de aquí
             showMessage('Edición de perfil cancelada.', 'info');
+            cargarDatosUsuario(); // Recargar para asegurar que los campos muestren los datos originales
         }
 
 
         function saveProfileChanges() {
             const editNombre = document.getElementById('editNombre').value.trim();
             const editApellido = document.getElementById('editApellido').value.trim();
-            const editEmail = document.getElementById('editEmail').value.trim();
+            // const editEmail = document.getElementById('editEmail').value.trim(); // Eliminado
 
-            if (!editNombre || !editApellido || !editEmail) {
-                showMessage("Todos los campos son obligatorios.", "error");
+            if (!editNombre || !editApellido) { // Solo se valida nombre y apellido
+                showMessage("Los campos de nombre y apellido son obligatorios.", "error");
                 return;
             }
-
-            // Validar formato de correo
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editEmail)) {
-                showMessage("Por favor, ingrese un formato de correo electrónico válido.", "error");
-                return;
-            }
-
-            // Verificar si el nuevo correo ya existe y es diferente al actual
-            if (editEmail !== usuarioActivo && usuariosRegistrados[editEmail]) {
-                showMessage("Este correo electrónico ya está en uso por otra cuenta.", "error");
-                return;
-            }
-
-            // Si el email ha cambiado, inicia flujo de verificación de email
-            if (editEmail !== usuarioActivo) {
-                emailParaVerificacion = editEmail; // Almacena el nuevo email temporalmente
-                iniciarCambioCorreo(editEmail);
-            } else {
-                // Si el email no cambió o es el mismo, guarda los demás cambios directamente
-                if (usuariosRegistrados[usuarioActivo]) {
-                    usuariosRegistrados[usuarioActivo].nombre = editNombre;
-                    usuariosRegistrados[usuarioActivo].apellido = editApellido;
-                    guardarUsuariosRegistrados(usuariosRegistrados);
-                    cargarDatosUsuario(); // Actualizar UI con nuevos datos
-                    showMessage("Cambios de perfil guardados con éxito.", "success");
-                    cancelProfileEdit(); // Vuelve a la vista principal
-                }
+            
+            // Toda la lógica de cambio de email eliminada
+            if (usuariosRegistrados[usuarioActivo]) {
+                usuariosRegistrados[usuarioActivo].nombre = editNombre;
+                usuariosRegistrados[usuarioActivo].apellido = editApellido;
+                guardarUsuariosRegistrados(usuariosRegistrados);
+                cargarDatosUsuario(); // Actualizar la interfaz de usuario con los nuevos datos (nombre/apellido)
+                showMessage("Cambios de perfil guardados con éxito.", "success");
+                cancelProfileEdit(); // Volver a la vista principal
             }
         }
 
@@ -746,7 +726,7 @@
 
         // --- Funciones para verificación de correo (EmailJS) ---
         let codigoVerificacionActual = ''; // Almacena el código enviado
-        let emailParaConfirmar = ''; // Guarda el email temporalmente para el cambio de email
+        // let emailParaConfirmar = ''; // Eliminado, ya no se usa para cambio de email
 
         function generarCodigoVerificacion() {
             return Math.floor(100000 + Math.random() * 900000).toString();
@@ -778,6 +758,7 @@
             emailParaVerificacion = usuariosRegistrados[usuarioActivo].email;
             codigoVerificacionActual = generarCodigoVerificacion();
 
+            // Usar la plantilla general de código de verificación para el correo existente
             const emailSent = await enviarCodigoEmail(emailParaVerificacion, codigoVerificacionActual, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID);
             if (emailSent) {
                 showMessage(`Se ha enviado un código de 6 dígitos a ${emailParaVerificacion}.`, "success");
@@ -794,20 +775,24 @@
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
             codigoVerificacionActual = '';
             emailParaVerificacion = '';
+            // emailParaConfirmar = ''; // Eliminado
+            // Lógica de cambio pendiente de email eliminada
             showMessage('Verificación de correo cancelada.', 'info');
         }
 
-        function verificarCodigoCorreo() {
+        // Esta función ahora solo maneja la verificación del correo actual (no el cambio de email)
+        document.querySelector('#verificationEmailSection button.btn-primary').onclick = () => {
             const enteredCode = document.getElementById('emailVerificationCode').value.trim();
+            
             if (enteredCode === codigoVerificacionActual) {
                 showMessage("¡Correo verificado exitosamente!", "success");
-                // Aquí podrías marcar el correo como verificado en tu base de datos si fuera real
-                setTimeout(() => cancelarVerificacionCorreo(), 2000); // Volver al menú principal
+                setTimeout(() => cancelarVerificacionCorreo(), 2000);
             } else {
                 showMessage("Código incorrecto. Por favor, inténtelo de nuevo.", "error");
                 marcarError(document.getElementById('emailVerificationCode'), true);
             }
-        }
+        };
+
 
         // --- Flujo para cambio de nombre de usuario (ejemplo de flujo con verificación) ---
         async function showChangeUsernameFlow() {
@@ -884,63 +869,8 @@
         }
 
 
-        // --- Flujo de cambio de correo (con verificación) ---
-        async function iniciarCambioCorreo(nuevoEmail) {
-            codigoVerificacionActual = generarCodigoVerificacion();
-            emailParaConfirmar = nuevoEmail; // Guarda el email propuesto
-
-            showMessage("Enviando código de verificación al nuevo correo...", "info");
-            const emailSent = await enviarCodigoEmail(nuevoEmail, codigoVerificacionActual, EMAILJS_TEMPLATE_EMAIL_CHANGE_CONFIRM_ID); // Usar plantilla específica para cambio de email
-
-            if (emailSent) {
-                hideAllSections();
-                document.getElementById('verificationEmailSection').classList.remove('hidden-section');
-                document.getElementById('mainTitle').textContent = "Confirmar Nuevo Correo";
-                document.getElementById('emailVerificationCode').value = '';
-                document.querySelector('#verificationEmailSection p').textContent = `Se ha enviado un código a ${nuevoEmail}. Ingréselo para confirmar el cambio.`;
-                showMessage(`Se ha enviado un código a ${nuevoEmail}.`, "success");
-            } else {
-                showMessage("Error al iniciar el cambio de correo. Intente de nuevo.", "error");
-                cancelProfileEdit(); // Volver al perfil si el envío falla
-            }
-        }
-
-        function verificarCodigoCorreoParaCambio() {
-            const enteredCode = document.getElementById('emailVerificationCode').value.trim();
-            if (enteredCode === codigoVerificacionActual) {
-                if (usuariosRegistrados[usuarioActivo]) {
-                    // Crea una nueva entrada con el nuevo email y copia los datos del usuario antiguo
-                    const userData = { ...usuariosRegistrados[usuarioActivo], email: emailParaConfirmar };
-                    usuariosRegistrados[emailParaConfirmar] = userData;
-                    
-                    // Elimina la entrada antigua del usuario
-                    delete usuariosRegistrados[usuarioActivo];
-
-                    // Actualiza localStorage y la variable global usuarioActivo
-                    localStorage.setItem("usuarioActivo", emailParaConfirmar);
-                    usuarioActivo = emailParaConfirmar;
-
-                    guardarUsuariosRegistrados(usuariosRegistrados);
-                    cargarDatosUsuario(); // Actualizar UI con el nuevo email
-                    showMessage("¡Correo electrónico actualizado con éxito!", "success");
-                    setTimeout(() => cancelarVerificacionCorreo(), 2000); // Volver al perfil
-                }
-            } else {
-                showMessage("Código incorrecto. Intente de nuevo.", "error");
-                marcarError(document.getElementById('emailVerificationCode'), true);
-            }
-        }
-        // Ajuste: Cambiar el evento onclick del botón "Verificar Código" en verificationEmailSection
-        // para llamar a verificarCodigoCorreoParaCambio si emailParaConfirmar tiene valor.
-        // Esto se maneja mejor en el evento click del botón, verificando la variable.
-
-        document.querySelector('#verificationEmailSection button.btn-primary').onclick = () => {
-            if (emailParaConfirmar) {
-                verificarCodigoCorreoParaCambio();
-            } else {
-                verificarCodigoCorreo(); // Comportamiento por defecto de verificación de correo
-            }
-        };
+        // --- Flujo de cambio de correo (con verificación) --- ELIMINADO
+        // async function iniciarCambioCorreo(nuevoEmail) { ... }
 
 
         // --- Funciones de Notificaciones ---
@@ -985,7 +915,7 @@
         }
 
         // --- Funciones de Diálogo de Confirmación ---
-        function showConfirmDialog(message, onConfirm) {
+        function showConfirmDialog(message, onConfirm, onCancel = () => {}) {
             const dialog = document.getElementById('confirmDialog');
             const msgElement = document.getElementById('dialogMessage');
             const confirmBtn = document.getElementById('dialogConfirmBtn');
@@ -1003,6 +933,7 @@
                 dialog.classList.remove('show');
             };
             cancelBtn.onclick = () => {
+                onCancel(); // Llamar a la función onCancel si se proporciona
                 dialog.classList.remove('show');
                 showMessage('Acción cancelada.', 'info');
             };
@@ -1011,24 +942,20 @@
         // Control de navegación hacia atrás
         function goBack() {
             const currentTitle = document.getElementById('mainTitle').textContent;
+            // const currentUserData = usuariosRegistrados[usuarioActivo]; // Ya no se necesita esta línea aquí
 
             if (currentTitle === "Editar Perfil") {
                 cancelProfileEdit();
             } else if (currentTitle === "Cambiar Contraseña") {
                 cancelChangePassword();
-            } else if (currentTitle === "Verificar Correo" || currentTitle === "Confirmar Nuevo Correo") {
+            } else if (currentTitle === "Verificar Correo") { // Solo el flujo de verificación de correo actual
                 cancelarVerificacionCorreo();
-                // Si estaba en flujo de cambio de correo, también volver a edición de perfil
-                if (emailParaConfirmar) {
-                    showProfileEditSection(); // Mostrar sección de edición de perfil
-                    emailParaConfirmar = ''; // Limpiar la variable
-                }
             } else if (currentTitle === "Verificar Cambio de Nombre de Usuario") {
                 cancelarVerificacionUsername();
             } else if (currentTitle === "Cambiar Nombre de Usuario") {
                 cancelChangeUsername();
             } else {
-                history.back(); // Volver a la página anterior en el historial
+                history.back();
             }
         }
 
