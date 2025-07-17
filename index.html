@@ -7,7 +7,13 @@
     <style>
         /* RESET Y BASE */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #f9f9f9; color: #333; }
+        body { 
+            font-family: sans-serif; 
+            background: #f9f9f9; 
+            color: #333; 
+            line-height: 1.6;
+            overflow-x: hidden; /* Evita el scroll horizontal en móviles */
+        }
 
         /* HEADER */
         header {
@@ -16,8 +22,8 @@
             align-items: center;
             padding: 1rem 2rem;
             gap: 1rem;
-            flex-wrap: wrap;
-            position: relative; /* Esencial para el posicionamiento del menú de cuenta */
+            flex-wrap: wrap; /* Permite que los elementos salten de línea si no caben */
+            position: relative;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         header img { height: 50px; }
@@ -30,6 +36,7 @@
             font-weight: 600;
             padding: 0.5rem 0.75rem;
             cursor: pointer;
+            white-space: nowrap; /* Evita que los enlaces de navegación se rompan */
         }
         nav a:hover {
             background: rgba(255,255,255,0.2);
@@ -39,14 +46,14 @@
         /* BARRA DE BÚSQUEDA */
         .search-bar {
             position: relative;
-            flex: 1 1 500px;
+            flex: 1 1 500px; /* Flex-grow, flex-shrink, base-width */
             max-width: 600px;
             display: flex;
         }
         .search-bar input {
             flex: 1;
             padding: 0.5rem 1rem;
-            border: 1px solid #ddd; /* Añadido borde para mejor visualización */
+            border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
             font-size: 1rem;
         }
@@ -76,7 +83,8 @@
             z-index: 10;
             display: none;
             font-size: 0.9rem;
-            border-radius: 0 0 4px 4px; /* Añadido border-radius */
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra para que destaque */
         }
         .dropdown .heading {
             padding: 0.5rem 1rem;
@@ -115,36 +123,36 @@
             cursor: pointer;
             border-bottom: 1px solid #eee;
             color: #333;
-            display: flex; /* Make it a flex container */
-            justify-content: space-between; /* Space out content and arrow */
-            align-items: center; /* Vertically center content */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .dropdown .item.suggestion:hover {
             background: #f0f0f0;
         }
         .suggestion-arrow {
-            width: 16px; /* Tamaño revertido a 16px */
-            height: 16px; /* Tamaño revertido a 16px */
-            fill: #999; /* Grey color for the arrow */
-            transform: rotate(-45deg); /* Rotate to point up-right */
-            margin-left: 10px; /* Space between text and arrow */
+            width: 16px;
+            height: 16px;
+            fill: #999;
+            transform: rotate(-45deg);
+            margin-left: 10px;
             transition: fill 0.2s, transform 0.2s;
         }
         .dropdown .item.suggestion:hover .suggestion-arrow {
-            fill: #ff0101; /* Change color on hover */
-            transform: rotate(-45deg) scale(1.1); /* Slightly enlarge on hover */
+            fill: #ff0101;
+            transform: rotate(-45deg) scale(1.1);
         }
         .search-suggestion-icon {
             width: 16px;
             height: 16px;
-            fill: #999; /* Grey color for the icon */
+            fill: #999;
         }
 
         /* ICONOS DERECHA GENERAL */
         .header-right {
-            margin-left: auto; /* Empuja los elementos a la derecha en el header */
+            margin-left: auto;
             display: flex;
-            gap: 1rem; /* Espacio entre los botones de cuenta y carrito */
+            gap: 1rem;
             align-items: center;
         }
 
@@ -163,11 +171,11 @@
             font-size: 0.9rem;
             text-decoration: none;
             transition: background 0.2s;
-            white-space: nowrap; /* Evita que el texto se rompa */
+            white-space: nowrap;
         }
         .btn-rounded:hover {
-            background: #cc0000; /* Hover más oscuro para coherencia */
-            color: white; /* Texto blanco al hacer hover */
+            background: #cc0000;
+            color: white;
         }
         .btn-rounded svg {
             width: 20px;
@@ -176,27 +184,27 @@
             transition: fill 0.2s;
         }
         .btn-rounded:hover svg {
-            fill: white; /* Ícono blanco al hacer hover */
+            fill: white;
         }
 
         /* --- ESTILOS DEL MENÚ DE CUENTA DESPLEGABLE --- */
         /* Contenedor del botón de usuario y su menú */
         .user-menu-container {
-            position: relative; /* Crucial para posicionar el dropdown respecto a este contenedor */
-            display: inline-block; /* Ocupa solo el espacio necesario */
+            position: relative;
+            display: inline-block;
         }
 
         /* Contenido del menú desplegable (las opciones) */
         .account-dropdown-content {
-            display: none; /* Oculto por defecto */
+            display: none;
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 20; /* Mayor z-index para que aparezca encima de todo */
+            z-index: 20;
             border-radius: 5px;
-            right: 0; /* Alinea el menú a la derecha del botón */
-            top: calc(100% + 5px); /* Coloca el menú justo debajo del botón, con un pequeño espacio */
+            right: 0;
+            top: calc(100% + 5px);
         }
 
         /* Estilo de los enlaces dentro del menú desplegable */
@@ -228,7 +236,7 @@
             display: block;
         }
 
-        /* Select idioma */
+        /* Select idioma - no en el HTML actual, pero por si acaso */
         #lang-select {
             background: white;
             color: #e60000;
@@ -282,6 +290,8 @@
         }
         .product img {
             width: 100%;
+            height: auto; /* Asegura que la imagen se escala proporcionalmente */
+            max-width: 100%; /* Asegura que la imagen no exceda el contenedor */
             border-radius: 4px;
             margin-bottom: 1rem;
         }
@@ -317,8 +327,9 @@
         #cajita-carrito {
             position: fixed;
             top: 0;
-            right: -100%;
+            right: -100%; /* Empieza fuera de la pantalla */
             width: 380px;
+            max-width: 100%; /* Asegura que no sea más ancho que la pantalla en móviles */
             height: 100vh;
             background: white;
             box-shadow: -6px 0 20px rgb(0 0 0 / 0.1);
@@ -326,15 +337,16 @@
             box-sizing: border-box;
             transition: right 0.35s ease;
             z-index: 1000;
+            overflow-y: auto; /* Permite scroll si el contenido es largo */
         }
         #cajita-carrito header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            padding: 0; /* Resetear padding del header específico del carrito */
-            background: none; /* Resetear background */
-            box-shadow: none; /* Resetear box-shadow */
+            padding: 0;
+            background: none;
+            box-shadow: none;
         }
         #cerrarCarrito {
             font-size: 24px;
@@ -353,6 +365,120 @@
         .item-carrito:last-child {
             border-bottom: none;
             margin-bottom: 0;
+        }
+
+        /* ============================================== */
+        /* Estilos Responsive para Móviles (Ancho máximo 767px) */
+        /* ============================================== */
+        @media (max-width: 767px) {
+            header {
+                flex-direction: column; /* Apila los elementos del header */
+                align-items: center; /* Centra los elementos apilados */
+                padding: 1rem; /* Reduce el padding lateral del header */
+                gap: 0.5rem; /* Reduce el espacio entre elementos apilados */
+            }
+
+            header img {
+                margin-bottom: 0.5rem; /* Espacio extra debajo del logo */
+            }
+
+            nav {
+                flex-direction: column; /* Apila los enlaces de navegación */
+                width: 100%; /* Ocupa todo el ancho disponible */
+                text-align: center;
+                margin-bottom: 0.5rem; /* Espacio debajo de la navegación */
+                gap: 0; /* Elimina el gap entre elementos apilados */
+            }
+            nav a {
+                padding: 0.75rem 0.5rem; /* Más padding vertical para tocar más fácil */
+                border-bottom: 1px solid #eee; /* Separador entre enlaces */
+                width: 100%; /* Asegura que cada enlace ocupe su propia línea */
+            }
+            nav a:last-child {
+                border-bottom: none; /* Sin borde en el último elemento */
+            }
+
+            .search-bar {
+                flex-basis: 100%; /* Ocupa todo el ancho en móviles */
+                max-width: 100%; /* Elimina el max-width para que sea flexible */
+                margin-top: 0.5rem; /* Espacio arriba de la barra de búsqueda */
+            }
+            .search-bar input, .search-bar button {
+                padding: 0.8rem 1rem; /* Aumenta el padding para que sea más fácil tocar */
+            }
+
+            .header-right {
+                margin-left: 0; /* Quita el margen automático para que no empuje los elementos */
+                width: 100%; /* Ocupa todo el ancho */
+                justify-content: space-around; /* Distribuye los botones equitativamente */
+                margin-top: 1rem; /* Espacio arriba de los botones de la derecha */
+            }
+            .btn-rounded {
+                padding: 0.6rem 1rem; /* Más padding para los botones */
+                font-size: 1rem; /* Tamaño de fuente ligeramente más grande */
+            }
+            .btn-rounded svg {
+                width: 22px; /* Íconos un poco más grandes */
+                height: 22px;
+            }
+
+            /* Alinea el menú de cuenta desplegable a la izquierda en móviles, o lo centra */
+            .account-dropdown-content {
+                right: auto; /* Desactiva la alineación a la derecha */
+                left: 50%; /* Intenta centrarlo */
+                transform: translateX(-50%); /* Ajuste para centrarlo perfectamente */
+                min-width: 90%; /* Ocupa casi todo el ancho de la pantalla */
+                top: calc(100% + 10px); /* Más espacio debajo del botón */
+            }
+
+            .container {
+                padding: 0 1rem; /* Reduce el padding lateral del contenedor principal */
+                margin-top: 2rem; /* Reduce el margen superior */
+            }
+
+            .products {
+                grid-template-columns: 1fr; /* Una sola columna para los productos */
+                gap: 1.5rem; /* Reduce el espacio entre productos */
+            }
+
+            .product {
+                padding: 1rem; /* Reduce el padding interno del producto */
+            }
+
+            footer {
+                padding: 1.5rem 1rem; /* Ajusta el padding del footer */
+                font-size: 0.8rem; /* Tamaño de fuente más pequeño para el footer */
+            }
+
+            #cajita-carrito {
+                width: 100%; /* El carrito lateral ocupa todo el ancho en móviles */
+            }
+        }
+
+        /* ============================================== */
+        /* Estilos Responsive para Tabletas (768px a 1023px) */
+        /* ============================================== */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            header {
+                padding: 1rem 1.5rem;
+                gap: 0.8rem;
+            }
+            nav {
+                gap: 0.8rem;
+            }
+            .search-bar {
+                flex-basis: 400px; /* Tamaño más controlado para tabletas */
+            }
+            .header-right {
+                gap: 0.8rem;
+            }
+            .container {
+                padding: 0 1.5rem;
+            }
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); /* 2 o 3 columnas */
+                gap: 1.8rem;
+            }
         }
     </style>
 </head>
