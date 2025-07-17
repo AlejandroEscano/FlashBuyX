@@ -7,65 +7,56 @@
     <style>
         /* RESET Y BASE */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: sans-serif; 
-            background: #f9f9f9; 
-            color: #333; 
-            line-height: 1.6;
-            overflow-x: hidden; /* Evita el scroll horizontal en móviles */
-        }
-
-        /* Utilidad para elementos que son solo para lectores de pantalla */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
+        body { font-family: sans-serif; background: #f9f9f9; color: #333; }
 
         /* HEADER */
         header {
             background: #ffffff;
             display: flex;
-            flex-wrap: wrap; /* Permite que los elementos salten de línea si no caben */
-            padding: 1rem 2rem;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            align-items: center; /* Alinea verticalmente elementos en la fila principal */
-        }
-        header img { height: 50px; margin-right: 1rem; } /* Espacio a la derecha del logo */
-
-        /* CONTENEDOR PRINCIPAL DEL HEADER (logo, búsqueda, botones de la derecha) */
-        .header-top-row {
-            display: flex;
             align-items: center;
-            width: 100%; /* Ocupa todo el ancho en la fila superior */
-            justify-content: space-between; /* Distribuye espacio entre logo, búsqueda y botones */
-            margin-bottom: 1rem; /* Espacio antes de la nav */
+            padding: 1rem 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            position: relative; /* Esencial para el posicionamiento del menú de cuenta */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        /* *** CAMBIO REALIZADO AQUÍ PARA AJUSTAR EL LOGO *** */
+        header img {
+            max-height: 50px; /* Establece una altura máxima de 50px */
+            height: auto;      /* Permite que la altura se ajuste automáticamente */
+            width: auto;       /* Permite que el ancho se ajuste automáticamente, manteniendo la proporción */
+        }
+
+        /* NAVEGACIÓN */
+        nav { display: flex; gap: 1rem; }
+        nav a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+        }
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
         /* BARRA DE BÚSQUEDA */
         .search-bar {
             position: relative;
-            flex: 1; /* Ocupa el espacio restante */
+            flex: 1 1 500px;
             max-width: 600px;
             display: flex;
-            margin: 0 1rem; /* Margen a los lados de la barra de búsqueda */
         }
         .search-bar input {
             flex: 1;
-            padding: 0.6rem 1rem; /* Ajustado para uniformidad */
-            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd; /* Añadido borde para mejor visualización */
             border-radius: 4px 0 0 4px;
             font-size: 1rem;
-            height: 40px; /* Altura fija para consistencia */
         }
         .search-bar button {
-            padding: 0.6rem 1.5rem; /* Ajustado para uniformidad */
+            padding: 0.5rem 1.5rem;
             background: #ff0101;
             color: #fff;
             border: none;
@@ -73,7 +64,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
-            height: 40px; /* Altura fija para consistencia */
         }
         .search-bar button:hover {
             background: #b30000;
@@ -91,8 +81,7 @@
             z-index: 10;
             display: none;
             font-size: 0.9rem;
-            border-radius: 0 0 4px 4px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 0 0 4px 4px; /* Añadido border-radius */
         }
         .dropdown .heading {
             padding: 0.5rem 1rem;
@@ -131,35 +120,36 @@
             cursor: pointer;
             border-bottom: 1px solid #eee;
             color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; /* Make it a flex container */
+            justify-content: space-between; /* Space out content and arrow */
+            align-items: center; /* Vertically center content */
         }
         .dropdown .item.suggestion:hover {
             background: #f0f0f0;
         }
         .suggestion-arrow {
-            width: 16px;
-            height: 16px;
-            fill: #999;
-            transform: rotate(-45deg);
-            margin-left: 10px;
+            width: 16px; /* Tamaño revertido a 16px */
+            height: 16px; /* Tamaño revertido a 16px */
+            fill: #999; /* Grey color for the arrow */
+            transform: rotate(-45deg); /* Rotate to point up-right */
+            margin-left: 10px; /* Space between text and arrow */
             transition: fill 0.2s, transform 0.2s;
         }
         .dropdown .item.suggestion:hover .suggestion-arrow {
-            fill: #ff0101;
-            transform: rotate(-45deg) scale(1.1);
+            fill: #ff0101; /* Change color on hover */
+            transform: rotate(-45deg) scale(1.1); /* Slightly enlarge on hover */
         }
         .search-suggestion-icon {
             width: 16px;
             height: 16px;
-            fill: #999;
+            fill: #999; /* Grey color for the icon */
         }
 
         /* ICONOS DERECHA GENERAL */
         .header-right {
+            margin-left: auto; /* Empuja los elementos a la derecha en el header */
             display: flex;
-            gap: 1rem;
+            gap: 1rem; /* Espacio entre los botones de cuenta y carrito */
             align-items: center;
         }
 
@@ -172,18 +162,17 @@
             color: #000000;
             font-weight: bold;
             border: none;
-            padding: 0.5rem 1rem; /* Ajustado para uniformidad */
+            padding: 0.4rem 1rem;
             border-radius: 999px;
             cursor: pointer;
-            font-size: 0.95rem; /* Ligeramente aumentado */
+            font-size: 0.9rem;
             text-decoration: none;
             transition: background 0.2s;
-            white-space: nowrap;
-            height: 40px; /* Altura fija para consistencia */
+            white-space: nowrap; /* Evita que el texto se rompa */
         }
         .btn-rounded:hover {
-            background: #cc0000;
-            color: white;
+            background: #cc0000; /* Hover más oscuro para coherencia */
+            color: white; /* Texto blanco al hacer hover */
         }
         .btn-rounded svg {
             width: 20px;
@@ -192,25 +181,30 @@
             transition: fill 0.2s;
         }
         .btn-rounded:hover svg {
-            fill: white;
+            fill: white; /* Ícono blanco al hacer hover */
         }
 
         /* --- ESTILOS DEL MENÚ DE CUENTA DESPLEGABLE --- */
+        /* Contenedor del botón de usuario y su menú */
         .user-menu-container {
-            position: relative;
-            display: inline-block;
+            position: relative; /* Crucial para posicionar el dropdown respecto a este contenedor */
+            display: inline-block; /* Ocupa solo el espacio necesario */
         }
+
+        /* Contenido del menú desplegable (las opciones) */
         .account-dropdown-content {
-            display: none;
+            display: none; /* Oculto por defecto */
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 20;
+            z-index: 20; /* Mayor z-index para que aparezca encima de todo */
             border-radius: 5px;
-            right: 0;
-            top: calc(100% + 5px);
+            right: 0; /* Alinea el menú a la derecha del botón */
+            top: calc(100% + 5px); /* Coloca el menú justo debajo del botón, con un pequeño espacio */
         }
+
+        /* Estilo de los enlaces dentro del menú desplegable */
         .account-dropdown-content a {
             color: black;
             padding: 12px 16px;
@@ -219,9 +213,12 @@
             text-align: left;
             transition: background-color 0.2s ease;
         }
+
         .account-dropdown-content a:hover {
             background-color: #f1f1f1;
         }
+
+        /* Bordes redondeados para el primer y último elemento del menú */
         .account-dropdown-content a:first-child {
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
@@ -230,42 +227,31 @@
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
         }
+
+        /* Clase para mostrar el menú (activada por JavaScript) */
         .account-dropdown-content.show {
             display: block;
         }
 
-        /* NAVEGACIÓN - AHORA DEBAJO DE LA BARRA PRINCIPAL DEL HEADER */
-        nav { 
-            flex-basis: 100%; /* Ocupa todo el ancho disponible */
-            display: flex; 
-            gap: 1rem; 
-            margin-top: 0.5rem; /* Pequeño espacio superior */
-            border-top: 1px solid #eee; /* Separador visual */
-            padding-top: 0.5rem;
-            justify-content: flex-start; /* Alinea los elementos a la izquierda */
-        }
-        nav ul { /* Agregado 'ul' al selector */
-            list-style: none; /* Quita los puntos de la lista */
-            display: flex; 
-            gap: 1rem; 
-            width: 100%; /* Asegura que la lista ocupe el espacio */
-            justify-content: center; /* Centra los elementos de navegación */
-        }
-        nav ul li a { /* Agregado 'ul li' al selector */
-            color: #000000;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 0.5rem 0.75rem;
+        /* Select idioma */
+        #lang-select {
+            background: white;
+            color: #e60000;
+            border: 2px solid #e60000;
+            border-radius: 999px;
+            padding: 0.3rem 0.8rem;
+            font-weight: 700;
             cursor: pointer;
-            white-space: nowrap;
+            font-size: 0.9rem;
+            outline: none;
+            transition: background 0.2s, color 0.2s;
         }
-        nav ul li a:hover { /* Agregado 'ul li' al selector */
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
+        #lang-select:hover {
+            background: #ffe6e6;
         }
 
-        /* CONTENIDO PRINCIPAL */
-        main .container { 
+        /* CONTENIDO */
+        .container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 2rem;
@@ -275,7 +261,7 @@
             grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
             gap: 2rem;
         }
-        article.product { /* Ahora aplica a <article class="product"> */
+        .product {
             position: relative;
             background: #fff;
             padding: 1.5rem;
@@ -284,7 +270,7 @@
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        article.product:hover {
+        .product:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -299,19 +285,17 @@
             border-radius: 3px;
             text-transform: uppercase;
         }
-        article.product img {
+        .product img {
             width: 100%;
-            height: auto;
-            max-width: 100%;
             border-radius: 4px;
             margin-bottom: 1rem;
         }
-        article.product h3 { margin-bottom: 0.5rem; }
-        article.product .product-price { 
+        .product h3 { margin-bottom: 0.5rem; }
+        .product p {
             margin-bottom: 1rem;
             font-weight: 600;
         }
-        article.product button {
+        .product button {
             padding: 0.6rem 1.2rem;
             border: none;
             background: #000000;
@@ -321,7 +305,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        article.product button:hover {
+        .product button:hover {
             background: #b30000;
         }
 
@@ -340,7 +324,6 @@
             top: 0;
             right: -100%;
             width: 380px;
-            max-width: 100%;
             height: 100vh;
             background: white;
             box-shadow: -6px 0 20px rgb(0 0 0 / 0.1);
@@ -348,16 +331,15 @@
             box-sizing: border-box;
             transition: right 0.35s ease;
             z-index: 1000;
-            overflow-y: auto;
         }
         #cajita-carrito header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            padding: 0;
-            background: none;
-            box-shadow: none;
+            padding: 0; /* Resetear padding del header específico del carrito */
+            background: none; /* Resetear background */
+            box-shadow: none; /* Resetear box-shadow */
         }
         #cerrarCarrito {
             font-size: 24px;
@@ -377,193 +359,61 @@
             border-bottom: none;
             margin-bottom: 0;
         }
-
-        /* ============================================== */
-        /* Estilos Responsive para Móviles (Ancho máximo 767px) */
-        /* ============================================== */
-        @media (max-width: 767px) {
-            header {
-                flex-direction: column; /* Apila los elementos del header */
-                align-items: center; /* Centra los elementos apilados */
-                padding: 1rem; /* Reduce el padding lateral del header */
-            }
-
-            .header-top-row {
-                flex-direction: column; /* Apila los elementos en la fila superior */
-                margin-bottom: 0.5rem; /* Reduce el espacio */
-            }
-
-            header img {
-                margin-right: 0; /* Elimina el margen a la derecha del logo */
-                margin-bottom: 0.5rem; /* Espacio extra debajo del logo */
-            }
-            .search-bar {
-                flex-basis: 100%; /* Ocupa todo el ancho en móviles */
-                max-width: 100%;
-                margin: 0.5rem 0; /* Margen vertical para la barra de búsqueda */
-            }
-            .search-bar input, .search-bar button {
-                padding: 0.8rem 1rem;
-                height: auto; /* Permite que el padding determine la altura */
-            }
-
-            .header-right {
-                width: 100%; /* Ocupa todo el ancho */
-                justify-content: space-around; /* Distribuye los botones equitativamente */
-                margin-top: 1rem;
-            }
-            .btn-rounded {
-                padding: 0.6rem 1rem;
-                font-size: 1rem;
-                height: auto; /* Permite que el padding determine la altura */
-            }
-            .btn-rounded svg {
-                width: 22px;
-                height: 22px;
-            }
-
-            nav {
-                flex-direction: column; /* Apila los enlaces de navegación */
-                margin-top: 0.5rem;
-                padding-top: 0.5rem;
-                border-top: none; /* Elimina el borde superior en móvil si no es necesario */
-            }
-            nav ul {
-                flex-direction: column; /* Apila los elementos de la lista */
-                width: 100%;
-                text-align: center;
-                gap: 0;
-            }
-            nav ul li a {
-                padding: 0.75rem 0.5rem;
-                border-bottom: 1px solid #eee;
-                width: 100%;
-            }
-            nav ul li:last-child a {
-                border-bottom: none;
-            }
-
-            .account-dropdown-content {
-                right: auto;
-                left: 50%;
-                transform: translateX(-50%);
-                min-width: 90%;
-                top: calc(100% + 10px);
-            }
-
-            main .container {
-                padding: 0 1rem;
-                margin-top: 2rem;
-            }
-            .products {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            article.product {
-                padding: 1rem;
-            }
-            footer {
-                padding: 1.5rem 1rem;
-                font-size: 0.8rem;
-            }
-            #cajita-carrito {
-                width: 100%;
-            }
-        }
-
-        /* ============================================== */
-        /* Estilos Responsive para Tabletas (768px a 1023px) */
-        /* ============================================== */
-        @media (min-width: 768px) and (max-width: 1023px) {
-            header {
-                padding: 1rem 1.5rem;
-            }
-            .header-top-row {
-                margin-bottom: 0.8rem;
-            }
-            .search-bar {
-                flex-basis: 400px;
-                margin: 0 0.8rem;
-            }
-            .header-right {
-                gap: 0.8rem;
-            }
-            nav {
-                margin-top: 0.8rem;
-                padding-top: 0.8rem;
-            }
-            nav ul {
-                gap: 0.8rem;
-            }
-            main .container {
-                padding: 0 1.5rem;
-            }
-            .products {
-                grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-                gap: 1.8rem;
-            }
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-top-row">
-            <img src="https://i.imgur.com/luW5dMU.png" alt="FlashBuyX Logo" width="150" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
+        <img src="https://i.imgur.com/luW5dMU.png" alt="FlashBuyX Logo" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
 
-            <div class="search-bar">
-                <label for="searchInput" class="sr-only">Buscar productos…</label>
-                <input id="searchInput" type="text" placeholder="Buscar productos…" autocomplete="off" aria-label="Buscar productos" />
-                <button id="searchBtn" aria-label="Buscar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#fff" viewBox="0 0 24 24">
-                        <circle cx="10" cy="10" r="6" stroke="#fff" stroke-width="2" fill="none"/>
-                        <line x1="14" y1="14" x2="20" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-                <div id="dropdown" class="dropdown"></div>
-            </div>
+        <nav>
+            <a onclick="location.reload()" tabindex="0">Inicio</a>
+            <a href="#" tabindex="0">Productos</a>
+            <a href="#" tabindex="0">Contacto</a>
+            <a href="#" tabindex="0">Ofertas</a>
+        </nav>
+        <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="Buscar productos…" autocomplete="off" />
+            <button id="searchBtn" aria-label="Buscar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#fff" viewBox="0 0 24 24">
+                    <circle cx="10" cy="10" r="6" stroke="#fff" stroke-width="2" fill="none"/>
+                    <line x1="14" y1="14" x2="20" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div id="dropdown" class="dropdown"></div>
+        </div>
 
-            <div id="headerRightButtons" class="header-right">
-                
-                <a id="loginRegisterButton" href="Login.html" class="btn-rounded" tabindex="0">
+        <div id="headerRightButtons" class="header-right">
+
+            <a id="loginRegisterButton" href="Login.html" class="btn-rounded" tabindex="0">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Cuenta
+            </a>
+
+            <div id="userMenuContainer" class="user-menu-container" style="display:none;">
+                <button id="userNameButton" class="btn-rounded" tabindex="0">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
-                    Cuenta
-                </a>
-
-                <div id="userMenuContainer" class="user-menu-container" style="display:none;">
-                    <button id="userNameButton" class="btn-rounded" tabindex="0"> 
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                        </button>
-                    <div id="userDropdown" class="account-dropdown-content">
-                        <a href="configuracion.html" tabindex="0">Configuración</a> 
-                        <a href="#" id="logoutButton" tabindex="0">Cerrar Sesión</a>
-                    </div>
+                    </button>
+                <div id="userDropdown" class="account-dropdown-content">
+                    <a href="configuracion.html" tabindex="0">Configuración</a>
+                    <a href="#" id="logoutButton" tabindex="0">Cerrar Sesión</a>
                 </div>
-
-                <a id="abrirCarrito" class="btn-rounded" tabindex="0">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 
-                        0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14l.9-2h7.5
-                        c.8 0 1.5-.5 1.8-1.3l2.5-6.1c.1-.2.1-.4.1-.6 0-.6-.4-1-1-1H5.2
-                        L4.3 2H1v2h2l3.6 7.6-1.4 2.4C5 14.2 5.8 15 6.7 15h12v-2H7.2z"/>
-                    </svg>
-                    Carrito
-                </a>
             </div>
-        </div>
 
-        <nav>
-            <ul>
-                <li><a onclick="location.reload()" tabindex="0">Inicio</a></li>
-                <li><a href="#" tabindex="0">Productos</a></li>
-                <li><a href="#" tabindex="0">Contacto</a></li>
-                <li><a href="#" tabindex="0">Ofertas</a></li>
-            </ul>
-        </nav>
+            <a id="abrirCarrito" class="btn-rounded" tabindex="0">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10
+                    0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14l.9-2h7.5
+                    c.8 0 1.5-.5 1.8-1.3l2.5-6.1c.1-.2.1-.4.1-.6 0-.6-.4-1-1-1H5.2
+                    L4.3 2H1v2h2l3.6 7.6-1.4 2.4C5 14.2 5.8 15 6.7 15h12v-2H7.2z"/>
+                </svg>
+                Carrito
+            </a>
+        </div>
     </header>
 
     <aside id="cajita-carrito">
@@ -574,66 +424,26 @@
         <div id="contenidoCarrito"><p style="text-align:center; color:#666; font-style:italic; margin-top:20px;">Tu carrito está vacío.</p></div>
     </aside>
 
-    <main>
-        <div class="container" style="margin-top: 5rem;"> 
-            <section class="products" id="productsContainer">
-                <h2 class="sr-only">Nuestros Productos Destacados</h2>
-                
-                <article class="product">
-                    <div class="promo-label">¡Oferta!</div>
-                    <img src="https://via.placeholder.com/300/FF5733/FFFFFF?text=Producto+1" alt="Imagen del Producto 1">
-                    <h3>Producto 1</h3>
-                    <p class="product-price">$19.99</p>
-                    <button tabindex="0">Añadir al carrito</button>
-                </article>
-                <article class="product">
-                    <div class="promo-label">¡Oferta!</div>
-                    <img src="https://via.placeholder.com/300/33FF57/FFFFFF?text=Producto+2" alt="Imagen del Producto 2">
-                    <h3>Producto 2</h3>
-                    <p class="product-price">$29.99</p>
-                    <button tabindex="0">Añadir al carrito</button>
-                </article>
-                <article class="product">
-                    <div class="promo-label">¡Oferta!</div>
-                    <img src="https://via.placeholder.com/300/3357FF/FFFFFF?text=Audífonos+Bluetooth" alt="Audífonos Bluetooth">
-                    <h3>Audífonos Bluetooth</h3>
-                    <p class="product-price">$49.99</p>
-                    <button tabindex="0">Añadir al carrito</button>
-                </article>
-                <article class="product">
-                    <div class="promo-label">¡Oferta!</div>
-                    <img src="https://via.placeholder.com/300/FF33DA/FFFFFF?text=Smartwatch+X" alt="Smartwatch X">
-                    <h3>Smartwatch X</h3>
-                    <p class="product-price">$99.99</p>
-                    <button tabindex="0">Añadir al carrito</button>
-                </article>
-                <article class="product">
-                    <div class="promo-label">¡Oferta!</div>
-                    <img src="https://via.placeholder.com/300/DA33FF/FFFFFF?text=Tablet+Pro" alt="Tablet Pro">
-                    <h3>Tablet Pro</h3>
-                    <p class="product-price">$199.99</p>
-                    <button tabindex="0">Añadir al carrito</button>
-                </article>
-                <article class="product">
-                    <div class="promo-label">¡Oferta!</div>
-                    <img src="https://via.placeholder.com/300/33FFFF/FFFFFF?text=Auriculares+Noise+Cancelling" alt="Auriculares Noise Cancelling">
-                    <h3>Auriculares Noise Cancelling</h3>
-                    <p class="product-price">$79.99</p>
-                    <button tabindex="0">Añadir al carrito</button>
-                </article>
-            </section>
-        </div>
-    </main>
+    <div class="container" style="margin-top: 5rem;">
+        <section class="products" id="productsContainer">
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/FF5733/FFFFFF?text=Producto+1" alt="Producto 1"><h3>Producto 1</h3><p>$19.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/33FF57/FFFFFF?text=Producto+2" alt="Producto 2"><h3>Producto 2</h3><p>$29.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/3357FF/FFFFFF?text=Audífonos+Bluetooth" alt="Audífonos Bluetooth"><h3>Audífonos Bluetooth</h3><p>$49.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/FF33DA/FFFFFF?text=Smartwatch+X" alt="Smartwatch X"><h3>Smartwatch X</h3><p>$99.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/DA33FF/FFFFFF?text=Tablet+Pro" alt="Tablet Pro"><h3>Tablet Pro</h3><p>$199.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/33FFFF/FFFFFF?text=Auriculares+Noise+Cancelling" alt="Auriculares Noise Cancelling"><h3>Auriculares Noise Cancelling</h3><p>$79.99</p><button tabindex="0">Añadir al carrito</button></div>
+        </section>
+    </div>
 
     <footer>© 2025 FlashBuyX. Todos los derechos reservados.</footer>
 
     <script>
-        const productos = Array.from(document.querySelectorAll('article.product')).map(p => p.querySelector('h3').textContent);
+        const productos = Array.from(document.querySelectorAll('.product')).map(p => p.querySelector('h3').textContent);
         const input = document.getElementById('searchInput');
         const dd = document.getElementById('dropdown');
 
-        let usuarioActivo = null; 
-        let carrito = {}; 
+        let usuarioActivo = null;
+        let carrito = {};
 
         const loginRegisterButton = document.getElementById('loginRegisterButton');
         const userMenuContainer = document.getElementById('userMenuContainer');
@@ -657,15 +467,15 @@
             const key = usuarioActivo ? `historial_${usuarioActivo}` : 'historial_anonimo';
             let h = getHistorial();
             if (!h.includes(term)) {
-                h.unshift(term); 
-                if (h.length > 10) h.pop(); 
+                h.unshift(term);
+                if (h.length > 10) h.pop();
                 localStorage.setItem(key, JSON.stringify(h));
             }
         }
 
         function deleteHistorial(term) {
             const key = usuarioActivo ? `historial_${usuarioActivo}` : 'historial_anonimo';
-            let h = getHistorial().filter(t => t !== term); 
+            let h = getHistorial().filter(t => t !== term);
             localStorage.setItem(key, JSON.stringify(h));
             return h;
         }
@@ -698,16 +508,15 @@
                         const restante = deleteHistorial(e.target.dataset.term);
                         if (restante.length === 0) {
                             dd.style.display = 'none';
-                            input.value = ''; 
+                            input.value = '';
                         } else {
-                            renderDropdown(restante, 'Historial'); 
+                            renderDropdown(restante, 'Historial');
                         }
                     } else {
-                        // Acceso al texto del elemento dentro del span para sugerencias, o directamente si es historial
-                        const textContentElement = el.querySelector('.item.suggestion span') || el;
-                        input.value = textContentElement.textContent.trim().replace(/✕$/, ''); 
-                        filtrar(input.value.toLowerCase()); 
-                        saveHistorial(input.value); 
+                        const textContentElement = el.querySelector('.item.suggestion span') || el.firstChild;
+                        input.value = textContentElement.textContent.trim().replace(/✕$/, '');
+                        filtrar(input.value.toLowerCase());
+                        saveHistorial(input.value);
                         dd.style.display = 'none';
                     }
                 };
@@ -715,9 +524,9 @@
         }
 
         function filtrar(term) {
-            document.querySelectorAll('article.product').forEach(p => {
+            document.querySelectorAll('.product').forEach(p => {
                 const name = p.querySelector('h3').textContent.toLowerCase();
-                p.style.display = name.includes(term) ? 'block' : 'none'; 
+                p.style.display = name.includes(term) ? 'block' : 'none';
             });
         }
 
@@ -735,25 +544,25 @@
 
         document.addEventListener('click', e => {
             if (!e.target.closest('.search-bar')) {
-                dd.style.display = 'none'; 
+                dd.style.display = 'none';
             }
         });
 
         function buscar() {
             const term = input.value.trim();
-            if (!term) return; 
-            saveHistorial(term); 
-            filtrar(term.toLowerCase()); 
-            dd.style.display = 'none'; 
-            input.blur(); 
+            if (!term) return;
+            saveHistorial(term);
+            filtrar(term.toLowerCase());
+            dd.style.display = 'none';
+            input.blur();
         }
         document.getElementById('searchBtn').addEventListener('click', e => {
-            e.preventDefault(); 
+            e.preventDefault();
             buscar();
         });
         input.addEventListener('keydown', e => {
             if (e.key === 'Enter') {
-                e.preventDefault(); 
+                e.preventDefault();
                 buscar();
             }
         });
@@ -770,14 +579,14 @@
             if (carritoGuardado) {
                 carrito = JSON.parse(carritoGuardado);
             } else {
-                carrito = {}; 
+                carrito = {};
             }
-            renderizarCarrito(); 
+            renderizarCarrito();
         }
 
         function renderizarCarrito() {
             const contenidoCarrito = document.getElementById('contenidoCarrito');
-            contenidoCarrito.innerHTML = ''; 
+            contenidoCarrito.innerHTML = '';
 
             const keys = Object.keys(carrito);
             if (keys.length === 0) {
@@ -812,11 +621,11 @@
                 `;
 
                 div.querySelector('.eliminar').addEventListener('click', () => {
-                    div.style.opacity = '0'; 
+                    div.style.opacity = '0';
                     setTimeout(() => {
-                        delete carrito[nombre]; 
-                        guardarCarrito(); 
-                        renderizarCarrito(); 
+                        delete carrito[nombre];
+                        guardarCarrito();
+                        renderizarCarrito();
                     }, 300);
                 });
 
@@ -826,7 +635,7 @@
                         guardarCarrito();
                         renderizarCarrito();
                     } else {
-                        div.style.opacity = '0'; 
+                        div.style.opacity = '0';
                         setTimeout(() => {
                             delete carrito[nombre];
                             guardarCarrito();
@@ -846,12 +655,12 @@
         }
 
         // --- Lógica de añadir producto al carrito (ahora sin necesidad de login) ---
-        document.querySelectorAll('article.product button').forEach(btn => {
+        document.querySelectorAll('.product button').forEach(btn => {
             btn.addEventListener('click', () => {
-                const productArticle = btn.closest('article.product'); 
-                const nombre = productArticle.querySelector('h3').textContent;
-                const precioTexto = productArticle.querySelector('.product-price').textContent; 
-                const imgSrc = productArticle.querySelector('img').src;
+                const productDiv = btn.closest('.product');
+                const nombre = productDiv.querySelector('h3').textContent;
+                const precioTexto = productDiv.querySelector('p').textContent;
+                const imgSrc = productDiv.querySelector('img').src;
                 const precioUnitario = parseFloat(precioTexto.replace(/[^0-9.,]/g, '').replace(',', '.'));
 
                 if (carrito[nombre]) {
@@ -864,19 +673,19 @@
                     };
                 }
 
-                guardarCarrito(); 
-                renderizarCarrito(); 
+                guardarCarrito();
+                renderizarCarrito();
 
                 const cajita = document.getElementById('cajita-carrito');
                 cajita.style.right = '0';
-                userDropdown.classList.remove('show'); 
+                userDropdown.classList.remove('show');
             });
         });
 
         // --- Carrito lateral toggle ---
         btnAbrirCarrito.addEventListener('click', () => {
             cajitaCarrito.style.right = '0';
-            userDropdown.classList.remove('show'); 
+            userDropdown.classList.remove('show');
         });
 
         btnCerrarCarrito.addEventListener('click', () => {
@@ -889,33 +698,33 @@
 
             if (sesionData && sesionData.nombre) {
                 loginRegisterButton.style.display = 'none';
-                userMenuContainer.style.display = 'inline-block'; 
+                userMenuContainer.style.display = 'inline-block';
                 userNameButton.innerHTML = `
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
                     ${sesionData.nombre}
                 `;
-                
-                usuarioActivo = sesionData.nombre; 
+
+                usuarioActivo = sesionData.nombre;
 
             } else {
-                loginRegisterButton.style.display = 'flex'; 
+                loginRegisterButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
-                userDropdown.classList.remove('show'); 
-                usuarioActivo = null; 
+                userDropdown.classList.remove('show');
+                usuarioActivo = null;
             }
         }
 
         // --- Event listeners para el menú de cuenta ---
         userNameButton.addEventListener('click', (event) => {
-            event.stopPropagation(); 
-            userDropdown.classList.toggle('show'); 
-            cajitaCarrito.style.right = '-100%'; 
+            event.stopPropagation();
+            userDropdown.classList.toggle('show');
+            cajitaCarrito.style.right = '-100%';
         });
 
         logoutButton.addEventListener('click', (event) => {
-            event.preventDefault(); 
+            event.preventDefault();
             cerrarSesion();
         });
 
@@ -930,18 +739,18 @@
 
         function cerrarSesion() {
             if (usuarioActivo) {
-                guardarCarrito(); 
+                guardarCarrito();
             }
 
             localStorage.removeItem("sesionIniciada");
-            localStorage.removeItem("usuarioActivo"); 
+            localStorage.removeItem("usuarioActivo");
 
-            usuarioActivo = null; 
-            carrito = {}; 
-            
-            cargarCarrito(); 
+            usuarioActivo = null;
+            carrito = {};
 
-            updateAccountButton(); 
+            cargarCarrito();
+
+            updateAccountButton();
         }
 
         // --- Manejo global de la tecla Enter ---
@@ -952,10 +761,11 @@
                 // Trigger click for buttons
                 if (activeElement && activeElement.tagName === 'BUTTON') {
                     activeElement.click();
-                    event.preventDefault(); 
+                    event.preventDefault(); // Prevent default form submission if button is inside a form
                 }
-                
+
                 // Trigger click for links (<a> tags) that act as buttons
+                // Ensure they have tabindex="0" to be focusable
                 if (activeElement && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
                     activeElement.click();
                     event.preventDefault();
@@ -963,7 +773,7 @@
 
                 // Specific case for the logo image (if it's focused via tabindex)
                 if (activeElement && activeElement.tagName === 'IMG' && activeElement.alt === 'FlashBuyX Logo' && activeElement.hasAttribute('tabindex')) {
-                    activeElement.click(); 
+                    activeElement.click();
                     event.preventDefault();
                 }
 
@@ -978,23 +788,23 @@
         // --- Inicializar al cargar la página ---
         window.onload = () => {
             const sesionData = JSON.parse(localStorage.getItem('sesionIniciada'));
-            const usuarioActivoLS = localStorage.getItem('usuarioActivo'); 
+            const usuarioActivoLS = localStorage.getItem('usuarioActivo');
 
             if (sesionData && sesionData.nombre) {
                 usuarioActivo = sesionData.nombre;
             } else {
-                usuarioActivo = null; 
+                usuarioActivo = null;
             }
-            
-            updateAccountButton(); 
-            cargarCarrito(); 
+
+            updateAccountButton();
+            cargarCarrito();
         };
 
         // Escucha el evento 'storage' para reaccionar a cambios en localStorage desde Login.html
         window.addEventListener('storage', (event) => {
             if (event.key === 'sesionIniciada' || event.key === 'usuarioActivo') {
                 updateAccountButton();
-                cargarCarrito(); 
+                cargarCarrito();
             }
         });
 
