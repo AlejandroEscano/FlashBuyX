@@ -32,40 +32,29 @@
         header {
             background: #ffffff;
             display: flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            gap: 1rem;
             flex-wrap: wrap; /* Permite que los elementos salten de línea si no caben */
+            padding: 1rem 2rem;
             position: relative;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            align-items: center; /* Alinea verticalmente elementos en la fila principal */
         }
-        header img { height: 50px; }
+        header img { height: 50px; margin-right: 1rem; } /* Espacio a la derecha del logo */
 
-        /* NAVEGACIÓN */
-        nav ul { /* Agregado 'ul' al selector */
-            list-style: none; /* Quita los puntos de la lista */
-            display: flex; 
-            gap: 1rem; 
+        /* CONTENEDOR PRINCIPAL DEL HEADER (logo, búsqueda, botones de la derecha) */
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            width: 100%; /* Ocupa todo el ancho en la fila superior */
+            justify-content: space-between; /* Distribuye espacio entre logo, búsqueda y botones */
+            margin-bottom: 1rem; /* Espacio antes de la nav */
         }
-        nav ul li a { /* Agregado 'ul li' al selector */
-            color: #000000;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 0.5rem 0.75rem;
-            cursor: pointer;
-            white-space: nowrap; /* Evita que los enlaces de navegación se rompan */
-        }
-        nav ul li a:hover { /* Agregado 'ul li' al selector */
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-        }
-
         /* BARRA DE BÚSQUEDA */
         .search-bar {
             position: relative;
-            flex: 1 1 500px; /* Flex-grow, flex-shrink, base-width */
+            flex: 1; /* Ocupa el espacio restante */
             max-width: 600px;
             display: flex;
+            margin: 0 1rem; /* Margen a los lados de la barra de búsqueda */
         }
         .search-bar input {
             flex: 1;
@@ -101,7 +90,7 @@
             display: none;
             font-size: 0.9rem;
             border-radius: 0 0 4px 4px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra para que destaque */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .dropdown .heading {
             padding: 0.5rem 1rem;
@@ -167,7 +156,6 @@
 
         /* ICONOS DERECHA GENERAL */
         .header-right {
-            margin-left: auto;
             display: flex;
             gap: 1rem;
             align-items: center;
@@ -205,13 +193,10 @@
         }
 
         /* --- ESTILOS DEL MENÚ DE CUENTA DESPLEGABLE --- */
-        /* Contenedor del botón de usuario y su menú */
         .user-menu-container {
             position: relative;
             display: inline-block;
         }
-
-        /* Contenido del menú desplegable (las opciones) */
         .account-dropdown-content {
             display: none;
             position: absolute;
@@ -223,8 +208,6 @@
             right: 0;
             top: calc(100% + 5px);
         }
-
-        /* Estilo de los enlaces dentro del menú desplegable */
         .account-dropdown-content a {
             color: black;
             padding: 12px 16px;
@@ -233,12 +216,9 @@
             text-align: left;
             transition: background-color 0.2s ease;
         }
-
         .account-dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-
-        /* Bordes redondeados para el primer y último elemento del menú */
         .account-dropdown-content a:first-child {
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
@@ -247,31 +227,42 @@
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
         }
-
-        /* Clase para mostrar el menú (activada por JavaScript) */
         .account-dropdown-content.show {
             display: block;
         }
 
-        /* Select idioma - no en el HTML actual, pero por si acaso */
-        #lang-select {
-            background: white;
-            color: #e60000;
-            border: 2px solid #e60000;
-            border-radius: 999px;
-            padding: 0.3rem 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.9rem;
-            outline: none;
-            transition: background 0.2s, color 0.2s;
+        /* NAVEGACIÓN - AHORA DEBAJO DE LA BARRA PRINCIPAL DEL HEADER */
+        nav { 
+            flex-basis: 100%; /* Ocupa todo el ancho disponible */
+            display: flex; 
+            gap: 1rem; 
+            margin-top: 0.5rem; /* Pequeño espacio superior */
+            border-top: 1px solid #eee; /* Separador visual */
+            padding-top: 0.5rem;
+            justify-content: flex-start; /* Alinea los elementos a la izquierda */
         }
-        #lang-select:hover {
-            background: #ffe6e6;
+        nav ul { /* Agregado 'ul' al selector */
+            list-style: none; /* Quita los puntos de la lista */
+            display: flex; 
+            gap: 1rem; 
+            width: 100%; /* Asegura que la lista ocupe el espacio */
+            justify-content: center; /* Centra los elementos de navegación */
+        }
+        nav ul li a { /* Agregado 'ul li' al selector */
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        nav ul li a:hover { /* Agregado 'ul li' al selector */
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
         }
 
         /* CONTENIDO PRINCIPAL */
-        main .container { /* Agregado 'main' al selector */
+        main .container { 
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 2rem;
@@ -281,7 +272,7 @@
             grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
             gap: 2rem;
         }
-        .product { /* Ahora aplica a <article class="product"> */
+        article.product { /* Ahora aplica a <article class="product"> */
             position: relative;
             background: #fff;
             padding: 1.5rem;
@@ -290,7 +281,7 @@
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .product:hover {
+        article.product:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -305,19 +296,19 @@
             border-radius: 3px;
             text-transform: uppercase;
         }
-        .product img {
+        article.product img {
             width: 100%;
-            height: auto; /* Asegura que la imagen se escala proporcionalmente */
-            max-width: 100%; /* Asegura que la imagen no exceda el contenedor */
+            height: auto;
+            max-width: 100%;
             border-radius: 4px;
             margin-bottom: 1rem;
         }
-        .product h3 { margin-bottom: 0.5rem; }
-        .product .product-price { /* Nueva clase para el precio */
+        article.product h3 { margin-bottom: 0.5rem; }
+        article.product .product-price { 
             margin-bottom: 1rem;
             font-weight: 600;
         }
-        .product button {
+        article.product button {
             padding: 0.6rem 1.2rem;
             border: none;
             background: #000000;
@@ -327,7 +318,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .product button:hover {
+        article.product button:hover {
             background: #b30000;
         }
 
@@ -344,9 +335,9 @@
         #cajita-carrito {
             position: fixed;
             top: 0;
-            right: -100%; /* Empieza fuera de la pantalla */
+            right: -100%;
             width: 380px;
-            max-width: 100%; /* Asegura que no sea más ancho que la pantalla en móviles */
+            max-width: 100%;
             height: 100vh;
             background: white;
             box-shadow: -6px 0 20px rgb(0 0 0 / 0.1);
@@ -354,7 +345,7 @@
             box-sizing: border-box;
             transition: right 0.35s ease;
             z-index: 1000;
-            overflow-y: auto; /* Permite scroll si el contenido es largo */
+            overflow-y: auto;
         }
         #cajita-carrito header {
             display: flex;
@@ -392,83 +383,86 @@
                 flex-direction: column; /* Apila los elementos del header */
                 align-items: center; /* Centra los elementos apilados */
                 padding: 1rem; /* Reduce el padding lateral del header */
-                gap: 0.5rem; /* Reduce el espacio entre elementos apilados */
+            }
+
+            .header-top-row {
+                flex-direction: column; /* Apila los elementos en la fila superior */
+                margin-bottom: 0.5rem; /* Reduce el espacio */
             }
 
             header img {
+                margin-right: 0; /* Elimina el margen a la derecha del logo */
                 margin-bottom: 0.5rem; /* Espacio extra debajo del logo */
             }
-
-            nav ul { /* Selector adaptado */
-                flex-direction: column; /* Apila los enlaces de navegación */
-                width: 100%; /* Ocupa todo el ancho disponible */
-                text-align: center;
-                margin-bottom: 0.5rem; /* Espacio debajo de la navegación */
-                gap: 0; /* Elimina el gap entre elementos apilados */
-            }
-            nav ul li a { /* Selector adaptado */
-                padding: 0.75rem 0.5rem; /* Más padding vertical para tocar más fácil */
-                border-bottom: 1px solid #eee; /* Separador entre enlaces */
-                width: 100%; /* Asegura que cada enlace ocupe su propia línea */
-            }
-            nav ul li:last-child a { /* Selector adaptado */
-                border-bottom: none; /* Sin borde en el último elemento */
-            }
-
             .search-bar {
                 flex-basis: 100%; /* Ocupa todo el ancho en móviles */
-                max-width: 100%; /* Elimina el max-width para que sea flexible */
-                margin-top: 0.5rem; /* Espacio arriba de la barra de búsqueda */
+                max-width: 100%;
+                margin: 0.5rem 0; /* Margen vertical para la barra de búsqueda */
             }
             .search-bar input, .search-bar button {
-                padding: 0.8rem 1rem; /* Aumenta el padding para que sea más fácil tocar */
+                padding: 0.8rem 1rem;
             }
 
             .header-right {
-                margin-left: 0; /* Quita el margen automático para que no empuje los elementos */
                 width: 100%; /* Ocupa todo el ancho */
                 justify-content: space-around; /* Distribuye los botones equitativamente */
-                margin-top: 1rem; /* Espacio arriba de los botones de la derecha */
+                margin-top: 1rem;
             }
             .btn-rounded {
-                padding: 0.6rem 1rem; /* Más padding para los botones */
-                font-size: 1rem; /* Tamaño de fuente ligeramente más grande */
+                padding: 0.6rem 1rem;
+                font-size: 1rem;
             }
             .btn-rounded svg {
-                width: 22px; /* Íconos un poco más grandes */
+                width: 22px;
                 height: 22px;
             }
 
-            /* Alinea el menú de cuenta desplegable a la izquierda en móviles, o lo centra */
+            nav {
+                flex-direction: column; /* Apila los enlaces de navegación */
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+                border-top: none; /* Elimina el borde superior en móvil si no es necesario */
+            }
+            nav ul {
+                flex-direction: column; /* Apila los elementos de la lista */
+                width: 100%;
+                text-align: center;
+                gap: 0;
+            }
+            nav ul li a {
+                padding: 0.75rem 0.5rem;
+                border-bottom: 1px solid #eee;
+                width: 100%;
+            }
+            nav ul li:last-child a {
+                border-bottom: none;
+            }
+
             .account-dropdown-content {
-                right: auto; /* Desactiva la alineación a la derecha */
-                left: 50%; /* Intenta centrarlo */
-                transform: translateX(-50%); /* Ajuste para centrarlo perfectamente */
-                min-width: 90%; /* Ocupa casi todo el ancho de la pantalla */
-                top: calc(100% + 10px); /* Más espacio debajo del botón */
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                min-width: 90%;
+                top: calc(100% + 10px);
             }
 
-            main .container { /* Selector adaptado */
-                padding: 0 1rem; /* Reduce el padding lateral del contenedor principal */
-                margin-top: 2rem; /* Reduce el margen superior */
+            main .container {
+                padding: 0 1rem;
+                margin-top: 2rem;
             }
-
             .products {
-                grid-template-columns: 1fr; /* Una sola columna para los productos */
-                gap: 1.5rem; /* Reduce el espacio entre productos */
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
-
-            .product { /* Ahora aplica a <article class="product"> */
-                padding: 1rem; /* Reduce el padding interno del producto */
+            article.product {
+                padding: 1rem;
             }
-
             footer {
-                padding: 1.5rem 1rem; /* Ajusta el padding del footer */
-                font-size: 0.8rem; /* Tamaño de fuente más pequeño para el footer */
+                padding: 1.5rem 1rem;
+                font-size: 0.8rem;
             }
-
             #cajita-carrito {
-                width: 100%; /* El carrito lateral ocupa todo el ancho en móviles */
+                width: 100%;
             }
         }
 
@@ -478,22 +472,29 @@
         @media (min-width: 768px) and (max-width: 1023px) {
             header {
                 padding: 1rem 1.5rem;
-                gap: 0.8rem;
             }
-            nav ul { /* Selector adaptado */
-                gap: 0.8rem;
+            .header-top-row {
+                margin-bottom: 0.8rem;
             }
             .search-bar {
-                flex-basis: 400px; /* Tamaño más controlado para tabletas */
+                flex-basis: 400px;
+                margin: 0 0.8rem;
             }
             .header-right {
                 gap: 0.8rem;
             }
-            main .container { /* Selector adaptado */
+            nav {
+                margin-top: 0.8rem;
+                padding-top: 0.8rem;
+            }
+            nav ul {
+                gap: 0.8rem;
+            }
+            main .container {
                 padding: 0 1.5rem;
             }
             .products {
-                grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); /* 2 o 3 columnas */
+                grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
                 gap: 1.8rem;
             }
         }
@@ -502,7 +503,53 @@
 <body>
 
     <header>
-        <img src="https://i.imgur.com/luW5dMU.png" alt="FlashBuyX Logo" width="150" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
+        <div class="header-top-row">
+            <img src="https://i.imgur.com/luW5dMU.png" alt="FlashBuyX Logo" width="150" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
+
+            <div class="search-bar">
+                <label for="searchInput" class="sr-only">Buscar productos…</label>
+                <input id="searchInput" type="text" placeholder="Buscar productos…" autocomplete="off" aria-label="Buscar productos" />
+                <button id="searchBtn" aria-label="Buscar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#fff" viewBox="0 0 24 24">
+                        <circle cx="10" cy="10" r="6" stroke="#fff" stroke-width="2" fill="none"/>
+                        <line x1="14" y1="14" x2="20" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <div id="dropdown" class="dropdown"></div>
+            </div>
+
+            <div id="headerRightButtons" class="header-right">
+                
+                <a id="loginRegisterButton" href="Login.html" class="btn-rounded" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    Cuenta
+                </a>
+
+                <div id="userMenuContainer" class="user-menu-container" style="display:none;">
+                    <button id="userNameButton" class="btn-rounded" tabindex="0"> 
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        </button>
+                    <div id="userDropdown" class="account-dropdown-content">
+                        <a href="configuracion.html" tabindex="0">Configuración</a> 
+                        <a href="#" id="logoutButton" tabindex="0">Cerrar Sesión</a>
+                    </div>
+                </div>
+
+                <a id="abrirCarrito" class="btn-rounded" tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 
+                        0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14l.9-2h7.5
+                        c.8 0 1.5-.5 1.8-1.3l2.5-6.1c.1-.2.1-.4.1-.6 0-.6-.4-1-1-1H5.2
+                        L4.3 2H1v2h2l3.6 7.6-1.4 2.4C5 14.2 5.8 15 6.7 15h12v-2H7.2z"/>
+                    </svg>
+                    Carrito
+                </a>
+            </div>
+        </div>
 
         <nav>
             <ul>
@@ -512,48 +559,6 @@
                 <li><a href="#" tabindex="0">Ofertas</a></li>
             </ul>
         </nav>
-        <div class="search-bar">
-            <label for="searchInput" class="sr-only">Buscar productos…</label> <input id="searchInput" type="text" placeholder="Buscar productos…" autocomplete="off" aria-label="Buscar productos" />
-            <button id="searchBtn" aria-label="Buscar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#fff" viewBox="0 0 24 24">
-                    <circle cx="10" cy="10" r="6" stroke="#fff" stroke-width="2" fill="none"/>
-                    <line x1="14" y1="14" x2="20" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-            <div id="dropdown" class="dropdown"></div>
-        </div>
-
-        <div id="headerRightButtons" class="header-right">
-            
-            <a id="loginRegisterButton" href="Login.html" class="btn-rounded" tabindex="0">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-                Cuenta
-            </a>
-
-            <div id="userMenuContainer" class="user-menu-container" style="display:none;">
-                <button id="userNameButton" class="btn-rounded" tabindex="0"> 
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                    </button>
-                <div id="userDropdown" class="account-dropdown-content">
-                    <a href="configuracion.html" tabindex="0">Configuración</a> 
-                    <a href="#" id="logoutButton" tabindex="0">Cerrar Sesión</a>
-                </div>
-            </div>
-
-            <a id="abrirCarrito" class="btn-rounded" tabindex="0">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 
-                    0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14l.9-2h7.5
-                    c.8 0 1.5-.5 1.8-1.3l2.5-6.1c.1-.2.1-.4.1-.6 0-.6-.4-1-1-1H5.2
-                    L4.3 2H1v2h2l3.6 7.6-1.4 2.4C5 14.2 5.8 15 6.7 15h12v-2H7.2z"/>
-                </svg>
-                Carrito
-            </a>
-        </div>
     </header>
 
     <aside id="cajita-carrito">
@@ -564,9 +569,12 @@
         <div id="contenidoCarrito"><p style="text-align:center; color:#666; font-style:italic; margin-top:20px;">Tu carrito está vacío.</p></div>
     </aside>
 
-    <main> <div class="container" style="margin-top: 5rem;"> 
+    <main>
+        <div class="container" style="margin-top: 5rem;"> 
             <section class="products" id="productsContainer">
-                <h2 class="sr-only">Nuestros Productos Destacados</h2> <article class="product">
+                <h2 class="sr-only">Nuestros Productos Destacados</h2>
+                
+                <article class="product">
                     <div class="promo-label">¡Oferta!</div>
                     <img src="https://via.placeholder.com/300/FF5733/FFFFFF?text=Producto+1" alt="Imagen del Producto 1">
                     <h3>Producto 1</h3>
@@ -615,7 +623,7 @@
     <footer>© 2025 FlashBuyX. Todos los derechos reservados.</footer>
 
     <script>
-        const productos = Array.from(document.querySelectorAll('.product')).map(p => p.querySelector('h3').textContent);
+        const productos = Array.from(document.querySelectorAll('article.product')).map(p => p.querySelector('h3').textContent);
         const input = document.getElementById('searchInput');
         const dd = document.getElementById('dropdown');
 
@@ -702,8 +710,7 @@
         }
 
         function filtrar(term) {
-            // El selector sigue funcionando para <article class="product">
-            document.querySelectorAll('.product').forEach(p => {
+            document.querySelectorAll('article.product').forEach(p => {
                 const name = p.querySelector('h3').textContent.toLowerCase();
                 p.style.display = name.includes(term) ? 'block' : 'none'; 
             });
@@ -834,12 +841,11 @@
         }
 
         // --- Lógica de añadir producto al carrito (ahora sin necesidad de login) ---
-        // El selector sigue funcionando para <article class="product">
-        document.querySelectorAll('.product button').forEach(btn => {
+        document.querySelectorAll('article.product button').forEach(btn => {
             btn.addEventListener('click', () => {
-                const productArticle = btn.closest('.product'); // Usar .closest para encontrar el ancestro <article>
+                const productArticle = btn.closest('article.product'); 
                 const nombre = productArticle.querySelector('h3').textContent;
-                const precioTexto = productArticle.querySelector('.product-price').textContent; // Selector actualizado
+                const precioTexto = productArticle.querySelector('.product-price').textContent; 
                 const imgSrc = productArticle.querySelector('img').src;
                 const precioUnitario = parseFloat(precioTexto.replace(/[^0-9.,]/g, '').replace(',', '.'));
 
@@ -941,11 +947,10 @@
                 // Trigger click for buttons
                 if (activeElement && activeElement.tagName === 'BUTTON') {
                     activeElement.click();
-                    event.preventDefault(); // Prevent default form submission if button is inside a form
+                    event.preventDefault(); 
                 }
                 
                 // Trigger click for links (<a> tags) that act as buttons
-                // Ensure they have tabindex="0" to be focusable
                 if (activeElement && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
                     activeElement.click();
                     event.preventDefault();
