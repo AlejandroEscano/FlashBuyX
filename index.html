@@ -58,13 +58,14 @@
         }
         .search-bar input {
             flex: 1;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1rem; /* Ajustado para uniformidad */
             border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
             font-size: 1rem;
+            height: 40px; /* Altura fija para consistencia */
         }
         .search-bar button {
-            padding: 0.5rem 1.5rem;
+            padding: 0.6rem 1.5rem; /* Ajustado para uniformidad */
             background: #ff0101;
             color: #fff;
             border: none;
@@ -72,6 +73,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
+            height: 40px; /* Altura fija para consistencia */
         }
         .search-bar button:hover {
             background: #b30000;
@@ -170,13 +172,14 @@
             color: #000000;
             font-weight: bold;
             border: none;
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1rem; /* Ajustado para uniformidad */
             border-radius: 999px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem; /* Ligeramente aumentado */
             text-decoration: none;
             transition: background 0.2s;
             white-space: nowrap;
+            height: 40px; /* Altura fija para consistencia */
         }
         .btn-rounded:hover {
             background: #cc0000;
@@ -401,6 +404,7 @@
             }
             .search-bar input, .search-bar button {
                 padding: 0.8rem 1rem;
+                height: auto; /* Permite que el padding determine la altura */
             }
 
             .header-right {
@@ -411,6 +415,7 @@
             .btn-rounded {
                 padding: 0.6rem 1rem;
                 font-size: 1rem;
+                height: auto; /* Permite que el padding determine la altura */
             }
             .btn-rounded svg {
                 width: 22px;
