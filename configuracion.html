@@ -4,496 +4,1052 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Configuración de Cuenta - FlashBuyX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Variables CSS para consistencia de colores y fuentes */
+        :root {
+            --primary-color: #ff0101; /* Rojo de FlashBuyX */
+            --primary-light: #ff3333; /* Rojo más claro para hover */
+            --secondary-color: #4a5568; /* Gris oscuro para texto y botones secundarios */
+            --secondary-light: #718096; /* Gris medio */
+            --text-color-dark: #2d3748; /* Texto casi negro */
+            --text-color-medium: #4a5568; /* Texto gris oscuro */
+            --text-color-light: #718096; /* Gris claro para texto secundario */
+            --border-color: #e2e8f0; /* Gris muy claro para bordes */
+            --bg-color-light: #f7fafc; /* Fondo muy claro */
+            --success-color: #48bb78; /* Verde para éxito */
+            --error-color: #e53e3e; /* Rojo para error */
+            --info-color: #3182ce; /* Azul para información */
+            --warning-color: #dd6b20; /* Naranja para advertencia */
+            --spacing-unit: 1rem; /* Unidad base para espaciado */
+        }
+
+        /* Estilos Base (Mobile First) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alineación superior para mejor visualización de scroll en móvil */
+            padding: var(--spacing-unit);
+            box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: calc(var(--spacing-unit) * 1.5); /* 1.5rem */
+            width: 100%;
+            max-width: 500px; /* Limite de ancho para que no se extienda demasiado en pantallas grandes */
+            margin-top: var(--spacing-unit); /* Espacio arriba del contenedor */
+            position: relative;
+        }
+
+        #backArrow {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transition: background 0.3s, transform 0.2s;
+            z-index: 10;
+        }
+        #backArrow:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+        #backArrow svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--primary-color);
+            transition: fill 0.3s;
+        }
+        #backArrow:hover svg {
+            fill: white;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color-dark);
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            font-size: 1.8rem; /* Tamaño de fuente responsivo */
+        }
+
+        .section {
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            padding: var(--spacing-unit);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color-light);
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-unit);
+            color: var(--text-color-medium);
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-unit);
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color-medium);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text-color-dark);
+            background-color: #fff;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 1, 1, 0.1);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input-wrapper input {
+            padding-right: 2.5rem; /* Espacio para el icono */
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--secondary-light);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor; /* Usa el color del padre (toggle-password) */
+        }
+
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: var(--secondary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--info-color);
+            text-decoration: underline;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            width: auto;
+            margin-top: 1rem;
+        }
+        .btn-link:hover {
+            color: var(--primary-color);
+        }
+
+        .message {
+            margin-top: var(--spacing-unit);
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            text-align: left;
+        }
+        .message.success {
+            background-color: rgba(72, 187, 120, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        .message.error {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+        .message.info {
+            background-color: rgba(49, 130, 206, 0.1);
+            color: var(--info-color);
+            border: 1px solid var(--info-color);
+        }
+        .message.warning {
+            background-color: rgba(221, 107, 32, 0.1);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .container {
-            background-color: #ffffff;
-            padding: 30px 40px;
+        .dialog-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .dialog-box {
+            background: white;
+            padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             text-align: center;
-            position: relative;
+            max-width: 90%;
+            width: 400px;
         }
-        h2 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 2em;
-            font-weight: 600;
+        .dialog-box p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: var(--text-color-dark);
         }
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
+        .dialog-actions button {
+            width: 48%; /* Para botones en fila */
+            margin: 0.5rem 1%;
         }
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
+
+        /* Secciones ocultas por defecto */
+        .hidden-section {
+            display: none;
         }
-        .input-group input[type="text"],
-        .input-group input[type="password"],
-        .input-group input[type="email"] {
-            width: calc(100% - 20px);
-            padding: 12px;
-            border: 1px solid #ddd;
+
+        /* Estado de error para inputs */
+        input.error {
+            border-color: var(--error-color);
+        }
+
+        /* Estilos para campos de usuario en la sección de seguridad */
+        #currentUsernameDisplay {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background-color: var(--bg-color-light);
             border-radius: 6px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
+            border: 1px solid var(--border-color);
+            text-align: center;
         }
-        .input-group input[type="text"]:focus,
-        .input-group input[type="password"]:focus,
-        .input-group input[type="email"]:focus {
-            border-color: #ff4d4d;
-            outline: none;
-            box-shadow: 0 0 5px rgba(255, 77, 77, 0.3);
+        #changeUsernameForm .form-group input {
+            text-align: center;
         }
-        .current-username {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #ff0101;
-            margin-bottom: 25px;
+
+        /* Media Queries */
+        /* Tabletas y escritorios pequeños */
+        @media (min-width: 768px) {
+            body {
+                padding: calc(var(--spacing-unit) * 2);
+                align-items: center; /* Centrar verticalmente en pantallas más grandes */
+            }
+            .container {
+                padding: calc(var(--spacing-unit) * 2.5); /* Más padding en pantallas más grandes */
+                margin-top: 0; /* No se necesita margen superior si está centrado */
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            input[type="text"],
+            input[type="email"],
+            input[type="password"] {
+                padding: 1rem;
+            }
+            button {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+            .message {
+                font-size: 1rem;
+            }
         }
-        .btn {
-            background-color: #ff0101;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .btn:hover {
-            background-color: #cc0000;
-            transform: translateY(-2px);
-        }
-        .btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            margin-top: 10px;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        .btn-delete {
-            background-color: #dc3545;
-            margin-top: 25px;
-        }
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
-        .message {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            display: none;
-        }
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .message.warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            color: #666;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .back-button:hover {
-            color: #000;
-        }
-        #verificationSection {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            display: none;
-        }
-        #verificationSection p {
-            margin-bottom: 15px;
-            color: #666;
-        }
-        #passwordChangeForm {
-            display: none;
-            margin-top: 20px;
-            text-align: left;
+
+        /* Escritorios más grandes */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 600px;
+            }
+            h2 {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="back-button" onclick="history.back()">&larr; Volver</button>
-        <h2>Configuración de Cuenta</h2>
-        <div class="input-group">
-            <label for="currentUsernameDisplay">Usuario Actual:</label>
-            <span id="currentUsernameDisplay" class="current-username">Cargando...</span>
-        </div>
-        <div class="input-group">
-            <label for="currentUserEmail">Correo Electrónico (para verificación):</label>
-            <input type="email" id="currentUserEmail" placeholder="Tu correo electrónico"> 
-            <small style="color:#888;">Este correo se usará para enviar códigos de verificación.</small>
+        <div id="backArrow" onclick="goBack()" tabindex="0">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </div>
 
-        <div class="input-group">
-            <label for="newUsername">Cambiar Nombre de Usuario:</label>
-            <input type="text" id="newUsername" placeholder="Nuevo nombre de usuario" />
-        </div>
-        <button class="btn" id="solicitarUsernameBtn" onclick="solicitarCambio('username')">Solicitar Cambio de Nombre de Usuario</button>
+        <h2 id="mainTitle">Configuración de Cuenta</h2>
 
-        <div style="margin-top: 30px;">
-            <button class="btn" id="btnMostrarFormPass" onclick="mostrarFormularioPassword()">Restablecer Contraseña</button>
-        </div>
+        <div id="messageDisplay" class="message"></div>
 
-        <form id="passwordChangeForm" onsubmit="event.preventDefault(); solicitarCambio('password');">
-            <div class="input-group">
+        <section id="userProfileSection" class="section">
+            <h3 class="section-title">Información de Perfil</h3>
+            <div class="form-group">
+                <label for="displayNombre">Nombre:</label>
+                <input type="text" id="displayNombre" readonly>
+            </div>
+            <div class="form-group">
+                <label for="displayApellido">Apellido:</label>
+                <input type="text" id="displayApellido" readonly>
+            </div>
+            <div class="form-group">
+                <label for="displayEmail">Correo Electrónico:</label>
+                <input type="email" id="displayEmail" readonly>
+            </div>
+            <button class="btn-primary" onclick="showProfileEditSection()" tabindex="0">Editar Perfil</button>
+        </section>
+
+        <section id="userProfileEditSection" class="section hidden-section">
+            <h3 class="section-title">Editar Información de Perfil</h3>
+            <div class="form-group">
+                <label for="editNombre">Nombre:</label>
+                <input type="text" id="editNombre">
+            </div>
+            <div class="form-group">
+                <label for="editApellido">Apellido:</label>
+                <input type="text" id="editApellido">
+            </div>
+            <div class="form-group">
+                <label for="editEmail">Correo Electrónico:</label>
+                <input type="email" id="editEmail">
+            </div>
+            <button class="btn-primary" onclick="saveProfileChanges()" tabindex="0">Guardar Cambios</button>
+            <button class="btn-secondary" onclick="cancelProfileEdit()" tabindex="0">Cancelar</button>
+        </section>
+
+        <section id="securitySection" class="section">
+            <h3 class="section-title">Seguridad de la Cuenta</h3>
+            <div class="form-group">
+                <label>Usuario actual:</label>
+                <div id="currentUsernameDisplay"></div>
+            </div>
+            <button class="btn-primary" onclick="showChangePasswordFlow()" tabindex="0">Cambiar Contraseña</button>
+            <button class="btn-secondary" onclick="showChangeUsernameFlow()" tabindex="0">Cambiar Nombre de Usuario</button>
+            <button class="btn-secondary" onclick="iniciarVerificacionCorreo()" tabindex="0">Verificar Correo</button>
+        </section>
+
+        <section id="changePasswordSection" class="section hidden-section">
+            <h3 class="section-title">Cambiar Contraseña</h3>
+            <div class="form-group password-input-wrapper">
+                <label for="currentPassword">Contraseña Actual:</label>
+                <input type="password" id="currentPassword" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility('currentPassword')" tabindex="0">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+            <div class="form-group password-input-wrapper">
                 <label for="newPassword">Nueva Contraseña:</label>
-                <input type="password" id="newPassword" placeholder="Nueva contraseña (mínimo 8 caracteres)" />
+                <input type="password" id="newPassword" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')" tabindex="0">
+                    <i class="fas fa-eye"></i>
+                </span>
             </div>
-            <div class="input-group">
-                <label for="confirmPassword">Confirmar Contraseña:</label>
-                <input type="password" id="confirmPassword" placeholder="Confirmar nueva contraseña" />
+            <div class="form-group password-input-wrapper">
+                <label for="confirmNewPassword">Confirmar Nueva Contraseña:</label>
+                <input type="password" id="confirmNewPassword" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility('confirmNewPassword')" tabindex="0">
+                    <i class="fas fa-eye"></i>
+                </span>
             </div>
-            <button class="btn" type="submit" id="solicitarPasswordBtn">Enviar Código y Cambiar Contraseña</button>
-        </form>
+            <button class="btn-primary" onclick="changePassword()" tabindex="0">Cambiar Contraseña</button>
+            <button class="btn-secondary" onclick="cancelChangePassword()" tabindex="0">Cancelar</button>
+        </section>
 
-        <div id="verificationSection">
-            <p>Se ha enviado un código de verificación a tu correo. Por favor, introdúcelo aquí:</p>
-            <div class="input-group">
-                <label for="verificationCodeInput">Código de Verificación:</label>
-                <input type="text" id="verificationCodeInput" placeholder="Introduce el código" />
+        <section id="verificationEmailSection" class="section hidden-section">
+            <h3 class="section-title">Verificar Correo Electrónico</h3>
+            <p>Se ha enviado un código de verificación a su correo electrónico. Por favor, ingréselo a continuación:</p>
+            <div class="form-group">
+                <label for="emailVerificationCode">Código de Verificación:</label>
+                <input type="text" id="emailVerificationCode" maxlength="6" required>
             </div>
-            <button class="btn" onclick="verificarCodigo()">Verificar Código</button>
-            <button class="btn btn-secondary" onclick="cancelarVerificacion()">Cancelar</button>
+            <button class="btn-primary" onclick="verificarCodigoCorreo()" tabindex="0">Verificar Código</button>
+            <button class="btn-secondary" onclick="cancelarVerificacionCorreo()" tabindex="0">Cancelar</button>
+        </section>
+
+        <section id="verificationUsernameSection" class="section hidden-section">
+            <h3 class="section-title">Verificar Cambio de Nombre de Usuario</h3>
+            <p>Se ha enviado un código de verificación al correo electrónico asociado a su cuenta. Por favor, ingréselo a continuación para confirmar el cambio de nombre de usuario:</p>
+            <div class="form-group">
+                <label for="usernameVerificationCode">Código de Verificación:</label>
+                <input type="text" id="usernameVerificationCode" maxlength="6" required>
+            </div>
+            <button class="btn-primary" onclick="verificarCodigoUsername()" tabindex="0">Verificar Código</button>
+            <button class="btn-secondary" onclick="cancelarVerificacionUsername()" tabindex="0">Cancelar</button>
+        </section>
+
+        <section id="changeUsernameSection" class="section hidden-section">
+            <h3 class="section-title">Cambiar Nombre de Usuario</h3>
+            <div class="form-group">
+                <label for="newUsername">Nuevo Nombre de Usuario:</label>
+                <input type="text" id="newUsername" placeholder="Ingrese nuevo nombre de usuario" required>
+            </div>
+            <button class="btn-primary" onclick="iniciarCambioUsername()" tabindex="0">Guardar Nuevo Nombre de Usuario</button>
+            <button class="btn-secondary" onclick="cancelChangeUsername()" tabindex="0">Cancelar</button>
+        </section>
+
+
+        <section id="notificationsSection" class="section">
+            <h3 class="section-title">Notificaciones</h3>
+            <div class="form-group">
+                <input type="checkbox" id="emailNotifications">
+                <label for="emailNotifications">Recibir notificaciones por correo electrónico</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="smsNotifications">
+                <label for="smsNotifications">Recibir notificaciones por SMS</label>
+            </div>
+            <button class="btn-primary" onclick="saveNotificationSettings()" tabindex="0">Guardar Ajustes de Notificación</button>
+        </section>
+
+        <section id="accountManagementSection" class="section">
+            <h3 class="section-title">Gestión de Cuenta</h3>
+            <button class="btn-secondary" onclick="cerrarSesion()" tabindex="0">Cerrar Sesión</button>
+            <button class="btn-primary" style="background-color: var(--error-color);" onclick="eliminarCuenta()" tabindex="0">Eliminar Cuenta</button>
+        </section>
+
+        <div id="confirmDialog" class="dialog-overlay">
+            <div class="dialog-box">
+                <p id="dialogMessage"></p>
+                <div class="dialog-actions">
+                    <button class="btn-secondary" id="dialogCancelBtn" tabindex="0">Cancelar</button>
+                    <button class="btn-primary" id="dialogConfirmBtn" tabindex="0">Confirmar</button>
+                </div>
+            </div>
         </div>
-
-        <button class="btn btn-secondary" onclick="cerrarSesion()">Cerrar Sesión</button>
-        <button class="btn btn-delete" onclick="eliminarCuenta()">Eliminar Cuenta</button>
-
-        <div id="messageBox" class="message"></div>
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
+        // Inicializa EmailJS con tu Public Key
+        // Asegúrate de que "DC68SiTk8JF2M4x_a" sea tu Public Key real de EmailJS
         (function() {
-            // ** TU Public Key (User ID) de EmailJS **
-            emailjs.init('DC68SiTk8JF2M4x_a'); 
+            try {
+                emailjs.init("DC68SiTk8JF2M4x_a");
+                console.log("EmailJS inicializado correctamente con Public Key: DC68SiTk8JF2M4x_a");
+            } catch (e) {
+                console.error("Error al inicializar EmailJS. Detalles:", e);
+            }
         })();
     </script>
     <script>
-        const currentUsernameDisplay = document.getElementById('currentUsernameDisplay');
-        const currentUserEmailInput = document.getElementById('currentUserEmail');
-        const newUsernameInput = document.getElementById('newUsername');
-        const newPasswordInput = document.getElementById('newPassword');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const verificationSection = document.getElementById('verificationSection');
-        const verificationCodeInput = document.getElementById('verificationCodeInput');
-        const messageBox = document.getElementById('messageBox');
-        const passwordChangeForm = document.getElementById('passwordChangeForm');
-        const btnMostrarFormPass = document.getElementById('btnMostrarFormPass');
+        const MIN_PASSWORD_LENGTH = 8;
+        let usuarioActivo = localStorage.getItem("usuarioActivo");
+        let usuariosRegistrados = getUsuariosRegistrados();
+        let emailParaVerificacion = ''; // Usado para el flujo de verificación de correo
+        let usernameParaCambio = ''; // Usado para el flujo de cambio de nombre de usuario
 
-        const solicitarUsernameBtn = document.getElementById('solicitarUsernameBtn');
-        const solicitarPasswordBtn = document.getElementById('solicitarPasswordBtn');
+        const EMAILJS_SERVICE_ID = "service_kz355xk"; // Asegúrate de que este sea tu Service ID
+        const EMAILJS_TEMPLATE_CODE_VERIFICATION_ID = "template_8tu2f1r"; // Plantilla para códigos de verificación
+        const EMAILJS_TEMPLATE_EMAIL_CHANGE_CONFIRM_ID = "template_yq4j08i"; // Plantilla para confirmación de cambio de email
 
-        let usuarioActivo = null;
-        let usuariosRegistrados = JSON.parse(localStorage.getItem('usuariosRegistrados')) || {};
+        // Cargar datos del usuario al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDatosUsuario();
+            // Inicializar opciones de notificación (ejemplo)
+            document.getElementById('emailNotifications').checked = true;
+            document.getElementById('smsNotifications').checked = false;
+        });
 
-        let pendingChange = null;
+        // Rutas SVG para los iconos de ojo (copiadas de Login.html para consistencia)
+        const EYE_OPEN_SVG_PATH = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
+
+        function getUsuariosRegistrados() {
+            try {
+                const usuarios = localStorage.getItem("usuariosRegistrados");
+                return usuarios ? JSON.parse(usuarios) : {};
+            } catch (e) {
+                console.error("Error al leer usuariosRegistrados de localStorage:", e);
+                return {};
+            }
+        }
+
+        function guardarUsuariosRegistrados(usuarios) {
+            try {
+                localStorage.setItem("usuariosRegistrados", JSON.stringify(usuarios));
+            } catch (e) {
+                console.error("Error al guardar usuariosRegistrados en localStorage:", e);
+            }
+        }
 
         function showMessage(msg, type) {
-            messageBox.textContent = msg;
-            messageBox.className = `message ${type}`;
-            messageBox.style.display = 'block';
+            const msgDisplay = document.getElementById('messageDisplay');
+            msgDisplay.textContent = msg;
+            msgDisplay.className = `message ${type}`;
+            msgDisplay.style.display = 'block';
             setTimeout(() => {
-                messageBox.style.display = 'none';
+                msgDisplay.style.display = 'none';
             }, 5000);
         }
 
-        window.onload = () => {
-            const sesionIniciada = JSON.parse(localStorage.getItem('sesionIniciada'));
-            if (sesionIniciada && sesionIniciada.correo) {
-                usuarioActivo = sesionIniciada.correo;
+        function hideAllSections() {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden-section');
+            });
+            document.getElementById('mainTitle').textContent = "Configuración de Cuenta"; // Reset title
+            document.getElementById('messageDisplay').style.display = 'none'; // Ocultar mensajes al cambiar de sección
+        }
+
+        function cargarDatosUsuario() {
+            if (usuarioActivo && usuariosRegistrados[usuarioActivo]) {
+                const usuario = usuariosRegistrados[usuarioActivo];
+                document.getElementById('displayNombre').value = usuario.nombre;
+                document.getElementById('displayApellido').value = usuario.apellido;
+                document.getElementById('displayEmail').value = usuario.email;
+                document.getElementById('currentUsernameDisplay').textContent = usuario.nombre || usuario.email; // Muestra nombre o email como usuario actual
             } else {
-                alert('No hay sesión iniciada. Redirigiendo a la página de inicio de sesión.');
-                window.location.href = 'Login.html';
+                showMessage("No hay sesión activa. Por favor, inicie sesión.", "error");
+                setTimeout(() => window.location.href = 'Login.html', 2000);
+            }
+        }
+
+        function showProfileEditSection() {
+            hideAllSections();
+            document.getElementById('userProfileEditSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Editar Perfil";
+
+            // Precargar valores actuales para edición
+            document.getElementById('editNombre').value = document.getElementById('displayNombre').value;
+            document.getElementById('editApellido').value = document.getElementById('displayApellido').value;
+            document.getElementById('editEmail').value = document.getElementById('displayEmail').value;
+        }
+
+        function cancelProfileEdit() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            cargarDatosUsuario(); // Recargar para asegurar que los campos muestren los datos originales
+            showMessage('Edición de perfil cancelada.', 'info');
+        }
+
+
+        function saveProfileChanges() {
+            const editNombre = document.getElementById('editNombre').value.trim();
+            const editApellido = document.getElementById('editApellido').value.trim();
+            const editEmail = document.getElementById('editEmail').value.trim();
+
+            if (!editNombre || !editApellido || !editEmail) {
+                showMessage("Todos los campos son obligatorios.", "error");
                 return;
             }
 
-            const userData = usuariosRegistrados[usuarioActivo];
-            if (userData) {
-                currentUsernameDisplay.textContent = userData.nombre || usuarioActivo;
-                newUsernameInput.value = userData.nombre || "";
+            // Validar formato de correo
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editEmail)) {
+                showMessage("Por favor, ingrese un formato de correo electrónico válido.", "error");
+                return;
+            }
 
-                if (userData.email) {
-                    currentUserEmailInput.value = userData.email;
-                } else {
-                    showMessage('Advertencia: Tu cuenta no tiene correo registrado. Por favor, introduce un correo válido para habilitar las funciones de verificación.', 'warning');
-                    currentUserEmailInput.value = '';
-                }
+            // Verificar si el nuevo correo ya existe y es diferente al actual
+            if (editEmail !== usuarioActivo && usuariosRegistrados[editEmail]) {
+                showMessage("Este correo electrónico ya está en uso por otra cuenta.", "error");
+                return;
+            }
+
+            // Si el email ha cambiado, inicia flujo de verificación de email
+            if (editEmail !== usuarioActivo) {
+                emailParaVerificacion = editEmail; // Almacena el nuevo email temporalmente
+                iniciarCambioCorreo(editEmail);
             } else {
-                alert('Error: Datos de usuario no encontrados. Redirigiendo a la página de inicio de sesión.');
-                window.location.href = 'Login.html';
-            }
-
-            toggleButtonsBasedOnEmail();
-        };
-
-        function toggleButtonsBasedOnEmail() {
-            const currentEmail = currentUserEmailInput.value.trim();
-            const isValidEmail = /\S+@\S+\.\S+/.test(currentEmail);
-            
-            solicitarUsernameBtn.disabled = !isValidEmail;
-            solicitarPasswordBtn.disabled = !isValidEmail;
-            btnMostrarFormPass.disabled = !isValidEmail;
-        }
-
-        currentUserEmailInput.addEventListener('input', toggleButtonsBasedOnEmail);
-
-        function mostrarFormularioPassword() {
-            if (passwordChangeForm.style.display === 'none' || passwordChangeForm.style.display === '') {
-                passwordChangeForm.style.display = 'block';
-                btnMostrarFormPass.style.display = 'none';
-            }
-        }
-
-        function generateCode() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
-        }
-
-        async function sendVerificationEmail(userName, userEmail, code) {
-            // ** TU Service ID de EmailJS **
-            const serviceID = 'service_kz355xk'; 
-            // ** TU Template ID de EmailJS **
-            const templateID = 'template_o3n0xqw'; 
-
-            const templateParams = {
-                user_name: userName,
-                user_email: userEmail, 
-                code: code,
-            };
-
-            // --- LÍNEAS DE DEBUGGING ---
-            console.log("--- DEBUGGING EMAILJS SEND ---");
-            console.log("Service ID (tu clave del servicio):", serviceID);
-            console.log("Template ID (tu clave de la plantilla):", templateID);
-            console.log("Parámetro user_name enviado:", templateParams.user_name);
-            console.log("Parámetro user_email (DESTINATARIO) enviado:", templateParams.user_email);
-            console.log("Parámetro code enviado:", templateParams.code);
-            console.log("Tipo de user_email:", typeof templateParams.user_email);
-            console.log("--- FIN DEBUGGING ---");
-            // --- FIN DE LÍNEAS DE DEBUGGING ---
-
-            try {
-                const response = await emailjs.send(serviceID, templateID, templateParams);
-                console.log('Correo enviado con éxito:', response);
-                showMessage('Se ha enviado un código de verificación a tu correo. Revísalo (también la carpeta de spam).', 'success');
-                return true;
-            } catch (error) {
-                console.error('Error al enviar el correo:', error);
-                if (error.status === 422 && error.text && error.text.includes('The recipients address is empty')) {
-                    showMessage('Error de envío: La dirección de correo del destinatario está vacía o es inválida. Revisa el correo en el campo y la configuración de tu servicio en EmailJS.', 'error');
-                } else if (error.status === 400) {
-                    showMessage('Error de envío: Verifica si tus IDs de EmailJS son correctos o si tu plantilla en EmailJS es válida.', 'error');
-                } else if (error.status === 401) {
-                    showMessage('Error de autorización: Tu Public Key es incorrecta o tu servicio de correo no está conectado/autorizado en EmailJS.', 'error');
-                } else if (error.status === 403) {
-                    showMessage('Acceso denegado: Podrías haber alcanzado el límite de envío de EmailJS o hay un problema con tu cuenta de correo.', 'error');
-                } else {
-                    showMessage('Error al enviar el código de verificación. Por favor, intenta de nuevo más tarde. (Error desconocido)', 'error');
+                // Si el email no cambió o es el mismo, guarda los demás cambios directamente
+                if (usuariosRegistrados[usuarioActivo]) {
+                    usuariosRegistrados[usuarioActivo].nombre = editNombre;
+                    usuariosRegistrados[usuarioActivo].apellido = editApellido;
+                    guardarUsuariosRegistrados(usuariosRegistrados);
+                    cargarDatosUsuario(); // Actualizar UI con nuevos datos
+                    showMessage("Cambios de perfil guardados con éxito.", "success");
+                    cancelProfileEdit(); // Vuelve a la vista principal
                 }
+            }
+        }
+
+
+        // Funciones de seguridad
+        function showChangePasswordFlow() {
+            hideAllSections();
+            document.getElementById('changePasswordSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Cambiar Contraseña";
+            // Limpiar campos de contraseña al mostrar la sección
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+        }
+
+        function cancelChangePassword() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            showMessage('Cambio de contraseña cancelado.', 'info');
+        }
+
+        function validarContrasena(password) {
+            return password.length >= MIN_PASSWORD_LENGTH;
+        }
+
+        function marcarError(input, cond) {
+            if (cond) {
+                input.classList.add("error");
+                return true;
+            } else {
+                input.classList.remove("error");
                 return false;
             }
         }
 
-        async function solicitarCambio(type) {
-            const userEmail = currentUserEmailInput.value.trim(); 
-            
-            if (!userEmail || !/\S+@\S+\.\S+/.test(userEmail)) {
-                showMessage('Por favor, ingresa un correo electrónico válido en el campo "Correo Electrónico (para verificación)".', 'error');
-                console.error("Error: Correo electrónico del usuario vacío o inválido en el campo de entrada:", userEmail);
-                return;
-            }
-
-            let valueToChange = '';
-            let isValid = true;
-
-            if (type === 'username') {
-                valueToChange = newUsernameInput.value.trim();
-                if (!valueToChange) {
-                    showMessage('El nuevo nombre de usuario no puede estar vacío.', 'error');
-                    isValid = false;
-                } else if (usuariosRegistrados[usuarioActivo] && valueToChange === usuariosRegistrados[usuarioActivo].nombre) {
-                    showMessage('El nuevo nombre de usuario es igual al actual. No hay cambio.', 'warning');
-                    isValid = false;
-                }
-            } else if (type === 'password') {
-                const nuevaPassword = newPasswordInput.value;
-                const confirmarPassword = confirmPasswordInput.value;
-
-                if (!nuevaPassword || !confirmarPassword) {
-                    showMessage('Todos los campos de contraseña son obligatorios.', 'error');
-                    isValid = false;
-                } else if (nuevaPassword !== confirmarPassword) {
-                    showMessage('Las contraseñas no coinciden.', 'error');
-                    isValid = false;
-                } else if (nuevaPassword.length < 8) {
-                    showMessage('La contraseña debe tener al menos 8 caracteres.', 'error');
-                    isValid = false;
-                }
-                valueToChange = nuevaPassword;
-            }
-
-            if (!isValid) return;
-
-            const code = generateCode();
-            const expirationTime = Date.now() + 5 * 60 * 1000; // 5 minutos
-
-            const emailSent = await sendVerificationEmail(currentUsernameDisplay.textContent, userEmail, code);
-            if (!emailSent) {
-                return; 
-            }
-
-            pendingChange = {
-                type: type,
-                value: valueToChange,
-                code: code,
-                expiration: expirationTime,
-                user: usuarioActivo,
-                email: userEmail 
-            };
-
-            verificationSection.style.display = 'block';
-            verificationCodeInput.value = '';
-            solicitarUsernameBtn.disabled = true;
-            solicitarPasswordBtn.disabled = true;
-            btnMostrarFormPass.disabled = true;
-        }
-
-        function verificarCodigo() {
-            const enteredCode = verificationCodeInput.value.trim();
-
-            if (!pendingChange || pendingChange.user !== usuarioActivo) {
-                showMessage('No hay solicitud pendiente o no corresponde a tu sesión.', 'error');
-                cancelarVerificacion();
-                return;
-            }
-
-            if (Date.now() > pendingChange.expiration) {
-                showMessage('El código ha expirado. Por favor, solicita uno nuevo.', 'error');
-                cancelarVerificacion();
-                return;
-            }
-
-            if (enteredCode !== pendingChange.code) {
-                showMessage('Código incorrecto. Intenta de nuevo.', 'error');
-                return;
-            }
-
-            if (pendingChange.type === 'username') {
-                applyUsernameChange(pendingChange.value);
-            } else if (pendingChange.type === 'password') {
-                applyPasswordChange(pendingChange.value);
-            }
-
-            showMessage('Código verificado correctamente. ¡Cambios aplicados!', 'success');
-            cancelarVerificacion();
-        }
-
-        function applyUsernameChange(nuevoNombre) {
-            const oldUserData = usuariosRegistrados[usuarioActivo];
-
-            if (oldUserData) {
-                oldUserData.nombre = nuevoNombre;
-                localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosRegistrados));
-
-                const sesionIniciada = JSON.parse(localStorage.getItem('sesionIniciada'));
-                if (sesionIniciada && sesionIniciada.correo === usuarioActivo) {
-                    sesionIniciada.nombre = nuevoNombre;
-                    localStorage.setItem('sesionIniciada', JSON.stringify(sesionIniciada));
-                }
-
-                currentUsernameDisplay.textContent = nuevoNombre;
-                newUsernameInput.value = nuevoNombre;
-                showMessage('Nombre de usuario actualizado con éxito.', 'success');
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = passwordInput.nextElementSibling.querySelector('i'); // Asumiendo que el <i> es el primer hijo del span
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
-                showMessage('Error al actualizar el nombre de usuario: usuario no encontrado.', 'error');
+                passwordInput.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
 
-        function applyPasswordChange(nuevaPassword) {
-            usuariosRegistrados[usuarioActivo].clave = nuevaPassword;
-            localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosRegistrados));
 
-            newPasswordInput.value = '';
-            confirmPasswordInput.value = '';
-            passwordChangeForm.style.display = 'none';
-            btnMostrarFormPass.style.display = 'block';
-            showMessage('Contraseña actualizada con éxito.', 'success');
+        function changePassword() {
+            const currentPasswordInput = document.getElementById('currentPassword');
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+
+            const currentPassword = currentPasswordInput.value;
+            const newPassword = newPasswordInput.value;
+            const confirmNewPassword = confirmNewPasswordInput.value;
+
+            let hasErrors = false;
+            document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+            showMessage('', ''); // Limpiar mensajes anteriores
+
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                showMessage("Todos los campos de contraseña son obligatorios.", "error");
+                hasErrors = true;
+            } else if (usuariosRegistrados[usuarioActivo].clave !== currentPassword) {
+                marcarError(currentPasswordInput, true);
+                showMessage("La contraseña actual es incorrecta.", "error");
+                hasErrors = true;
+            } else if (!validarContrasena(newPassword)) {
+                marcarError(newPasswordInput, true);
+                showMessage(`La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`, "error");
+                hasErrors = true;
+            } else if (newPassword !== confirmNewPassword) {
+                marcarError(newPasswordInput, true);
+                marcarError(confirmNewPasswordInput, true);
+                showMessage("Las nuevas contraseñas no coinciden.", "error");
+                hasErrors = true;
+            } else if (currentPassword === newPassword) {
+                marcarError(newPasswordInput, true);
+                showMessage("La nueva contraseña no puede ser igual a la actual.", "warning");
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return;
+            }
+
+            usuariosRegistrados[usuarioActivo].clave = newPassword;
+            guardarUsuariosRegistrados(usuariosRegistrados);
+            showMessage("¡Contraseña cambiada con éxito!", "success");
+            setTimeout(() => {
+                cancelChangePassword();
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmNewPassword').value = '';
+            }, 2000);
         }
 
-        function cancelarVerificacion() {
-            verificationSection.style.display = 'none';
-            pendingChange = null;
-            verificationCodeInput.value = '';
-            toggleButtonsBasedOnEmail();
-            newPasswordInput.value = '';
-            confirmPasswordInput.value = '';
-            passwordChangeForm.style.display = 'none';
-            btnMostrarFormPass.style.display = 'block';
+        // --- Funciones para verificación de correo (EmailJS) ---
+        let codigoVerificacionActual = ''; // Almacena el código enviado
+        let emailParaConfirmar = ''; // Guarda el email temporalmente para el cambio de email
+
+        function generarCodigoVerificacion() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
         }
 
+        async function enviarCodigoEmail(toEmail, code, templateId) {
+            const templateParams = {
+                to_email: toEmail,
+                verification_code: code,
+            };
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, templateId, templateParams);
+                return true;
+            } catch (error) {
+                console.error("Error al enviar el correo con EmailJS:", error);
+                showMessage("Error al enviar el código de verificación. Inténtelo de nuevo.", "error");
+                return false;
+            }
+        }
+
+        // Flujo para la verificación de correo electrónico existente
+        async function iniciarVerificacionCorreo() {
+            hideAllSections();
+            document.getElementById('verificationEmailSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Verificar Correo";
+            document.getElementById('emailVerificationCode').value = ''; // Limpiar campo
+            showMessage("Generando y enviando código de verificación...", "info");
+
+            emailParaVerificacion = usuariosRegistrados[usuarioActivo].email;
+            codigoVerificacionActual = generarCodigoVerificacion();
+
+            const emailSent = await enviarCodigoEmail(emailParaVerificacion, codigoVerificacionActual, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID);
+            if (emailSent) {
+                showMessage(`Se ha enviado un código de 6 dígitos a ${emailParaVerificacion}.`, "success");
+            } else {
+                cancelarVerificacionCorreo(); // Volver si falla el envío
+            }
+        }
+
+        function cancelarVerificacionCorreo() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            codigoVerificacionActual = '';
+            emailParaVerificacion = '';
+            showMessage('Verificación de correo cancelada.', 'info');
+        }
+
+        function verificarCodigoCorreo() {
+            const enteredCode = document.getElementById('emailVerificationCode').value.trim();
+            if (enteredCode === codigoVerificacionActual) {
+                showMessage("¡Correo verificado exitosamente!", "success");
+                // Aquí podrías marcar el correo como verificado en tu base de datos si fuera real
+                setTimeout(() => cancelarVerificacionCorreo(), 2000); // Volver al menú principal
+            } else {
+                showMessage("Código incorrecto. Por favor, inténtelo de nuevo.", "error");
+                marcarError(document.getElementById('emailVerificationCode'), true);
+            }
+        }
+
+        // --- Flujo para cambio de nombre de usuario (ejemplo de flujo con verificación) ---
+        async function showChangeUsernameFlow() {
+            hideAllSections();
+            document.getElementById('changeUsernameSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Cambiar Nombre de Usuario";
+            document.getElementById('newUsername').value = usuariosRegistrados[usuarioActivo].nombre || '';
+        }
+
+        function cancelChangeUsername() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            showMessage('Cambio de nombre de usuario cancelado.', 'info');
+        }
+
+        async function iniciarCambioUsername() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            if (!newUsername) {
+                showMessage("El nuevo nombre de usuario no puede estar vacío.", "error");
+                marcarError(document.getElementById('newUsername'), true);
+                return;
+            }
+
+            if (newUsername === usuariosRegistrados[usuarioActivo].nombre) {
+                showMessage("El nuevo nombre de usuario es igual al actual.", "warning");
+                return;
+            }
+
+            usernameParaCambio = newUsername; // Guarda el nuevo nombre de usuario temporalmente
+            codigoVerificacionActual = generarCodigoVerificacion(); // Generar un nuevo código
+
+            showMessage("Enviando código de verificación para cambio de nombre de usuario...", "info");
+            const emailSent = await enviarCodigoEmail(usuariosRegistrados[usuarioActivo].email, codigoVerificacionActual, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID);
+
+            if (emailSent) {
+                hideAllSections();
+                document.getElementById('verificationUsernameSection').classList.remove('hidden-section');
+                document.getElementById('mainTitle').textContent = "Verificar Cambio de Nombre de Usuario";
+                document.getElementById('usernameVerificationCode').value = '';
+                showMessage(`Se ha enviado un código a ${usuariosRegistrados[usuarioActivo].email}.`, "success");
+            } else {
+                showMessage("Error al iniciar el cambio de nombre de usuario. Intente de nuevo.", "error");
+            }
+        }
+
+        function verificarCodigoUsername() {
+            const enteredCode = document.getElementById('usernameVerificationCode').value.trim();
+            if (enteredCode === codigoVerificacionActual) {
+                if (usuariosRegistrados[usuarioActivo]) {
+                    usuariosRegistrados[usuarioActivo].nombre = usernameParaCambio;
+                    guardarUsuariosRegistrados(usuariosRegistrados);
+                    cargarDatosUsuario(); // Actualizar UI con el nuevo nombre
+                    showMessage("¡Nombre de usuario cambiado exitosamente!", "success");
+                    setTimeout(() => cancelarVerificacionUsername(), 2000);
+                }
+            } else {
+                showMessage("Código incorrecto. Intente de nuevo.", "error");
+                marcarError(document.getElementById('usernameVerificationCode'), true);
+            }
+        }
+
+        function cancelarVerificacionUsername() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            codigoVerificacionActual = '';
+            usernameParaCambio = '';
+            showMessage('Cambio de nombre de usuario cancelado.', 'info');
+        }
+
+
+        // --- Flujo de cambio de correo (con verificación) ---
+        async function iniciarCambioCorreo(nuevoEmail) {
+            codigoVerificacionActual = generarCodigoVerificacion();
+            emailParaConfirmar = nuevoEmail; // Guarda el email propuesto
+
+            showMessage("Enviando código de verificación al nuevo correo...", "info");
+            const emailSent = await enviarCodigoEmail(nuevoEmail, codigoVerificacionActual, EMAILJS_TEMPLATE_EMAIL_CHANGE_CONFIRM_ID); // Usar plantilla específica para cambio de email
+
+            if (emailSent) {
+                hideAllSections();
+                document.getElementById('verificationEmailSection').classList.remove('hidden-section');
+                document.getElementById('mainTitle').textContent = "Confirmar Nuevo Correo";
+                document.getElementById('emailVerificationCode').value = '';
+                document.querySelector('#verificationEmailSection p').textContent = `Se ha enviado un código a ${nuevoEmail}. Ingréselo para confirmar el cambio.`;
+                showMessage(`Se ha enviado un código a ${nuevoEmail}.`, "success");
+            } else {
+                showMessage("Error al iniciar el cambio de correo. Intente de nuevo.", "error");
+                cancelProfileEdit(); // Volver al perfil si el envío falla
+            }
+        }
+
+        function verificarCodigoCorreoParaCambio() {
+            const enteredCode = document.getElementById('emailVerificationCode').value.trim();
+            if (enteredCode === codigoVerificacionActual) {
+                if (usuariosRegistrados[usuarioActivo]) {
+                    // Crea una nueva entrada con el nuevo email y copia los datos del usuario antiguo
+                    const userData = { ...usuariosRegistrados[usuarioActivo], email: emailParaConfirmar };
+                    usuariosRegistrados[emailParaConfirmar] = userData;
+                    
+                    // Elimina la entrada antigua del usuario
+                    delete usuariosRegistrados[usuarioActivo];
+
+                    // Actualiza localStorage y la variable global usuarioActivo
+                    localStorage.setItem("usuarioActivo", emailParaConfirmar);
+                    usuarioActivo = emailParaConfirmar;
+
+                    guardarUsuariosRegistrados(usuariosRegistrados);
+                    cargarDatosUsuario(); // Actualizar UI con el nuevo email
+                    showMessage("¡Correo electrónico actualizado con éxito!", "success");
+                    setTimeout(() => cancelarVerificacionCorreo(), 2000); // Volver al perfil
+                }
+            } else {
+                showMessage("Código incorrecto. Intente de nuevo.", "error");
+                marcarError(document.getElementById('emailVerificationCode'), true);
+            }
+        }
+        // Ajuste: Cambiar el evento onclick del botón "Verificar Código" en verificationEmailSection
+        // para llamar a verificarCodigoCorreoParaCambio si emailParaConfirmar tiene valor.
+        // Esto se maneja mejor en el evento click del botón, verificando la variable.
+
+        document.querySelector('#verificationEmailSection button.btn-primary').onclick = () => {
+            if (emailParaConfirmar) {
+                verificarCodigoCorreoParaCambio();
+            } else {
+                verificarCodigoCorreo(); // Comportamiento por defecto de verificación de correo
+            }
+        };
+
+
+        // --- Funciones de Notificaciones ---
+        function saveNotificationSettings() {
+            const emailChecked = document.getElementById('emailNotifications').checked;
+            const smsChecked = document.getElementById('smsNotifications').checked;
+            // Aquí enviarías estos ajustes a un servidor o los guardarías localmente
+            console.log(`Notificaciones por email: ${emailChecked}, Notificaciones por SMS: ${smsChecked}`);
+            showMessage("Ajustes de notificación guardados.", "success");
+        }
+
+
+        // --- Funciones de Gestión de Cuenta ---
         function cerrarSesion() {
-            localStorage.removeItem("sesionIniciada");
-            alert('Has cerrado sesión.');
-            window.location.href = 'index.html'; // Redirige al inicio (ajusta si es otra página)
+            showConfirmDialog('¿Estás seguro de que quieres cerrar sesión?', () => {
+                localStorage.removeItem("sesionIniciada");
+                localStorage.removeItem("usuarioActivo");
+                showMessage('Has cerrado sesión.', 'success');
+                setTimeout(() => window.location.href = 'index.html', 1500);
+            });
         }
 
         function eliminarCuenta() {
-            if (confirm('¿Estás seguro de eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-                delete usuariosRegistrados[usuarioActivo];
-                localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosRegistrados));
+            showConfirmDialog('¿Estás seguro de eliminar tu cuenta? Esta acción no se puede deshacer y perderás todos tus datos.', () => {
+                if (usuariosRegistrados[usuarioActivo]) {
+                    delete usuariosRegistrados[usuarioActivo];
+                    guardarUsuariosRegistrados(usuariosRegistrados);
 
-                localStorage.removeItem(`carrito_${usuarioActivo}`);
-                localStorage.removeItem(`historial_${usuarioActivo}`);
+                    // Limpiar datos asociados a la cuenta eliminada
+                    localStorage.removeItem(`carrito_${usuarioActivo}`);
+                    localStorage.removeItem(`historial_${usuarioActivo}`);
 
-                localStorage.removeItem("sesionIniciada");
-                
-                alert('Tu cuenta ha sido eliminada. Redirigiendo al inicio.');
-                window.location.href = 'index.html'; // Redirige al inicio (ajusta si es otra página)
+                    localStorage.removeItem("sesionIniciada");
+                    localStorage.removeItem("usuarioActivo");
+
+                    showMessage('Tu cuenta ha sido eliminada. Redirigiendo al inicio.', 'success');
+                    setTimeout(() => window.location.href = 'index.html', 2000);
+                } else {
+                    showMessage("Error al eliminar la cuenta: Usuario no encontrado.", "error");
+                }
+            });
+        }
+
+        // --- Funciones de Diálogo de Confirmación ---
+        function showConfirmDialog(message, onConfirm) {
+            const dialog = document.getElementById('confirmDialog');
+            const msgElement = document.getElementById('dialogMessage');
+            const confirmBtn = document.getElementById('dialogConfirmBtn');
+            const cancelBtn = document.getElementById('dialogCancelBtn');
+
+            msgElement.textContent = message;
+            dialog.classList.add('show');
+
+            // Limpiar listeners anteriores para evitar duplicados
+            confirmBtn.onclick = null;
+            cancelBtn.onclick = null;
+
+            confirmBtn.onclick = () => {
+                onConfirm();
+                dialog.classList.remove('show');
+            };
+            cancelBtn.onclick = () => {
+                dialog.classList.remove('show');
+                showMessage('Acción cancelada.', 'info');
+            };
+        }
+
+        // Control de navegación hacia atrás
+        function goBack() {
+            const currentTitle = document.getElementById('mainTitle').textContent;
+
+            if (currentTitle === "Editar Perfil") {
+                cancelProfileEdit();
+            } else if (currentTitle === "Cambiar Contraseña") {
+                cancelChangePassword();
+            } else if (currentTitle === "Verificar Correo" || currentTitle === "Confirmar Nuevo Correo") {
+                cancelarVerificacionCorreo();
+                // Si estaba en flujo de cambio de correo, también volver a edición de perfil
+                if (emailParaConfirmar) {
+                    showProfileEditSection(); // Mostrar sección de edición de perfil
+                    emailParaConfirmar = ''; // Limpiar la variable
+                }
+            } else if (currentTitle === "Verificar Cambio de Nombre de Usuario") {
+                cancelarVerificacionUsername();
+            } else if (currentTitle === "Cambiar Nombre de Usuario") {
+                cancelChangeUsername();
+            } else {
+                history.back(); // Volver a la página anterior en el historial
             }
         }
+
+        // Manejo global de la tecla Enter para accesibilidad
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const activeElement = document.activeElement;
+
+                // Si el elemento activo es un botón
+                if (activeElement && activeElement.tagName === 'BUTTON') {
+                    activeElement.click();
+                    event.preventDefault(); // Evita el comportamiento predeterminado del Enter
+                }
+                
+                // Si el elemento activo es un div o span con un onclick y tabindex
+                if (activeElement && (activeElement.tagName === 'DIV' || activeElement.tagName === 'SPAN') && activeElement.hasAttribute('tabindex') && activeElement.onclick) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+            }
+        });
     </script>
 </body>
 </html>

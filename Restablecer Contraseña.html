@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Restablecer Contraseña - FlashBuyX</title>
     <style>
-        /* Estilos CSS (similares a tu Login.html para consistencia) */
+        /* Estilos CSS Base (Móvil Primero) */
         * { box-sizing: border-box; }
         body {
             margin: 0;
             padding: 0;
             font-family: "Segoe UI", sans-serif;
-            background-color: white; /* Fondo blanco */
-            height: 100vh;
+            background-color: white;
+            min-height: 100vh; /* Usar min-height en lugar de height para flexibilidad */
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 15px; /* Pequeño padding general para móviles */
         }
         .container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            width: 480px; /* Tamaño consistente con el login */
-            max-width: 95vw;
+            padding: 30px; /* Reducir padding en móviles */
+            width: 95%; /* Usar porcentaje para ancho en móviles */
+            max-width: 480px; /* Limitar el ancho máximo */
             text-align: center;
             position: relative;
         }
@@ -51,23 +52,20 @@
             transition: fill 0.3s;
         }
         #flechaVolver:hover svg { fill: white; }
-        h2 { margin-bottom: 20px; color: #333; }
+        h2 { margin-bottom: 20px; color: #333; font-size: 24px; /* Ajustar tamaño de fuente para móviles */ }
 
-        /* Estilos para campos de entrada y botón */
-        input {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-        }
         .password-input-wrapper {
             position: relative;
             margin: 10px 0;
         }
         .password-input-wrapper input {
-            padding-right: 45px; /* Espacio para el icono del ojo */
+            width: 100%;
+            padding: 14px;
+            margin: 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            padding-right: 45px;
         }
         .toggle-password {
             position: absolute;
@@ -94,6 +92,15 @@
             fill: #4a60f2;
         }
 
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
         input.error-input {
             border-color: #e74c3c;
             background-color: #ffe6e6;
@@ -107,12 +114,13 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s;
+        }
+        .btn-submit {
             background-color: #4a60f2;
             color: white;
             margin-top: 10px;
         }
-        button:hover { background-color: #3542c6; }
-
+        .btn-submit:hover { background-color: #3542c6; }
         .message {
             margin-top: 15px;
             font-size: 14px;
@@ -131,21 +139,43 @@
             background-color: #e6fae6;
             border: 1px solid #388e3c;
         }
+
+        /* Media Query para Tabletas y Escritorios Pequeños */
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px; /* Restaurar padding para pantallas más grandes */
+                width: 480px; /* Ancho fijo para contenedores en tabletas/escritorios */
+            }
+            h2 {
+                font-size: 28px; /* Tamaño de fuente más grande para encabezados */
+            }
+            .message {
+                font-size: 16px; /* Ajustar tamaño de fuente para mensajes */
+            }
+        }
+
+        /* Media Query para Escritorios y Pantallas Grandes */
+        @media (min-width: 1024px) {
+            body {
+                font-size: 18px; /* Tamaño de fuente general para pantallas grandes */
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="flechaVolver" onclick="handleBackArrowClick()">
+        <div id="flechaVolver" onclick="window.location.href = 'Login.html';" tabindex="0">
             <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </div>
 
-        <h2>Restablecer Contraseña</h2>
+        <h2 id="formTitle">Establecer Nueva Contraseña</h2>
 
-        <form onsubmit="restablecerContrasena(); return false;">
-            <p>Ingresa y confirma tu nueva contraseña.</p>
+        <form onsubmit="establecerNuevaContrasena(); return false;" id="resetPasswordForm">
+            <p id="userEmailDisplay" style="font-size: 15px; color: #555; margin-bottom: 20px;"></p>
+
             <div class="password-input-wrapper">
                 <input type="password" id="nuevaClave" placeholder="Nueva Contraseña" required />
-                <span class="toggle-password" onclick="togglePasswordVisibility('nuevaClave')">
+                <span class="toggle-password" onclick="togglePasswordVisibility('nuevaClave')" tabindex="0">
                     <svg id="eyeIconNuevaClave" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                     </svg>
@@ -153,15 +183,15 @@
             </div>
 
             <div class="password-input-wrapper">
-                <input type="password" id="confirmarClave" placeholder="Confirmar Nueva Contraseña" required />
-                <span class="toggle-password" onclick="togglePasswordVisibility('confirmarClave')">
-                    <svg id="eyeIconConfirmarClave" viewBox="0 0 24 24" fill="currentColor">
+                <input type="password" id="confirmarNuevaClave" placeholder="Confirmar Nueva Contraseña" required />
+                <span class="toggle-password" onclick="togglePasswordVisibility('confirmarNuevaClave')" tabindex="0">
+                    <svg id="eyeIconConfirmarNuevaClave" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                     </svg>
                 </span>
             </div>
-            
-            <button type="submit">Guardar Nueva Contraseña</button>
+
+            <button type="submit" class="btn-submit" tabindex="0">Cambiar Contraseña</button>
         </form>
 
         <div class="message" id="mensaje"></div>
@@ -169,12 +199,11 @@
 
     <script>
         const MIN_PASSWORD_LENGTH = 8;
-        const EYE_OPEN_SVG_PATH = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
-        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39 6-7.5 11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
+        let currentUserEmail = ''; // Variable para almacenar el email del usuario
 
-        function handleBackArrowClick() {
-            window.location.href = "login.html"; // Vuelve a la página de login
-        }
+        // Rutas SVG para los iconos de ojo (copiadas de Login.html para consistencia)
+        const EYE_OPEN_SVG_PATH = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
 
         function getUsuariosRegistrados() {
             try {
@@ -220,7 +249,12 @@
 
         function togglePasswordVisibility(inputId) {
             const passwordInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById('eyeIcon' + inputId.charAt(0).toUpperCase() + inputId.slice(1)); 
+            const eyeIcon = document.getElementById('eyeIcon' + inputId.charAt(0).toUpperCase() + inputId.slice(1));
+
+            if (!passwordInput || !eyeIcon) {
+                console.error("Elemento de contraseña o icono no encontrado para:", inputId);
+                return;
+            }
 
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
@@ -231,64 +265,89 @@
             }
         }
 
-        function restablecerContrasena() {
+        // Función principal para establecer la nueva contraseña
+        function establecerNuevaContrasena() {
             const nuevaClaveInput = document.getElementById("nuevaClave");
-            const confirmarClaveInput = document.getElementById("confirmarClave");
+            const confirmarNuevaClaveInput = document.getElementById("confirmarNuevaClave");
 
-            // Limpiar errores anteriores y mensajes
+            const nuevaClave = nuevaClaveInput.value.trim();
+            const confirmarNuevaClave = confirmarNuevaClaveInput.value.trim();
+
+            let hasErrors = false;
             document.querySelectorAll("input").forEach(input => input.classList.remove("error-input"));
             mostrarMensaje('', '');
 
-            let hasErrors = false;
-            let firstErrorMessage = "";
-
-            if (!validarContrasena(nuevaClaveInput.value.trim())) {
+            if (!validarContrasena(nuevaClave)) {
                 marcarError(nuevaClaveInput, true);
                 hasErrors = true;
-                if (!firstErrorMessage) firstErrorMessage = `La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`;
-            }
-
-            if (nuevaClaveInput.value.trim() !== confirmarClaveInput.value.trim()) {
+                mostrarMensaje(`La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`, "error");
+            } else if (nuevaClave !== confirmarNuevaClave) {
                 marcarError(nuevaClaveInput, true);
-                marcarError(confirmarClaveInput, true);
+                marcarError(confirmarNuevaClaveInput, true);
                 hasErrors = true;
-                if (!firstErrorMessage) firstErrorMessage = "Las contraseñas no coinciden.";
+                mostrarMensaje("Las contraseñas no coinciden.", "error");
             }
 
             if (hasErrors) {
-                mostrarMensaje(firstErrorMessage, "error");
                 return;
             }
-            
-            // Lógica para actualizar la contraseña del usuario actualmente "activo"
-            // ESTO ES UNA SIMULACIÓN. EN UN SISTEMA REAL, LA IDENTIDAD ESTARÍA VERIFICADA.
-            const usuarioActivoCorreo = localStorage.getItem("usuarioActivo");
-            let usuariosRegistrados = getUsuariosRegistrados();
 
-            if (usuarioActivoCorreo && usuariosRegistrados[usuarioActivoCorreo]) {
-                usuariosRegistrados[usuarioActivoCorreo].clave = nuevaClaveInput.value.trim(); // Actualiza la contraseña
+            // Si no hay errores de validación, procedemos a guardar la nueva contraseña
+            const usuariosRegistrados = getUsuariosRegistrados();
+
+            if (currentUserEmail && usuariosRegistrados[currentUserEmail]) {
+                usuariosRegistrados[currentUserEmail].clave = nuevaClave; // Actualiza la contraseña
                 guardarUsuariosRegistrados(usuariosRegistrados);
-                mostrarMensaje("Contraseña restablecida con éxito para el usuario activo. Redirigiendo al login...", "success");
-                
-                // Redirigir al login después de un breve retraso
+                mostrarMensaje("¡Contraseña restablecida con éxito! Redirigiendo al inicio de sesión...", "success");
+
+                // Redirige al usuario de vuelta a la página de inicio de sesión
                 setTimeout(() => {
-                    window.location.href = "login.html";
-                }, 2000);
+                    window.location.href = "Login.html";
+                }, 2000); // Redirige después de 2 segundos
             } else {
-                // Si no hay un usuario activo o no se encuentra,
-                // significa que no podemos saber de quién es la contraseña
-                mostrarMensaje("No hay un usuario activo para restablecer la contraseña. Por favor, inicia sesión o regístrate.", "error");
-                // Podrías redirigir al login si no hay usuario activo
-                // setTimeout(() => { window.location.href = "login.html"; }, 3000);
+                mostrarMensaje("Error: No se pudo encontrar el usuario para restablecer la contraseña.", "error");
+                console.error("No se pudo encontrar el correo del usuario en localStorage para restablecer la contraseña.");
             }
         }
 
+        // --- Manejo global de la tecla Enter ---
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const activeElement = document.activeElement;
+
+                // Si el elemento activo es un botón, haz clic en él
+                if (activeElement && activeElement.tagName === 'BUTTON') {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+                
+                // Si el elemento activo es un div o span con un onclick y tabindex
+                if (activeElement && (activeElement.tagName === 'DIV' || activeElement.tagName === 'SPAN') && activeElement.hasAttribute('tabindex') && activeElement.onclick) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+            }
+        });
+
+
+        // Se ejecuta cuando la página se carga
         window.onload = () => {
-            // Asegurar que las contraseñas estén ocultas por defecto al cargar y los iconos sean de ojo abierto
-            document.getElementById("nuevaClave").type = "password";
-            document.getElementById("eyeIconNuevaClave").innerHTML = EYE_OPEN_SVG_PATH;
-            document.getElementById("confirmarClave").type = "password";
-            document.getElementById("eyeIconConfirmarClave").innerHTML = EYE_OPEN_SVG_PATH;
+            // Obtener el email del parámetro de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailFromUrl = urlParams.get('email');
+
+            if (emailFromUrl) {
+                currentUserEmail = decodeURIComponent(emailFromUrl);
+                document.getElementById('userEmailDisplay').textContent = `Estableciendo contraseña para: ${currentUserEmail}`;
+                console.log("Restableciendo contraseña para el correo:", currentUserEmail);
+            } else {
+                // Si no hay email en la URL, es un acceso inválido o directo.
+                // Podrías redirigir al Login o mostrar un error.
+                mostrarMensaje("Acceso inválido. Por favor, inicia el proceso de restablecimiento desde la página de inicio de sesión.", "error");
+                setTimeout(() => {
+                    window.location.href = "Login.html";
+                }, 3000);
+            }
         };
     </script>
 </body>

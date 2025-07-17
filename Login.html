@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Acceder / Registrarse - FlashBuyX</title>
-    
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         // Inicializa EmailJS con tu Public Key
         // Asegúrate de que "DC68SiTk8JF2M4x_a" sea tu Public Key real de EmailJS
         (function() {
             try {
-                emailjs.init("DC68SiTk8JF2M4x_a"); 
+                emailjs.init("DC68SiTk8JF2M4x_a");
                 console.log("EmailJS inicializado correctamente con Public Key: DC68SiTk8JF2M4x_a");
             } catch (e) {
                 console.error("Error al inicializar EmailJS. Detalles:", e);
@@ -216,41 +216,62 @@
             color: #4a60f2;
             cursor: pointer;
             text-decoration: none;
-            font-size: 16px; 
+            font-size: 16px;
         }
         .forgot-password-link:hover {
             text-decoration: underline;
         }
-        /* New style for the direct reset button */
-        .btn-direct-reset {
-            background-color: #f0f0f0; /* Light gray background */
-            color: #4a60f2; /* Blue text to match links */
-            border: 1px solid #ddd;
-            margin-top: 10px;
+        /* Styles for the new verification code input */
+        .verification-code-input-group {
+            margin-top: 20px;
+            text-align: center;
+            display: none; /* Hidden by default */
         }
-        .btn-direct-reset:hover {
-            background-color: #e0e0e0;
-            color: #3542c6;
+        .verification-code-input-group.mostrar {
+            display: block;
+        }
+        .verification-code-input-group p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 15px;
+        }
+        .verification-code-input-group input {
+            width: 100%;
+            max-width: 250px; /* Adjust as needed */
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 2px; /* For better code visibility */
+        }
+        .verification-code-input-group button {
+            margin-top: 15px;
+            background-color: #4a60f2;
+            color: white;
+        }
+        .verification-code-input-group button:hover {
+            background-color: #3542c6;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="flechaVolver" onclick="handleBackArrowClick()">
+        <div id="flechaVolver" onclick="handleBackArrowClick()" tabindex="0">
             <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </div>
 
         <h2 id="formTitle">Iniciar Sesión</h2>
 
-        <form onsubmit="manejarAccion(); return false;">
+        <form onsubmit="manejarAccion(); return false;" id="mainForm">
             <input type="text" id="regNombre" class="campo-registro" placeholder="Nombre" />
             <input type="text" id="regApellido" class="campo-registro" placeholder="Apellido" />
-            
+
             <input type="email" id="correo" placeholder="Correo Electrónico" required />
 
             <div class="password-input-wrapper" id="claveWrapper">
-                <input type="password" id="clave" name="clave_acceso" placeholder="Contraseña" required /> 
-                <span class="toggle-password" onclick="togglePasswordVisibility('clave')">
+                <input type="password" id="clave" name="clave_acceso" placeholder="Contraseña" required />
+                <span class="toggle-password" onclick="togglePasswordVisibility('clave')" tabindex="0">
                     <svg id="eyeIconClave" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                     </svg>
@@ -259,28 +280,31 @@
 
             <div class="password-input-wrapper campo-registro" id="confirmClaveWrapper">
                 <input type="password" id="confirmClave" name="confirmar_clave" placeholder="Confirmar Contraseña" />
-                <span class="toggle-password" onclick="togglePasswordVisibility('confirmClave')">
+                <span class="toggle-password" onclick="togglePasswordVisibility('confirmClave')" tabindex="0">
                     <svg id="eyeIconConfirmClave" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                     </svg>
                 </span>
             </div>
-            
-            <button type="submit" class="btn-submit">Entrar</button>
+
+            <button type="submit" class="btn-submit" id="submitButton" tabindex="0">Entrar</button>
         </form>
 
-        <button class="toggle" onclick="alternarFormulario()">¿No tienes cuenta? Regístrate</button>
-        <a href="#" class="forgot-password-link" id="forgotPasswordLink" onclick="mostrarRestablecerContrasena(); return false;">¿Olvidaste tu contraseña?</a>
-        
-        <button class="btn-direct-reset" onclick="window.location.href = 'Restablecer Contraseña.html';">Restablecer Contraseña (Directo)</button>
+        <div class="verification-code-input-group" id="verificationCodeGroup">
+            <p>Se ha enviado un código a tu correo. Por favor, ingrésalo a continuación.</p>
+            <input type="text" id="verificationCode" placeholder="Código de Verificación" required maxlength="6" tabindex="0" />
+            <button class="btn-submit" onclick="verificarCodigo()" tabindex="0">Verificar Código</button>
+        </div>
 
+        <button class="toggle" id="toggleFormButton" onclick="alternarFormulario()" tabindex="0">¿No tienes cuenta? Regístrate</button>
+        <a href="#" class="forgot-password-link" id="forgotPasswordLink" onclick="mostrarRestablecerContrasena(); return false;" tabindex="0">¿Olvidaste tu contraseña?</a>
 
         <div class="social-row" id="socialLoginRow">
-            <button class="social-btn google" onclick="loginSocial('Google')">
+            <button class="social-btn google" onclick="loginSocial('Google')" tabindex="0">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
                 Continuar con Google
             </button>
-            <button class="social-btn icloud" onclick="loginSocial('iCloud')">
+            <button class="social-btn icloud" onclick="loginSocial('iCloud')" tabindex="0">
                 <img src="https://www.svgrepo.com/download/444156/os-apple.svg" alt="iCloud" />
                 Continuar con iCloud
             </button>
@@ -292,27 +316,40 @@
     <script>
         let modoRegistro = false;
         let modoRestablecer = false;
+        let modoVerificacion = false;
         const MIN_PASSWORD_LENGTH = 8;
-        
+
         // ¡IMPORTANTE! Asegúrate de que estos sean tus IDs reales de EmailJS
-        const EMAILJS_SERVICE_ID = "service_kz355xk"; 
-        const EMAILJS_TEMPLATE_ID = "template_8tu2f1r"; 
+        const EMAILJS_SERVICE_ID = "service_kz355xk";
+        const EMAILJS_TEMPLATE_ID = "template_8tu2f1r";
 
         // Rutas SVG para los iconos de ojo
         const EYE_OPEN_SVG_PATH = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
-        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39 6-7.5 11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
+        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
 
         function handleBackArrowClick() {
-            if (modoRegistro || modoRestablecer) {
-                modoRegistro = false;
+            if (modoVerificacion) {
+                // Si estamos en el modo de verificación, volvemos al modo de restablecimiento
+                modoVerificacion = false;
+                modoRestablecer = true;
+                document.getElementById('verificationCode').value = ''; // Limpiar solo el campo del código
+                mostrarMensaje('', ''); // Limpiar mensajes
+            } else if (modoRestablecer) {
+                // Si estamos en el modo de restablecimiento (solicitud de correo), volvemos al login
                 modoRestablecer = false;
-                updateFormVisibility();
-                limpiarCampos();
+                emailToVerify = ''; // Limpiar el correo de verificación almacenado
+                limpiarCampos(); // Limpiar todos los campos
+                mostrarMensaje('', '');
+            } else if (modoRegistro) {
+                // Si estamos en el modo de registro, volvemos al login
+                modoRegistro = false;
+                limpiarCampos(); // Limpiar todos los campos
                 mostrarMensaje('', '');
             } else {
-                // If not in register or reset mode (meaning, in login mode),
-                // the back arrow does nothing as there's no "previous" form state to go to.
+                // Si ya estamos en el modo de inicio de sesión predeterminado, redirigimos a index.html
+                window.location.href = "index.html";
             }
+            updateFormVisibility(); // Actualizar la visibilidad del formulario según el nuevo modo
         }
 
         function getUsuariosRegistrados() {
@@ -345,7 +382,8 @@
 
         function alternarFormulario() {
             modoRegistro = !modoRegistro;
-            modoRestablecer = false; // Ensure we're not in reset mode if we toggle
+            modoRestablecer = false;
+            modoVerificacion = false;
             updateFormVisibility();
             limpiarCampos();
             mostrarMensaje('', '');
@@ -353,7 +391,8 @@
 
         function mostrarRestablecerContrasena() {
             modoRestablecer = true;
-            modoRegistro = false; // Ensure we're not in register mode if we enter reset
+            modoRegistro = false;
+            modoVerificacion = false;
             updateFormVisibility();
             limpiarCampos();
             mostrarMensaje('', '');
@@ -361,80 +400,99 @@
 
         function updateFormVisibility() {
             const formTitle = document.getElementById("formTitle");
-            const btnSubmit = document.querySelector("button.btn-submit");
-            const toggleBtn = document.querySelector(".toggle"); 
+            const mainForm = document.getElementById("mainForm");
+            const submitButton = document.getElementById("submitButton");
+            const toggleFormButton = document.getElementById("toggleFormButton");
             const forgotPasswordLink = document.getElementById("forgotPasswordLink");
             const socialLoginRow = document.getElementById("socialLoginRow");
             const claveWrapper = document.getElementById("claveWrapper");
             const confirmClaveWrapper = document.getElementById("confirmClaveWrapper");
             const claveInput = document.getElementById("clave");
-            const directResetButton = document.querySelector(".btn-direct-reset"); // Get the new button
+            const verificationCodeGroup = document.getElementById("verificationCodeGroup");
 
             // Oculta los campos de registro por defecto
             document.querySelectorAll(".campo-registro").forEach(input => {
                 input.classList.remove("mostrar");
-                // Asegúrate de que los campos específicos de registro no sean requeridos cuando no están visibles
                 if (input.id === 'confirmClave' || input.id === 'regNombre' || input.id === 'regApellido') {
                     input.required = false;
                 }
             });
-            
+
             // Oculta la confirmación de clave por defecto
-            if (confirmClaveWrapper) { // Protección para asegurar que el elemento existe
-                confirmClaveWrapper.style.display = 'none'; 
+            if (confirmClaveWrapper) {
+                confirmClaveWrapper.style.display = 'none';
                 document.getElementById('confirmClave').required = false;
             }
 
+            // Always hide verification code group by default, then show if needed
+            verificationCodeGroup.classList.remove("mostrar");
+            document.getElementById('verificationCode').required = false;
+
+
             if (modoRegistro) {
                 formTitle.innerText = "Registrarse";
-                btnSubmit.innerText = "Registrar";
-                toggleBtn.textContent = "¿Ya tienes cuenta? Inicia Sesión";
-                toggleBtn.style.display = 'block'; // Ensure it's visible in register mode
+                submitButton.innerText = "Registrar";
+                mainForm.style.display = 'block';
+                toggleFormButton.textContent = "¿Ya tienes cuenta? Inicia Sesión";
+                toggleFormButton.style.display = 'block';
                 forgotPasswordLink.style.display = 'none';
                 socialLoginRow.style.display = "none";
                 claveWrapper.style.display = 'block';
-                if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'block'; // Mostrar confirmación de clave
-                directResetButton.style.display = 'none'; // Hide the direct reset button
+                if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'block';
 
-                // Hace los campos de registro requeridos
                 document.getElementById('regNombre').required = true;
                 document.getElementById('regApellido').required = true;
-                claveInput.required = true; 
+                claveInput.required = true;
                 if (document.getElementById('confirmClave')) document.getElementById('confirmClave').required = true;
 
-                // Muestra los campos de registro
                 document.querySelectorAll(".campo-registro").forEach(input => {
                     input.classList.add("mostrar");
                 });
 
             } else if (modoRestablecer) {
                 formTitle.innerText = "Restablecer Contraseña";
-                btnSubmit.innerText = "Enviar Solicitud";
-                toggleBtn.style.display = 'none'; // Hide the toggle button
+                submitButton.innerText = "Enviar Solicitud";
+                mainForm.style.display = 'block';
+                toggleFormButton.style.display = 'none';
                 forgotPasswordLink.style.display = 'none';
                 socialLoginRow.style.display = "none";
-                
-                claveWrapper.style.display = 'none'; // Ocultar campo de clave
-                claveInput.required = false; // Quitar el requisito
-                if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'none'; // Asegurarse de que también esté oculto
-                directResetButton.style.display = 'none'; // Hide the direct reset button
 
-            } else { // Modo Iniciar Sesión
+                // Solo muestra el input de correo para restablecer
+                document.getElementById("correo").style.display = 'block';
+                document.getElementById("correo").required = true;
+                claveWrapper.style.display = 'none';
+                claveInput.required = false;
+                if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'none';
+
+            } else if (modoVerificacion) {
+                formTitle.innerText = "Verificar Código";
+                mainForm.style.display = 'none';
+                toggleFormButton.style.display = 'none';
+                forgotPasswordLink.style.display = 'none';
+                socialLoginRow.style.display = "none";
+
+                verificationCodeGroup.classList.add("mostrar");
+                document.getElementById('verificationCode').required = true;
+
+            } else { // Modo Iniciar Sesión (Default)
                 formTitle.innerText = "Iniciar Sesión";
-                btnSubmit.innerText = "Entrar";
-                toggleBtn.textContent = "¿No tienes cuenta? Regístrate";
-                toggleBtn.style.display = 'block'; // Ensure it's visible in login mode
+                submitButton.innerText = "Entrar";
+                mainForm.style.display = 'block';
+                toggleFormButton.textContent = "¿No tienes cuenta? Regístrate";
+                toggleFormButton.style.display = 'block';
                 forgotPasswordLink.style.display = 'block';
                 socialLoginRow.style.display = "flex";
-                claveWrapper.style.display = 'block'; // Mostrar campo de clave
-                claveInput.required = true; // Hacer la clave requerida
-                directResetButton.style.display = 'block'; // Show the direct reset button
+                claveWrapper.style.display = 'block';
+                claveInput.required = true;
+
+                document.getElementById("correo").style.display = 'block';
+                document.getElementById("correo").required = true;
             }
 
             // Restablecer visibilidad de contraseñas
             document.getElementById("clave").type = "password";
             document.getElementById("eyeIconClave").innerHTML = EYE_OPEN_SVG_PATH;
-            
+
             const confirmClaveInput = document.getElementById("confirmClave");
             if (confirmClaveInput) {
                 confirmClaveInput.type = "password";
@@ -446,9 +504,11 @@
         function limpiarCampos() {
             document.getElementById("regNombre").value = "";
             document.getElementById("regApellido").value = "";
-            document.getElementById("correo").value = "";
+            // El correo NO se limpia aquí para permitir que se mantenga al volver de verificación a restablecer
+            // document.getElementById("correo").value = "";
             document.getElementById("clave").value = "";
             if (document.getElementById("confirmClave")) document.getElementById("confirmClave").value = "";
+            document.getElementById("verificationCode").value = "";
             document.querySelectorAll("input").forEach(input => input.classList.remove("error-input"));
         }
 
@@ -487,7 +547,7 @@
 
         function togglePasswordVisibility(inputId) {
             const passwordInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById('eyeIcon' + inputId.charAt(0).toUpperCase() + inputId.slice(1)); 
+            const eyeIcon = document.getElementById('eyeIcon' + inputId.charAt(0).toUpperCase() + inputId.slice(1));
 
             if (!passwordInput || !eyeIcon) {
                 console.error("Elemento de contraseña o icono no encontrado para:", inputId);
@@ -503,6 +563,14 @@
             }
         }
 
+        // Variable para almacenar temporalmente el correo para la verificación
+        let emailToVerify = '';
+
+        // Función para generar un código de verificación aleatorio de 6 dígitos
+        function generarCodigoVerificacion() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
         async function manejarAccion() {
             const nombreInput = document.getElementById("regNombre");
             const apellidoInput = document.getElementById("regApellido");
@@ -512,11 +580,16 @@
 
             let hasErrors = false;
             document.querySelectorAll("input").forEach(input => input.classList.remove("error-input"));
-            mostrarMensaje('', ''); 
+            mostrarMensaje('', '');
             let firstErrorMessage = "";
 
+            if (modoVerificacion) {
+                // Este bloque es ahora manejado por verificarCodigo()
+                return;
+            }
+
             if (modoRestablecer) {
-                console.log("Modo: Restablecer Contraseña."); 
+                console.log("Modo: Restablecer Contraseña (Solicitud).");
 
                 if (!correoInput.value.trim()) {
                     marcarError(correoInput, true);
@@ -530,8 +603,8 @@
 
                 if (hasErrors) {
                     mostrarMensaje(firstErrorMessage, "error");
-                    console.log("Validación de correo fallida en modo restablecer. Mensaje:", firstErrorMessage); 
-                    return; 
+                    console.log("Validación de correo fallida en modo restablecer (solicitud). Mensaje:", firstErrorMessage);
+                    return;
                 }
 
                 const email = correoInput.value.trim();
@@ -539,35 +612,52 @@
 
                 if (usuariosRegistrados[email]) {
                     mostrarMensaje("Enviando solicitud de restablecimiento...", "success");
-                    console.log("Correo registrado. Intentando enviar email a:", email); 
+                    console.log("Correo registrado. Intentando enviar email a:", email);
 
+                    emailToVerify = email; // Almacena el correo para el paso de verificación
+
+                    // --- INICIO: Lógica para generar y guardar el código aleatorio ---
+                    const newVerificationCode = generarCodigoVerificacion();
+                    // Establece una expiración, por ejemplo, 10 minutos (600,000 milisegundos)
+                    const expirationTime = Date.now() + (10 * 60 * 1000); // 10 minutos desde ahora
+
+                    localStorage.setItem('tempVerificationCode', JSON.stringify({
+                        code: newVerificationCode,
+                        email: email,
+                        expiresAt: expirationTime
+                    }));
+                    console.log("Código de verificación generado y guardado temporalmente:", newVerificationCode, "expira en:", new Date(expirationTime));
+                    // --- FIN: Lógica para generar y guardar el código aleatorio ---
+
+
+                    // Parámetros para la plantilla de EmailJS
                     const templateParams = {
-                        to_email: email, 
-                        reset_link: `http://tudominio.com/reset-password.html?email=${encodeURIComponent(email)}` 
-                        // Asegúrate de cambiar "http://tudominio.com/reset-password.html" por la URL real de tu página de restablecimiento
+                        to_email: email, // Correo del destinatario
+                        verification_code: newVerificationCode // Pasa el código generado aleatoriamente
                     };
-                    console.log("Parámetros a enviar a EmailJS:", templateParams); 
+                    console.log("Parámetros a enviar a EmailJS:", templateParams);
 
                     try {
                         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
 
-                        mostrarMensaje("Se ha enviado un enlace para restablecer tu contraseña a tu correo electrónico.", "success");
-                        console.log("Correo de restablecimiento enviado con éxito a", email); 
-                        setTimeout(() => {
-                            modoRestablecer = false;
-                            updateFormVisibility();
-                            limpiarCampos();
-                        }, 3000); 
+                        // Transición al modo de verificación después de enviar el correo
+                        modoRestablecer = false;
+                        modoVerificacion = true;
+                        updateFormVisibility();
+                        mostrarMensaje(`Se ha enviado un código a ${email}. Ingresa el código para continuar.`, "success");
+                        console.log("Correo de verificación enviado con éxito a", email);
+
                     } catch (error) {
                         console.error("Error al enviar el correo con EmailJS:", error);
+                        console.error("Error detallado de EmailJS:", error);
                         mostrarMensaje("No se pudo enviar el correo de restablecimiento. Intenta de nuevo. Revisa la consola para más detalles.", "error");
                     }
                 } else {
                     mostrarMensaje("El correo electrónico no está registrado.", "error");
                     marcarError(correoInput, true);
-                    console.log("El correo no está registrado en localStorage:", email); 
+                    console.log("El correo no está registrado en localStorage:", email);
                 }
-                return; 
+                return;
             }
 
             // --- Lógica para REGISTRO e INICIO DE SESIÓN ---
@@ -583,7 +673,6 @@
                     hasErrors = true;
                     if (!firstErrorMessage) firstErrorMessage = "Por favor, ingresa tu apellido.";
                 }
-                // Solo validar confirmClave si está visible y requerido
                 if (confirmClaveInput && confirmClaveInput.required && !confirmClaveInput.value.trim()) {
                     marcarError(confirmClaveInput, true);
                     hasErrors = true;
@@ -602,7 +691,6 @@
                 if (!firstErrorMessage) firstErrorMessage = "Por favor, ingresa un correo electrónico válido.";
             }
 
-            // Validar contraseña solo si el campo de clave está visible y es requerido
             if (claveInput.style.display !== 'none' && claveInput.required && !validarContrasena(claveInput.value.trim())) {
                 marcarError(claveInput, true);
                 hasErrors = true;
@@ -658,22 +746,106 @@
             }
         }
 
+        async function verificarCodigo() {
+            const verificationCodeInput = document.getElementById("verificationCode");
+            const code = verificationCodeInput.value.trim();
+
+            document.querySelectorAll("input").forEach(input => input.classList.remove("error-input"));
+            mostrarMensaje('', '');
+
+            if (!code) {
+                marcarError(verificationCodeInput, true);
+                mostrarMensaje("Por favor, ingresa el código de verificación.", "error");
+                return;
+            }
+
+            const storedCodeData = JSON.parse(localStorage.getItem('tempVerificationCode'));
+
+            if (!storedCodeData || storedCodeData.email !== emailToVerify) {
+                marcarError(verificationCodeInput, true);
+                mostrarMensaje("Error: No hay solicitud de código pendiente para este correo.", "error");
+                console.error("No se encontró código almacenado o no coincide el email.");
+                return;
+            }
+
+            const currentTime = Date.now();
+            if (currentTime > storedCodeData.expiresAt) {
+                marcarError(verificationCodeInput, true);
+                mostrarMensaje("El código ha expirado. Por favor, solicita uno nuevo.", "error");
+                localStorage.removeItem('tempVerificationCode'); // Limpiar código expirado
+                console.warn("Código expirado.");
+                return;
+            }
+
+            if (code === storedCodeData.code) {
+                mostrarMensaje("Código verificado exitosamente. Redirigiendo para establecer nueva contraseña...", "success");
+                
+                // Limpia el código de localStorage una vez verificado, por seguridad.
+                localStorage.removeItem('tempVerificationCode');
+
+                // Redirige a la página de restablecimiento de contraseña, pasando el email verificado
+                setTimeout(() => {
+                    window.location.href = `Restablecer Contraseña.html?email=${encodeURIComponent(emailToVerify)}`;
+                }, 2000); // Redirige después de 2 segundos para que el usuario vea el mensaje de éxito
+
+            } else {
+                marcarError(verificationCodeInput, true);
+                mostrarMensaje("Código de verificación incorrecto. Intenta de nuevo.", "error");
+                console.warn("Código ingresado no coincide con el almacenado.");
+            }
+        }
+
         function loginSocial(provider) {
             mostrarMensaje(`Redirigiendo a ${provider} para autenticar...`, "success");
             // Aquí iría la lógica real para autenticación con Google/iCloud (OAuth)
             // que es más compleja y requeriría APIs del lado del servidor.
         }
 
+        // --- Manejo global de la tecla Enter ---
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const activeElement = document.activeElement;
+
+                // Si el elemento activo es un botón, haz clic en él
+                if (activeElement && activeElement.tagName === 'BUTTON') {
+                    activeElement.click();
+                    event.preventDefault(); // Evita el comportamiento predeterminado del Enter (por ejemplo, envío de formulario duplicado)
+                }
+                
+                // Si el elemento activo es un enlace (<a>) que tiene un tabindex
+                // y, por lo tanto, es interactivo
+                if (activeElement && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+
+                // Si el elemento activo es un div o span con un onclick y tabindex
+                if (activeElement && (activeElement.tagName === 'DIV' || activeElement.tagName === 'SPAN') && activeElement.hasAttribute('tabindex') && activeElement.onclick) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+
+                // Lógica específica para el campo de verificación de código:
+                // Si está activo el input de verificación y se presiona Enter,
+                // que dispare la función de verificar código.
+                if (activeElement && activeElement.id === 'verificationCode') {
+                    document.querySelector('#verificationCodeGroup .btn-submit').click(); // Simula clic en el botón "Verificar Código"
+                    event.preventDefault();
+                }
+            }
+        });
+
         // Se ejecuta cuando la página se carga
         window.onload = () => {
             modoRegistro = false;
             modoRestablecer = false;
+            modoVerificacion = false;
             updateFormVisibility();
-            
+
             // Revisa si ya hay una sesión activa y redirige
             const sesion = JSON.parse(localStorage.getItem("sesionIniciada"));
             const usuarioActivoCorreo = localStorage.getItem("usuarioActivo");
-            const usuarios = getUsuariosRegistrados(); 
+            const usuarios = getUsuariosRegistrados();
 
             if (sesion && usuarioActivoCorreo && usuarios[usuarioActivoCorreo]) {
                 window.location.href = "index.html";

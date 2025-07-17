@@ -115,9 +115,29 @@
             cursor: pointer;
             border-bottom: 1px solid #eee;
             color: #333;
+            display: flex; /* Make it a flex container */
+            justify-content: space-between; /* Space out content and arrow */
+            align-items: center; /* Vertically center content */
         }
         .dropdown .item.suggestion:hover {
             background: #f0f0f0;
+        }
+        .suggestion-arrow {
+            width: 16px; /* Tamaño revertido a 16px */
+            height: 16px; /* Tamaño revertido a 16px */
+            fill: #999; /* Grey color for the arrow */
+            transform: rotate(-45deg); /* Rotate to point up-right */
+            margin-left: 10px; /* Space between text and arrow */
+            transition: fill 0.2s, transform 0.2s;
+        }
+        .dropdown .item.suggestion:hover .suggestion-arrow {
+            fill: #ff0101; /* Change color on hover */
+            transform: rotate(-45deg) scale(1.1); /* Slightly enlarge on hover */
+        }
+        .search-suggestion-icon {
+            width: 16px;
+            height: 16px;
+            fill: #999; /* Grey color for the icon */
         }
 
         /* ICONOS DERECHA GENERAL */
@@ -339,13 +359,13 @@
 <body>
 
     <header>
-        <img src="Imagenes/logo 22.png" alt="" width="150" style="cursor: pointer;" onclick="location.reload()">
+        <img src="https://i.imgur.com/luW5dMU.png" alt="FlashBuyX Logo" width="150" style="cursor: pointer;" onclick="location.reload()" tabindex="0">
 
         <nav>
-            <a onclick="location.reload()">Inicio</a>
-            <a href="#">Productos</a>
-            <a href="#">Contacto</a>
-            <a href="#">Ofertas</a>
+            <a onclick="location.reload()" tabindex="0">Inicio</a>
+            <a href="#" tabindex="0">Productos</a>
+            <a href="#" tabindex="0">Contacto</a>
+            <a href="#" tabindex="0">Ofertas</a>
         </nav>
         <div class="search-bar">
             <input id="searchInput" type="text" placeholder="Buscar productos…" autocomplete="off" />
@@ -360,7 +380,7 @@
 
         <div id="headerRightButtons" class="header-right">
             
-            <a id="loginRegisterButton" href="Login.html" class="btn-rounded">
+            <a id="loginRegisterButton" href="Login.html" class="btn-rounded" tabindex="0">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
@@ -368,18 +388,18 @@
             </a>
 
             <div id="userMenuContainer" class="user-menu-container" style="display:none;">
-                <button id="userNameButton" class="btn-rounded"> 
+                <button id="userNameButton" class="btn-rounded" tabindex="0"> 
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
                     </button>
                 <div id="userDropdown" class="account-dropdown-content">
-                    <a href="configuracion.html">Configuración</a> 
-                    <a href="#" id="logoutButton">Cerrar Sesión</a>
+                    <a href="configuracion.html" tabindex="0">Configuración</a> 
+                    <a href="#" id="logoutButton" tabindex="0">Cerrar Sesión</a>
                 </div>
             </div>
 
-            <a id="abrirCarrito" class="btn-rounded">
+            <a id="abrirCarrito" class="btn-rounded" tabindex="0">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 
                     0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14l.9-2h7.5
@@ -394,19 +414,19 @@
     <aside id="cajita-carrito">
         <header>
             <h2>Tu carrito</h2>
-            <button id="cerrarCarrito">&times;</button>
+            <button id="cerrarCarrito" tabindex="0">&times;</button>
         </header>
         <div id="contenidoCarrito"><p style="text-align:center; color:#666; font-style:italic; margin-top:20px;">Tu carrito está vacío.</p></div>
     </aside>
 
     <div class="container" style="margin-top: 5rem;"> 
         <section class="products" id="productsContainer">
-            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/FF5733/FFFFFF?text=Producto+1" alt="Producto 1"><h3>Producto 1</h3><p>$19.99</p><button>Añadir al carrito</button></div>
-            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/33FF57/FFFFFF?text=Producto+2" alt="Producto 2"><h3>Producto 2</h3><p>$29.99</p><button>Añadir al carrito</button></div>
-            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/3357FF/FFFFFF?text=Audífonos+Bluetooth" alt="Audífonos Bluetooth"><h3>Audífonos Bluetooth</h3><p>$49.99</p><button>Añadir al carrito</button></div>
-            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/FF33DA/FFFFFF?text=Smartwatch+X" alt="Smartwatch X"><h3>Smartwatch X</h3><p>$99.99</p><button>Añadir al carrito</button></div>
-            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/DA33FF/FFFFFF?text=Tablet+Pro" alt="Tablet Pro"><h3>Tablet Pro</h3><p>$199.99</p><button>Añadir al carrito</button></div>
-            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/33FFFF/FFFFFF?text=Auriculares+Noise+Cancelling" alt="Auriculares Noise Cancelling"><h3>Auriculares Noise Cancelling</h3><p>$79.99</p><button>Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/FF5733/FFFFFF?text=Producto+1" alt="Producto 1"><h3>Producto 1</h3><p>$19.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/33FF57/FFFFFF?text=Producto+2" alt="Producto 2"><h3>Producto 2</h3><p>$29.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/3357FF/FFFFFF?text=Audífonos+Bluetooth" alt="Audífonos Bluetooth"><h3>Audífonos Bluetooth</h3><p>$49.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/FF33DA/FFFFFF?text=Smartwatch+X" alt="Smartwatch X"><h3>Smartwatch X</h3><p>$99.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/DA33FF/FFFFFF?text=Tablet+Pro" alt="Tablet Pro"><h3>Tablet Pro</h3><p>$199.99</p><button tabindex="0">Añadir al carrito</button></div>
+            <div class="product"><div class="promo-label">¡Oferta!</div><img src="https://via.placeholder.com/300/33FFFF/FFFFFF?text=Auriculares+Noise+Cancelling" alt="Auriculares Noise Cancelling"><h3>Auriculares Noise Cancelling</h3><p>$79.99</p><button tabindex="0">Añadir al carrito</button></div>
         </section>
     </div>
 
@@ -417,17 +437,15 @@
         const input = document.getElementById('searchInput');
         const dd = document.getElementById('dropdown');
 
-        let usuarioActivo = null; // Inicializar como null, se establecerá al cargar la página si hay sesión
+        let usuarioActivo = null; 
         let carrito = {}; 
 
-        // --- Referencias a los nuevos elementos del DOM para la interacción de cuenta y carrito ---
         const loginRegisterButton = document.getElementById('loginRegisterButton');
         const userMenuContainer = document.getElementById('userMenuContainer');
         const userNameButton = document.getElementById('userNameButton');
         const userDropdown = document.getElementById('userDropdown');
         const logoutButton = document.getElementById('logoutButton');
 
-        // Carrito lateral toggle
         const btnAbrirCarrito = document.getElementById('abrirCarrito');
         const cajitaCarrito = document.getElementById('cajita-carrito');
         const btnCerrarCarrito = document.getElementById('cerrarCarrito');
@@ -435,14 +453,12 @@
 
         // --- Funciones para Historial de Búsqueda ---
         function getHistorial() {
-            // Usa el nombre del usuario si está logueado, de lo contrario, usa 'anonimo'
             const key = usuarioActivo ? `historial_${usuarioActivo}` : 'historial_anonimo';
             return JSON.parse(localStorage.getItem(key)) || [];
         }
 
         function saveHistorial(term) {
             if (!term) return;
-            // Usa el nombre del usuario si está logueado, de lo contrario, usa 'anonimo'
             const key = usuarioActivo ? `historial_${usuarioActivo}` : 'historial_anonimo';
             let h = getHistorial();
             if (!h.includes(term)) {
@@ -453,7 +469,6 @@
         }
 
         function deleteHistorial(term) {
-            // Usa el nombre del usuario si está logueado, de lo contrario, usa 'anonimo'
             const key = usuarioActivo ? `historial_${usuarioActivo}` : 'historial_anonimo';
             let h = getHistorial().filter(t => t !== term); 
             localStorage.setItem(key, JSON.stringify(h));
@@ -467,9 +482,17 @@
             }
             dd.innerHTML = `<div class="heading">${heading}</div>` + list.map(item => {
                 if (heading === 'Historial') {
-                    return `<div class="item history">${item}<span class="delete" data-term="${item}">✕</span></div>`;
+                    return `<div class="item history" tabindex="0">${item}<span class="delete" data-term="${item}">✕</span></div>`;
                 } else {
-                    return `<div class="item suggestion">${item}</div>`;
+                    return `<div class="item suggestion" tabindex="0">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <svg viewBox="0 0 24 24" class="search-suggestion-icon"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                    <span>${item}</span>
+                                </div>
+                                <svg viewBox="0 0 24 24" class="suggestion-arrow">
+                                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                                </svg>
+                            </div>`;
                 }
             }).join('');
             dd.style.display = 'block';
@@ -485,7 +508,8 @@
                             renderDropdown(restante, 'Historial'); 
                         }
                     } else {
-                        input.value = el.textContent.trim().replace(/✕$/, ''); 
+                        const textContentElement = el.querySelector('.item.suggestion span') || el.firstChild;
+                        input.value = textContentElement.textContent.trim().replace(/✕$/, ''); 
                         filtrar(input.value.toLowerCase()); 
                         saveHistorial(input.value); 
                         dd.style.display = 'none';
@@ -540,13 +564,11 @@
 
         // --- Funciones para Carrito por Usuario (o Anónimo) ---
         function guardarCarrito() {
-            // Guarda el carrito con una clave específica del usuario o una clave anónima
             const key = usuarioActivo ? `carrito_${usuarioActivo}` : 'carrito_anonimo';
             localStorage.setItem(key, JSON.stringify(carrito));
         }
 
         function cargarCarrito() {
-            // Carga el carrito con la clave del usuario o la clave anónima
             const key = usuarioActivo ? `carrito_${usuarioActivo}` : 'carrito_anonimo';
             const carritoGuardado = localStorage.getItem(key);
             if (carritoGuardado) {
@@ -582,13 +604,13 @@
                         <strong style="margin-bottom: 6px;">${nombre}</strong>
                         <div style="display:flex; justify-content: space-between; align-items: center;">
                             <div>Precio: <span class="precio-total">$${(item.precioUnitario * item.cantidad).toFixed(2)}</span></div>
-                            <button class="eliminar" style="background:#e60000; color:white; border:none; border-radius:4px; padding: 4px 10px; cursor:pointer; font-weight:bold; font-size: 0.85rem;">ELIMINAR</button>
+                            <button class="eliminar" style="background:#e60000; color:white; border:none; border-radius:4px; padding: 4px 10px; cursor:pointer; font-weight:bold; font-size: 0.85rem;" tabindex="0">ELIMINAR</button>
                         </div>
                         <div style="margin-top: 6px; display:flex; align-items: center; gap: 8px;">
                             Cantidad:
-                            <button class="menos" style="cursor:pointer; font-size: 16px; padding: 3px 8px; border-radius: 5px; border: 1px solid #ccc; background: #f0f0f0; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);">-</button>
+                            <button class="menos" style="cursor:pointer; font-size: 16px; padding: 3px 8px; border-radius: 5px; border: 1px solid #ccc; background: #f0f0f0; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);" tabindex="0">-</button>
                             <span class="cantidad" style="min-width: 18px; text-align: center;">${item.cantidad}</span>
-                            <button class="mas" style="cursor:pointer; font-size: 16px; padding: 3px 8px; border-radius: 5px; border: 1px solid #ccc; background: #f0f0f0; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);">+</button>
+                            <button class="mas" style="cursor:pointer; font-size: 16px; padding: 3px 8px; border-radius: 5px; border: 1px solid #ccc; background: #f0f0f0; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);" tabindex="0">+</button>
                         </div>
                     </div>
                 `;
@@ -630,8 +652,6 @@
         // --- Lógica de añadir producto al carrito (ahora sin necesidad de login) ---
         document.querySelectorAll('.product button').forEach(btn => {
             btn.addEventListener('click', () => {
-                // No se necesita verificar usuarioActivo aquí, siempre se puede añadir
-                
                 const productDiv = btn.closest('.product');
                 const nombre = productDiv.querySelector('h3').textContent;
                 const precioTexto = productDiv.querySelector('p').textContent;
@@ -651,10 +671,8 @@
                 guardarCarrito(); 
                 renderizarCarrito(); 
 
-                // Mostrar carrito
                 const cajita = document.getElementById('cajita-carrito');
                 cajita.style.right = '0';
-                // Asegurarse de que el menú desplegable de cuenta esté cerrado si estaba abierto
                 userDropdown.classList.remove('show'); 
             });
         });
@@ -662,7 +680,6 @@
         // --- Carrito lateral toggle ---
         btnAbrirCarrito.addEventListener('click', () => {
             cajitaCarrito.style.right = '0';
-            // Ocultar el menú desplegable de cuenta si está abierto
             userDropdown.classList.remove('show'); 
         });
 
@@ -672,28 +689,25 @@
 
         // --- Manejo de la interfaz de cuenta (el nuevo comportamiento dinámico) ---
         function updateAccountButton() {
-            const sesionIniciada = JSON.parse(localStorage.getItem('sesionIniciada'));
+            const sesionData = JSON.parse(localStorage.getItem('sesionIniciada'));
 
-            if (sesionIniciada && sesionIniciada.nombre) {
-                // Usuario logueado: Mostrar el botón con el nombre de usuario y ocultar el de login/registro
+            if (sesionData && sesionData.nombre) {
                 loginRegisterButton.style.display = 'none';
                 userMenuContainer.style.display = 'inline-block'; 
                 userNameButton.innerHTML = `
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
-                    ${sesionIniciada.nombre}
+                    ${sesionData.nombre}
                 `;
                 
-                // Actualiza usuarioActivo global si la sesión es válida
-                usuarioActivo = sesionIniciada.nombre; 
+                usuarioActivo = sesionData.nombre; 
 
             } else {
-                // No hay usuario logueado: Mostrar el botón de login/registro y ocultar el de usuario
                 loginRegisterButton.style.display = 'flex'; 
                 userMenuContainer.style.display = 'none';
                 userDropdown.classList.remove('show'); 
-                usuarioActivo = null; // Asegurar que usuarioActivo es null
+                usuarioActivo = null; 
             }
         }
 
@@ -701,7 +715,7 @@
         userNameButton.addEventListener('click', (event) => {
             event.stopPropagation(); 
             userDropdown.classList.toggle('show'); 
-            cajitaCarrito.style.right = '-100%'; // Asegurarse de que el carrito esté cerrado
+            cajitaCarrito.style.right = '-100%'; 
         });
 
         logoutButton.addEventListener('click', (event) => {
@@ -719,49 +733,73 @@
         });
 
         function cerrarSesion() {
-            // Guarda el carrito actual del usuario antes de cerrar sesión (si lo hay)
             if (usuarioActivo) {
                 guardarCarrito(); 
             }
 
             localStorage.removeItem("sesionIniciada");
-            localStorage.removeItem("usuarioActivo"); // Asegura que esta también se limpie
+            localStorage.removeItem("usuarioActivo"); 
 
-            usuarioActivo = null; // Establecer el usuario activo a null
-            carrito = {}; // Vaciar el carrito en memoria (para evitar mezclar con el carrito anónimo)
+            usuarioActivo = null; 
+            carrito = {}; 
             
-            // Recarga el carrito anónimo si existía
-            cargarCarrito(); // Esto cargará el carrito 'anonimo' si hay uno
+            cargarCarrito(); 
 
-            // alert('Has cerrado sesión.'); // ¡ELIMINADO!
-            updateAccountButton(); // Actualiza la interfaz para mostrar el botón de login/registro
-            // Si quieres redirigir siempre al login, descomenta la siguiente línea:
-            // window.location.href = 'Login.html'; 
+            updateAccountButton(); 
         }
+
+        // --- Manejo global de la tecla Enter ---
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const activeElement = document.activeElement;
+
+                // Trigger click for buttons
+                if (activeElement && activeElement.tagName === 'BUTTON') {
+                    activeElement.click();
+                    event.preventDefault(); // Prevent default form submission if button is inside a form
+                }
+                
+                // Trigger click for links (<a> tags) that act as buttons
+                // Ensure they have tabindex="0" to be focusable
+                if (activeElement && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+
+                // Specific case for the logo image (if it's focused via tabindex)
+                if (activeElement && activeElement.tagName === 'IMG' && activeElement.alt === 'FlashBuyX Logo' && activeElement.hasAttribute('tabindex')) {
+                    activeElement.click(); 
+                    event.preventDefault();
+                }
+
+                // Handle Enter on search dropdown items (suggestions and history)
+                if (activeElement && activeElement.classList.contains('item') && activeElement.hasAttribute('tabindex')) {
+                    activeElement.click();
+                    event.preventDefault();
+                }
+            }
+        });
 
         // --- Inicializar al cargar la página ---
         window.onload = () => {
             const sesionData = JSON.parse(localStorage.getItem('sesionIniciada'));
-            // El 'usuarioActivo' en localStorage ya no es estrictamente necesario si sesionIniciada lo maneja
-            // Pero lo mantenemos para consistencia con tu código anterior.
             const usuarioActivoLS = localStorage.getItem('usuarioActivo'); 
 
-            // Si hay sesión iniciada, actualiza el usuarioActivo global
             if (sesionData && sesionData.nombre) {
                 usuarioActivo = sesionData.nombre;
             } else {
-                usuarioActivo = null; // Asegurarse de que esté nulo si no hay sesión
+                usuarioActivo = null; 
             }
             
-            updateAccountButton(); // Llama a la función para configurar los botones de cuenta
-            cargarCarrito(); // Carga el carrito correspondiente al usuario (o anónimo) al iniciar
+            updateAccountButton(); 
+            cargarCarrito(); 
         };
 
         // Escucha el evento 'storage' para reaccionar a cambios en localStorage desde Login.html
         window.addEventListener('storage', (event) => {
             if (event.key === 'sesionIniciada' || event.key === 'usuarioActivo') {
                 updateAccountButton();
-                cargarCarrito(); // Recargar carrito por si el usuario cambia
+                cargarCarrito(); 
             }
         });
 
