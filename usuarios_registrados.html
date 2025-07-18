@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios Registrados - FlashBuyX</title>
+    <style>
+        :root {
+            --primary-color: #4a60f2;
+            --primary-dark: #3542c6;
+            --text-color-dark: #333;
+            --text-color-medium: #555;
+            --border-color: #e0e0e0;
+            --bg-light: #f8f9fa;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px var(--shadow-light);
+            padding: 30px;
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        #userTableContainer {
+            width: 100%;
+            overflow-x: auto; /* Permite desplazamiento horizontal en pantallas pequeñas */
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden; /* Asegura que los bordes redondeados se apliquen */
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .no-users-message {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffe0b2; /* Naranja suave */
+            border: 1px solid #ffb74d; /* Naranja más fuerte */
+            color: #e65100; /* Naranja oscuro */
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.2s;
+            margin-top: 30px;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .security-note {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff3cd; /* Amarillo pastel */
+            border: 1px solid #ffeeba; /* Amarillo más oscuro */
+            color: #856404; /* Marrón oscuro */
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            text-align: left;
+            width: 90%;
+            max-width: 900px;
+        }
+        .security-note strong {
+            color: #721c24; /* Rojo oscuro para resaltar */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Usuarios Registrados</h2>
+        <div id="userTableContainer">
+            </div>
+        <p class="no-users-message" id="noUsersMessage" style="display: none;">
+            No hay usuarios registrados aún.
+        </p>
+        
+    </div>
+
+    <div class="security-note">
+        <strong>Nota de Seguridad Importante:</strong>
+        Este archivo muestra las contraseñas en texto plano con fines demostrativos.
+        En una aplicación real, **nunca** debes almacenar contraseñas de esta manera.
+        Las contraseñas siempre deben ser almacenadas de forma segura (por ejemplo, con **hashing** y **salting**)
+        en una base de datos en un servidor seguro, no en el almacenamiento local del navegador.
+        `localStorage` no es un lugar seguro para datos sensibles de usuario.
+    </div>
+
+    <script>
+        function getUsuariosRegistrados() {
+            try {
+                const usuarios = localStorage.getItem("usuariosRegistrados");
+                return usuarios ? JSON.parse(usuarios) : {};
+            } catch (e) {
+                console.error("Error al leer usuariosRegistrados de localStorage:", e);
+                return {};
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const usuarios = getUsuariosRegistrados();
+            const userTableContainer = document.getElementById('userTableContainer');
+            const noUsersMessage = document.getElementById('noUsersMessage');
+
+            const userKeys = Object.keys(usuarios);
+
+            if (userKeys.length === 0) {
+                noUsersMessage.style.display = 'block';
+                userTableContainer.innerHTML = ''; // Asegúrate de que la tabla esté vacía
+            } else {
+                noUsersMessage.style.display = 'none';
+                let tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo Electrónico</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Contraseña</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                userKeys.forEach(email => {
+                    const user = usuarios[email];
+                    tableHTML += `
+                        <tr>
+                            <td>${user.nombre || 'N/A'}</td>
+                            <td>${user.apellido || 'N/A'}</td>
+                            <td>${user.email || 'N/A'}</td>
+                            <td>${user.fechaNacimiento || 'N/A'}</td>
+                            <td>${user.clave || 'N/A'}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+                userTableContainer.innerHTML = tableHTML;
+            }
+        });
+    </script>
+</body>
+</html>

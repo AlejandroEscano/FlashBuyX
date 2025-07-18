@@ -10,19 +10,20 @@
     <style>
         /* Variables CSS para consistencia de colores y fuentes */
         :root {
-            --primary-color: #ff0101; /* Rojo de FlashBuyX */
-            --primary-light: #ff3333; /* Rojo más claro para hover */
-            --secondary-color: #4a5568; /* Gris oscuro para texto y botones secundarios */
-            --secondary-light: #718096; /* Gris medio */
-            --text-color-dark: #2d3748; /* Texto casi negro */
-            --text-color-medium: #4a5568; /* Texto gris oscuro */
-            --text-color-light: #718096; /* Gris claro para texto secundario */
-            --border-color: #e2e8f0; /* Gris muy claro para bordes */
-            --bg-color-light: #f7fafc; /* Fondo muy claro */
-            --success-color: #48bb78; /* Verde para éxito */
-            --error-color: #e53e3e; /* Rojo para error */
-            --info-color: #3182ce; /* Azul para información */
-            --warning-color: #dd6b20; /* Naranja para advertencia */
+            --primary-color: #4285F4; /* Azul de Google, vibrante y limpio */
+            --primary-light: #66A3FF; /* Azul más claro para hover */
+            --primary-dark: #1A5FB4; /* Azul más oscuro para contraste */
+            --secondary-color: #616A6B; /* Gris pizarra oscuro para elementos secundarios */
+            --secondary-light: #ABB2B9; /* Gris más claro para texto y bordes secundarios */
+            --text-color-dark: #2C3E50; /* Azul oscuro casi negro para textos principales */
+            --text-color-medium: #5D6D7E; /* Gris azulado medio para texto secundario */
+            --text-color-light: #9FA7AE; /* Gris claro para texto informativo */
+            --border-color: #EBF1F5; /* Gris muy claro para bordes sutiles */
+            --bg-color-light: #F8F9FA; /* Fondo muy claro, casi blanco */
+            --success-color: #28A745; /* Verde estándar para éxito */
+            --error-color: #DC3545; /* Rojo estándar para error */
+            --info-color: #17A2B8; /* Azul cian para información */
+            --warning-color: #FFC107; /* Naranja para advertencia */
             --spacing-unit: 1rem; /* Unidad base para espaciado */
         }
 
@@ -35,7 +36,8 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color-light);
+            /* Fondo con un degradado suave y sutil */
+            background: linear-gradient(135deg, #f0f4f7 0%, #e8edf1 100%); /* Tonos de gris azulado muy claros */
             color: var(--text-color-dark);
             line-height: 1.6;
             min-height: 100vh;
@@ -49,7 +51,7 @@
         .container {
             background-color: #fff;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Sombra ligeramente más profunda */
             padding: calc(var(--spacing-unit) * 1.5); /* 1.5rem */
             width: 100%;
             max-width: 500px; /* Limite de ancho para que no se extienda demasiado en pantallas grandes */
@@ -92,6 +94,7 @@
             color: var(--text-color-dark);
             margin-bottom: calc(var(--spacing-unit) * 1.5);
             font-size: 1.8rem; /* Tamaño de fuente responsivo */
+            text-align: center; /* Centrar el título */
         }
 
         .section {
@@ -99,7 +102,8 @@
             padding: var(--spacing-unit);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background-color: var(--bg-color-light);
+            background-color: #fff; /* Mantener secciones blancas para contraste */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* Sombra muy sutil para secciones */
         }
 
         .section-title {
@@ -107,6 +111,8 @@
             margin-bottom: var(--spacing-unit);
             color: var(--text-color-medium);
             font-size: 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
         }
 
         .form-group {
@@ -132,6 +138,7 @@
             font-size: 1rem;
             color: var(--text-color-dark);
             background-color: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         input[type="text"]:focus,
@@ -139,7 +146,15 @@
         input[type="password"]:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(255, 1, 1, 0.1);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.25); /* Sombra azul para el foco, más opaca */
+        }
+
+        /* --- Estilo para el campo de email "bloqueado" --- */
+        input[readonly] {
+            background-color: var(--bg-color-light); /* Fondo más claro para indicar lectura */
+            cursor: default;
+            border-color: var(--border-color); /* Borde más claro */
+            opacity: 0.9; /* Ligeramente transparente */
         }
 
         .password-input-wrapper {
@@ -173,6 +188,7 @@
             fill: currentColor; /* Usa el color del padre (toggle-password) */
         }
 
+        /* ESTILOS DE BOTONES MEJORADOS */
         button {
             width: 100%;
             padding: 0.9rem;
@@ -180,28 +196,65 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s;
+            transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
             font-size: 1rem;
             margin-top: 0.5rem;
+            outline: none; /* Eliminar el contorno por defecto */
         }
 
+        button:focus {
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.4); /* Anillo de foco sutil */
+        }
+        
         .btn-primary {
             background-color: var(--primary-color);
             color: white;
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2); /* Sombra inicial */
         }
         .btn-primary:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-1px);
+            background-color: var(--primary-dark);
+            transform: translateY(-2px); /* Elevación más notable */
+            box-shadow: 0 8px 18px rgba(66, 133, 244, 0.35); /* Sombra más grande al hover */
+        }
+        .btn-primary:active {
+            transform: translateY(0); /* Efecto de "presionado" */
+            box-shadow: 0 2px 5px rgba(66, 133, 244, 0.2);
+            background-color: var(--primary-dark); /* Mantener oscuro al presionar */
         }
 
         .btn-secondary {
             background-color: var(--secondary-color);
             color: white;
+            box-shadow: 0 4px 10px rgba(97, 106, 107, 0.1); /* Sombra inicial */
         }
         .btn-secondary:hover {
             background-color: var(--secondary-light);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(97, 106, 107, 0.25);
         }
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(97, 106, 107, 0.1);
+            background-color: var(--secondary-light);
+        }
+
+        /* Estilo específico para el botón de eliminar cuenta */
+        button.btn-delete { /* Añadir una clase btn-delete al botón */
+            background-color: var(--error-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+        }
+        button.btn-delete:hover {
+            background-color: #C82333; /* Rojo ligeramente más oscuro */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(220, 53, 69, 0.35);
+        }
+        button.btn-delete:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
+            background-color: #C82333;
+        }
+
 
         .btn-link {
             background: none;
@@ -212,10 +265,21 @@
             font-size: 0.9rem;
             width: auto;
             margin-top: 1rem;
+            transition: color 0.2s ease;
         }
         .btn-link:hover {
-            color: var(--primary-color);
+            color: var(--primary-dark);
+            text-decoration: none; /* Quitar subrayado en hover para un efecto limpio */
         }
+        .btn-link:focus {
+            box-shadow: none; /* No queremos sombra para los links */
+            outline: 2px dotted var(--primary-color); /* Foco con puntos para accesibilidad */
+            outline-offset: 2px;
+        }
+        .btn-link:active {
+            color: var(--primary-dark);
+        }
+
 
         .message {
             margin-top: var(--spacing-unit);
@@ -226,22 +290,22 @@
             text-align: left;
         }
         .message.success {
-            background-color: rgba(72, 187, 120, 0.1);
+            background-color: rgba(40, 167, 69, 0.1); /* Verde con opacidad */
             color: var(--success-color);
             border: 1px solid var(--success-color);
         }
         .message.error {
-            background-color: rgba(229, 62, 62, 0.1);
+            background-color: rgba(220, 53, 69, 0.1); /* Rojo con opacidad */
             color: var(--error-color);
             border: 1px solid var(--error-color);
         }
         .message.info {
-            background-color: rgba(49, 130, 206, 0.1);
+            background-color: rgba(23, 162, 184, 0.1); /* Azul cian con opacidad */
             color: var(--info-color);
             border: 1px solid var(--info-color);
         }
         .message.warning {
-            background-color: rgba(221, 107, 32, 0.1);
+            background-color: rgba(255, 193, 7, 0.1); /* Naranja para advertencia */
             color: var(--warning-color);
             border: 1px solid var(--warning-color);
         }
@@ -292,22 +356,6 @@
         /* Estado de error para inputs */
         input.error {
             border-color: var(--error-color);
-        }
-
-        /* Estilos para campos de usuario en la sección de seguridad */
-        #currentUsernameDisplay {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-color-dark);
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            background-color: var(--bg-color-light);
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-        #changeUsernameForm .form-group input {
-            text-align: center;
         }
 
         /* Media Queries */
@@ -370,6 +418,10 @@
                 <label for="displayApellido">Apellido:</label>
                 <input type="text" id="displayApellido" readonly>
             </div>
+            <div class="form-group">
+                <label for="displayEmail">Correo Electrónico:</label>
+                <input type="email" id="displayEmail" readonly>
+            </div>
             <button class="btn-primary" onclick="showProfileEditSection()" tabindex="0">Editar Perfil</button>
         </section>
 
@@ -389,13 +441,9 @@
 
         <section id="securitySection" class="section">
             <h3 class="section-title">Seguridad de la Cuenta</h3>
-            <div class="form-group">
-                <label>Usuario actual:</label>
-                <div id="currentUsernameDisplay"></div>
-            </div>
-            <button class="btn-primary" onclick="showChangePasswordFlow()" tabindex="0">Cambiar Contraseña</button>
-            <button class="btn-secondary" onclick="showChangeUsernameFlow()" tabindex="0">Cambiar Nombre de Usuario</button>
-            <button class="btn-secondary" onclick="iniciarVerificacionCorreo()" tabindex="0">Verificar Correo</button>
+            <button class="btn-secondary" onclick="showChangePasswordFlow()" tabindex="0">Cambiar Contraseña</button>
+            <button class="btn-secondary" onclick="showChangeEmailFlow()" tabindex="0">Cambiar Correo Electrónico</button>
+            <button class="btn-secondary" onclick="iniciarVerificacionCorreo()" tabindex="0">Verificar Correo Actual</button>
         </section>
 
         <section id="changePasswordSection" class="section hidden-section">
@@ -423,11 +471,15 @@
             </div>
             <button class="btn-primary" onclick="changePassword()" tabindex="0">Cambiar Contraseña</button>
             <button class="btn-secondary" onclick="cancelChangePassword()" tabindex="0">Cancelar</button>
+            <button class="btn-link" onclick="showForgotPasswordFlow()" tabindex="0">¿Olvidaste tu contraseña?</button>
         </section>
 
         <section id="verificationEmailSection" class="section hidden-section">
-            <h3 class="section-title">Verificar Correo Electrónico</h3>
-            <p>Se ha enviado un código de verificación a su correo electrónico. Por favor, ingréselo a continuación:</p>
+            <h3 class="section-title">Verificar Correo Electrónico Actual</h3>
+            <p>El código de verificación será enviado a la dirección:</p>
+            <p id="emailToVerifyDisplay" style="font-weight: bold; margin-bottom: 1rem;"></p>
+            <button class="btn-primary" id="sendVerificationCodeBtn" onclick="enviarCodigoVerificacionActual()" tabindex="0">Enviar Código de Verificación</button>
+            <p style="margin-top: 1rem;">Una vez enviado, ingréselo a continuación:</p>
             <div class="form-group">
                 <label for="emailVerificationCode">Código de Verificación:</label>
                 <input type="text" id="emailVerificationCode" maxlength="6" required>
@@ -436,25 +488,82 @@
             <button class="btn-secondary" onclick="cancelarVerificacionCorreo()" tabindex="0">Cancelar</button>
         </section>
 
-        <section id="verificationUsernameSection" class="section hidden-section">
-            <h3 class="section-title">Verificar Cambio de Nombre de Usuario</h3>
-            <p>Se ha enviado un código de verificación al correo electrónico asociado a su cuenta. Por favor, ingréselo a continuación para confirmar el cambio de nombre de usuario:</p>
+        <section id="changeEmailSection" class="section hidden-section">
+            <h3 class="section-title">Cambiar Correo Electrónico</h3>
+            <p>Ingrese su nuevo correo electrónico. Deberá presionar 'Enviar Código' para recibir un código de verificación en esta dirección.</p>
             <div class="form-group">
-                <label for="usernameVerificationCode">Código de Verificación:</label>
-                <input type="text" id="usernameVerificationCode" maxlength="6" required>
+                <label for="newEmail">Nuevo Correo Electrónico:</label>
+                <input type="email" id="newEmail" placeholder="nuevo.correo@example.com" required>
             </div>
-            <button class="btn-primary" onclick="verificarCodigoUsername()" tabindex="0">Verificar Código</button>
-            <button class="btn-secondary" onclick="cancelarVerificacionUsername()" tabindex="0">Cancelar</button>
+            <button class="btn-primary" id="sendNewEmailCodeBtn" onclick="enviarCodigoNuevoCorreo()" tabindex="0">Enviar Código de Verificación</button>
+            <p style="margin-top: 1rem;">Una vez enviado, ingréselo a continuación:</p>
+            <div class="form-group">
+                <label for="newEmailVerificationCode">Código de Verificación:</label>
+                <input type="text" id="newEmailVerificationCode" maxlength="6" required>
+            </div>
+            <button class="btn-primary" onclick="verificarCodigoNuevoCorreo()" tabindex="0">Verificar Código</button>
+            <button class="btn-secondary" onclick="cancelChangeEmail()" tabindex="0">Cancelar</button>
         </section>
 
-        <section id="changeUsernameSection" class="section hidden-section">
-            <h3 class="section-title">Cambiar Nombre de Usuario</h3>
+        <section id="verifyNewEmailSection" class="section hidden-section">
+            <h3 class="section-title">Verificar Nuevo Correo Electrónico</h3>
+            <p>Se ha enviado un código de verificación al nuevo correo electrónico. Por favor, ingréselo a continuación:</p>
             <div class="form-group">
-                <label for="newUsername">Nuevo Nombre de Usuario:</label>
-                <input type="text" id="newUsername" placeholder="Ingrese nuevo nombre de usuario" required>
+                <label for="newEmailVerificationCode">Código de Verificación:</label>
+                <input type="text" id="newEmailVerificationCode" maxlength="6" required>
             </div>
-            <button class="btn-primary" onclick="iniciarCambioUsername()" tabindex="0">Guardar Nuevo Nombre de Usuario</button>
-            <button class="btn-secondary" onclick="cancelChangeUsername()" tabindex="0">Cancelar</button>
+            <button class="btn-primary" onclick="verificarCodigoNuevoCorreo()" tabindex="0">Verificar Código</button>
+            <button class="btn-secondary" onclick="cancelVerifyNewEmail()" tabindex="0">Cancelar</button>
+        </section>
+
+        <section id="forgotPasswordEmailSection" class="section hidden-section">
+            <h3 class="section-title">Recuperar Contraseña</h3>
+            <p>El código de recuperación será enviado al correo electrónico de tu cuenta.</p>
+            <div class="form-group">
+                <label for="forgotEmail">Correo Electrónico:</label>
+                <input type="email" id="forgotEmail" readonly required>
+            </div>
+            <button class="btn-primary" id="sendRecoveryCodeBtn" onclick="enviarCodigoRecuperacion()" tabindex="0">Enviar Código de Recuperación</button>
+            <p style="margin-top: 1rem;">Una vez enviado, ingréselo a continuación:</p>
+            <div class="form-group">
+                <label for="forgotVerificationCode">Código de Verificación:</label>
+                <input type="text" id="forgotVerificationCode" maxlength="6" required>
+            </div>
+            <button class="btn-primary" onclick="verificarCodigoRecuperacion()" tabindex="0">Verificar Código</button>
+            <button class="btn-secondary" onclick="cancelForgotPasswordFlow()" tabindex="0">Cancelar</button>
+        </section>
+
+        <section id="forgotPasswordCodeSection" class="section hidden-section">
+            <h3 class="section-title">Verificar Código de Recuperación</h3>
+            <p>Se ha enviado un código de verificación a la dirección:</p>
+            <p id="forgotEmailDisplay" style="font-weight: bold; margin-bottom: 1rem;"></p>
+            <p>Por favor, ingréselo a continuación:</p>
+            <div class="form-group">
+                <label for="forgotVerificationCode">Código de Verificación:</label>
+                <input type="text" id="forgotVerificationCode" maxlength="6" required>
+            </div>
+            <button class="btn-primary" onclick="verificarCodigoRecuperacion()" tabindex="0">Verificar Código</button>
+            <button class="btn-secondary" onclick="cancelForgotPasswordCodeVerification()" tabindex="0">Cancelar</button>
+        </section>
+
+        <section id="forgotPasswordResetSection" class="section hidden-section">
+            <h3 class="section-title">Establecer Nueva Contraseña</h3>
+            <div class="form-group password-input-wrapper">
+                <label for="resetNewPassword">Nueva Contraseña:</label>
+                <input type="password" id="resetNewPassword" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility('resetNewPassword')" tabindex="0">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+            <div class="form-group password-input-wrapper">
+                <label for="resetConfirmNewPassword">Confirmar Nueva Contraseña:</label>
+                <input type="password" id="resetConfirmNewPassword" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility('resetConfirmNewPassword')" tabindex="0">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+            <button class="btn-primary" onclick="establecerNuevaContrasena()" tabindex="0">Guardar Nueva Contraseña</button>
+            <button class="btn-secondary" onclick="cancelForgotPasswordReset()" tabindex="0">Cancelar</button>
         </section>
 
 
@@ -464,17 +573,13 @@
                 <input type="checkbox" id="emailNotifications">
                 <label for="emailNotifications">Recibir notificaciones por correo electrónico</label>
             </div>
-            <div class="form-group">
-                <input type="checkbox" id="smsNotifications">
-                <label for="smsNotifications">Recibir notificaciones por SMS</label>
-            </div>
             <button class="btn-primary" onclick="saveNotificationSettings()" tabindex="0">Guardar Ajustes de Notificación</button>
         </section>
 
         <section id="accountManagementSection" class="section">
             <h3 class="section-title">Gestión de Cuenta</h3>
             <button class="btn-secondary" onclick="cerrarSesion()" tabindex="0">Cerrar Sesión</button>
-            <button class="btn-primary" style="background-color: var(--error-color);" onclick="eliminarCuenta()" tabindex="0">Eliminar Cuenta</button>
+            <button class="btn-primary btn-delete" onclick="eliminarCuenta()" tabindex="0">Eliminar Cuenta</button>
         </section>
         
         <div id="messageDisplay" class="message"></div>
@@ -496,7 +601,7 @@
         // Asegúrate de que "DC68SiTk8JF2M4x_a" sea tu Public Key real de EmailJS
         (function() {
             try {
-                emailjs.init("DC68SiTk8JF2M4x_a");
+                emailjs.init("DC68SiTk8JF2M4x_a"); // Public Key proporcionada por el usuario
                 console.log("EmailJS inicializado correctamente con Public Key: DC68SiTk8JF2M4x_a");
             } catch (e) {
                 console.error("Error al inicializar EmailJS. Detalles:", e);
@@ -505,28 +610,31 @@
     </script>
     <script>
         const MIN_PASSWORD_LENGTH = 8;
-        // const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos - ya no es necesario
 
         let usuarioActivo = localStorage.getItem("usuarioActivo");
         let usuariosRegistrados = getUsuariosRegistrados();
         let emailParaVerificacion = ''; // Usado para el flujo de verificación de correo
-        let usernameParaCambio = ''; // Usado para el flujo de cambio de nombre de usuario
+        let newEmailToVerify = ''; // Almacena el nuevo email para el flujo de cambio de email
+        let emailUsuarioRecuperacion = ''; // Almacena el email para el flujo de recuperación de contraseña
 
-        const EMAILJS_SERVICE_ID = "service_kz355xk"; // Asegúrate de que este sea tu Service ID
-        // Simplificado: Solo se mantiene la plantilla general de código de verificación
-        const EMAILJS_TEMPLATE_CODE_VERIFICATION_ID = "template_o3n0xqw"; // Plantilla para códigos de verificación (para verificación de correo existente o cambio de username)
+        const EMAILJS_SERVICE_ID = "service_kz355xk"; // Service ID proporcionado por el usuario
+        const EMAILJS_TEMPLATE_CODE_VERIFICATION_ID = "template_o3n0xqw"; // Plantilla para códigos de verificación generales (sin cambios)
+        const EMAILJS_TEMPLATE_PASSWORD_RECOVERY_ID = "template_8tu2f1r"; // NEW: Plantilla específica para recuperación de contraseña
 
         // Cargar datos del usuario al iniciar
         document.addEventListener('DOMContentLoaded', () => {
+            // Asegúrate de que usuarioActivo y usuariosRegistrados estén cargados ANTES de cargar los datos de UI
+            usuarioActivo = localStorage.getItem("usuarioActivo"); // Re-obtener por si acaso
+            usuariosRegistrados = getUsuariosRegistrados(); // Re-obtener por si acaso
             cargarDatosUsuario();
             // Inicializar opciones de notificación (ejemplo)
             document.getElementById('emailNotifications').checked = true;
-            document.getElementById('smsNotifications').checked = false;
+            // La opción de SMS ha sido eliminada, por lo que no la inicializamos
         });
 
         // Rutas SVG para los iconos de ojo (copiadas de Login.html para consistencia)
         const EYE_OPEN_SVG_PATH = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
-        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73-4.39-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
+        const EYE_CLOSED_SVG_PATH = '<path d="M17.43 17.43L12 12l5.43-5.43L17 6l-6 6-5.43-5.43L6 7l6 6 5.43 5.43zM12 4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5s-9.27-3.11-11-7.5c1.73 4.39-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
 
         function getUsuariosRegistrados() {
             try {
@@ -551,7 +659,6 @@
             msgDisplay.textContent = msg;
             msgDisplay.className = `message ${type}`;
             msgDisplay.style.display = 'block';
-            // ELIMINADO: setTimeout para ocultar el mensaje automáticamente
         }
 
         function hideAllSections() {
@@ -563,31 +670,28 @@
         }
 
         function cargarDatosUsuario() {
+            // Asegurarse de que usuarioActivo y usuariosRegistrados estén actualizados
+            usuarioActivo = localStorage.getItem("usuarioActivo");
+            usuariosRegistrados = getUsuariosRegistrados();
+
             if (usuarioActivo && usuariosRegistrados[usuarioActivo]) {
                 const usuario = usuariosRegistrados[usuarioActivo];
                 document.getElementById('displayNombre').value = usuario.nombre;
                 document.getElementById('displayApellido').value = usuario.apellido;
-                // document.getElementById('displayEmail').value = usuario.email; // Muestra el correo activo actual - ELIMINADO
-                document.getElementById('currentUsernameDisplay').textContent = usuario.nombre || usuario.email;
-
-                // Lógica para aplicar cambio de email pendiente eliminada
+                document.getElementById('displayEmail').value = usuario.email; // Muestra el correo electrónico
             } else {
-                showMessage("No hay sesión activa. Por favor, inicie sesión.", "error");
+                showMessage("No hay sesión activa o su información de usuario no está completa. Por favor, inicie sesión nuevamente.", "error");
                 setTimeout(() => window.location.href = 'Login.html', 2000);
             }
         }
-
-        // Función applyPendingEmailChange eliminada
 
         function showProfileEditSection() {
             hideAllSections();
             document.getElementById('userProfileEditSection').classList.remove('hidden-section');
             document.getElementById('mainTitle').textContent = "Editar Perfil";
-
             // Precargar valores actuales para edición
             document.getElementById('editNombre').value = document.getElementById('displayNombre').value;
             document.getElementById('editApellido').value = document.getElementById('displayApellido').value;
-            // Campo de email ya no se precarga aquí
         }
 
         function cancelProfileEdit() {
@@ -596,34 +700,54 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
-            
-            // Lógica de cambio de email pendiente eliminada de aquí
             showMessage('Edición de perfil cancelada.', 'info');
             cargarDatosUsuario(); // Recargar para asegurar que los campos muestren los datos originales
         }
 
-
         function saveProfileChanges() {
-            const editNombre = document.getElementById('editNombre').value.trim();
-            const editApellido = document.getElementById('editApellido').value.trim();
-            // const editEmail = document.getElementById('editEmail').value.trim(); // Eliminado
+            const editNombreInput = document.getElementById('editNombre');
+            const editApellidoInput = document.getElementById('editApellido');
+            const newNombre = editNombreInput.value.trim();
+            const newApellido = editApellidoInput.value.trim();
 
-            if (!editNombre || !editApellido) { // Solo se valida nombre y apellido
-                showMessage("Los campos de nombre y apellido son obligatorios.", "error");
+            // Expresión regular para permitir solo letras (mayúsculas, minúsculas, con tilde) y espacios.
+            const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+            // Limpiar errores previos
+            editNombreInput.classList.remove('error');
+            editApellidoInput.classList.remove('error');
+            showMessage('', ''); // Limpiar cualquier mensaje anterior
+
+            let hasErrors = false;
+
+            if (!newNombre || !newApellido) {
+                showMessage("Todos los campos (nombre, apellido) son obligatorios.", "error");
+                if (!newNombre) marcarError(editNombreInput, true);
+                if (!newApellido) marcarError(editApellidoInput, true);
+                hasErrors = true;
+            } else if (!nameRegex.test(newNombre)) {
+                showMessage("El nombre solo puede contener letras y espacios.", "error");
+                marcarError(editNombreInput, true);
+                hasErrors = true;
+            } else if (!nameRegex.test(newApellido)) {
+                showMessage("El apellido solo puede contener letras y espacios.", "error");
+                marcarError(editApellidoInput, true);
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
                 return;
             }
-            
-            // Toda la lógica de cambio de email eliminada
+
             if (usuariosRegistrados[usuarioActivo]) {
-                usuariosRegistrados[usuarioActivo].nombre = editNombre;
-                usuariosRegistrados[usuarioActivo].apellido = editApellido;
+                usuariosRegistrados[usuarioActivo].nombre = newNombre;
+                usuariosRegistrados[usuarioActivo].apellido = newApellido;
                 guardarUsuariosRegistrados(usuariosRegistrados);
-                cargarDatosUsuario(); // Actualizar la interfaz de usuario con los nuevos datos (nombre/apellido)
+                cargarDatosUsuario(); // Actualizar la interfaz de usuario con los nuevos datos
                 showMessage("Cambios de perfil guardados con éxito.", "success");
-                cancelProfileEdit(); // Volver a la vista principal
+                setTimeout(() => cancelProfileEdit(), 2000); // Volver a la vista principal después de un tiempo
             }
         }
-
 
         // Funciones de seguridad
         function showChangePasswordFlow() {
@@ -661,7 +785,7 @@
 
         function togglePasswordVisibility(inputId) {
             const passwordInput = document.getElementById(inputId);
-            const icon = passwordInput.nextElementSibling.querySelector('i'); // Asumiendo que el <i> es el primer hijo del span
+            const icon = passwordInput.nextElementSibling.querySelector('i');
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
                 icon.classList.remove('fa-eye');
@@ -673,7 +797,6 @@
             }
         }
 
-
         function changePassword() {
             const currentPasswordInput = document.getElementById('currentPassword');
             const newPasswordInput = document.getElementById('newPassword');
@@ -684,8 +807,9 @@
             const confirmNewPassword = confirmNewPasswordInput.value;
 
             let hasErrors = false;
+
             document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
-            showMessage('', ''); // Limpiar mensajes anteriores
+            showMessage('', '');
 
             if (!currentPassword || !newPassword || !confirmNewPassword) {
                 showMessage("Todos los campos de contraseña son obligatorios.", "error");
@@ -703,7 +827,7 @@
                 marcarError(confirmNewPasswordInput, true);
                 showMessage("Las nuevas contraseñas no coinciden.", "error");
                 hasErrors = true;
-            } else if (currentPassword === newPassword) {
+            } else if (newPassword === currentPassword) {
                 marcarError(newPasswordInput, true);
                 showMessage("La nueva contraseña no puede ser igual a la actual.", "warning");
                 hasErrors = true;
@@ -713,57 +837,102 @@
                 return;
             }
 
-            usuariosRegistrados[usuarioActivo].clave = newPassword;
-            guardarUsuariosRegistrados(usuariosRegistrados);
-            showMessage("¡Contraseña cambiada con éxito!", "success");
-            setTimeout(() => {
-                cancelChangePassword();
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmNewPassword').value = '';
-            }, 2000);
-        }
-
-        // --- Funciones para verificación de correo (EmailJS) ---
-        let codigoVerificacionActual = ''; // Almacena el código enviado
-        // let emailParaConfirmar = ''; // Eliminado, ya no se usa para cambio de email
-
-        function generarCodigoVerificacion() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
-        }
-
-        async function enviarCodigoEmail(toEmail, code, templateId) {
-            const templateParams = {
-                to_email: toEmail,
-                verification_code: code,
-            };
-            try {
-                await emailjs.send(EMAILJS_SERVICE_ID, templateId, templateParams);
-                return true;
-            } catch (error) {
-                console.error("Error al enviar el correo con EmailJS:", error);
-                showMessage("Error al enviar el código de verificación. Inténtelo de nuevo.", "error");
-                return false;
+            if (usuariosRegistrados[usuarioActivo]) {
+                usuariosRegistrados[usuarioActivo].clave = newPassword;
+                guardarUsuariosRegistrados(usuariosRegistrados);
+                showMessage("Contraseña cambiada con éxito.", "success");
+                setTimeout(() => cancelChangePassword(), 2000);
+            } else {
+                showMessage("Error: No se encontró el usuario activo.", "error");
             }
         }
 
-        // Flujo para la verificación de correo electrónico existente
-        async function iniciarVerificacionCorreo() {
+        // =========================================================================
+        // FLUJO DE VERIFICACIÓN DE CORREO ACTUAL (MODIFICADO PARA ENVÍO MANUAL Y MEJOR VERIFICACIÓN)
+        // =========================================================================
+        function iniciarVerificacionCorreo() {
             hideAllSections();
             document.getElementById('verificationEmailSection').classList.remove('hidden-section');
-            document.getElementById('mainTitle').textContent = "Verificar Correo";
-            document.getElementById('emailVerificationCode').value = ''; // Limpiar campo
-            showMessage("Generando y enviando código de verificación...", "info");
+            document.getElementById('mainTitle').textContent = "Verificar Correo Actual";
+            
+            // Asegurarse de que usuarioActivo y usuariosRegistrados estén actualizados
+            usuarioActivo = localStorage.getItem("usuarioActivo");
+            usuariosRegistrados = getUsuariosRegistrados();
 
-            emailParaVerificacion = usuariosRegistrados[usuarioActivo].email;
-            codigoVerificacionActual = generarCodigoVerificacion();
-
-            // Usar la plantilla general de código de verificación para el correo existente
-            const emailSent = await enviarCodigoEmail(emailParaVerificacion, codigoVerificacionActual, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID);
-            if (emailSent) {
-                showMessage(`Se ha enviado un código de 6 dígitos a ${emailParaVerificacion}.`, "success");
+            const usuario = usuariosRegistrados[usuarioActivo];
+            if (usuario && usuario.email && usuario.email.trim() !== '') { // Asegurarse de que el email no esté vacío
+                emailParaVerificacion = usuario.email;
+                document.getElementById('emailToVerifyDisplay').textContent = emailParaVerificacion;
+                document.getElementById('emailVerificationCode').value = ''; // Limpiar campo de código
+                document.getElementById('sendVerificationCodeBtn').disabled = false; // Habilitar botón de envío
+                showMessage('',''); // Limpiar mensajes previos
             } else {
-                cancelarVerificacionCorreo(); // Volver si falla el envío
+                showMessage("No se pudo obtener una dirección de correo válida para verificación. Asegúrate de estar logueado y que tu perfil tenga un correo asociado.", "error");
+                document.getElementById('sendVerificationCodeBtn').disabled = true; // Deshabilitar botón si no hay email
+            }
+        }
+
+        async function enviarCodigoVerificacionActual() {
+            const sendButton = document.getElementById('sendVerificationCodeBtn');
+            // Re-verificar el email justo antes de enviar
+            if (!emailParaVerificacion || emailParaVerificacion.trim() === '') {
+                 showMessage("Error: La dirección de correo para verificación está vacía. Recargue la página e intente de nuevo.", "error");
+                 sendButton.disabled = true;
+                 return;
+            }
+
+            sendButton.disabled = true;
+            showMessage('Enviando código de verificación...', 'info');
+
+            const verificationCode = generateVerificationCode();
+            const templateParams = {
+                to_email: emailParaVerificacion,
+                verification_code: verificationCode,
+            };
+
+            // ! DEBUGGING: Imprimir el valor de emailParaVerificacion justo antes de send
+            console.log("Valor de emailParaVerificacion justo antes de send:", emailParaVerificacion); 
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID, templateParams);
+                usuariosRegistrados[usuarioActivo].verificationCode = verificationCode;
+                usuariosRegistrados[usuarioActivo].codeTimestamp = Date.now();
+                guardarUsuariosRegistrados(usuariosRegistrados);
+                showMessage(`Código enviado a ${emailParaVerificacion}.`, 'success');
+            } catch (error) {
+                console.error("Error al enviar el código de verificación:", error);
+                showMessage('Error al enviar el código de verificación. Por favor, revisa tu conexión y la configuración de EmailJS.', 'error');
+            } finally {
+                sendButton.disabled = false; // Re-habilitar botón
+            }
+        }
+
+        function verificarCodigoCorreo() {
+            const inputCode = document.getElementById('emailVerificationCode').value.trim();
+            const usuario = usuariosRegistrados[usuarioActivo];
+
+            if (!inputCode) {
+                showMessage("Por favor, ingrese el código de verificación.", "warning");
+                return;
+            }
+
+            if (usuario && usuario.verificationCode === inputCode) {
+                const now = Date.now();
+                const codeAge = now - usuario.codeTimestamp;
+                const TWO_MINUTES = 2 * 60 * 1000;
+
+                if (codeAge < TWO_MINUTES) {
+                    usuario.verifiedEmail = true; // Marcar el correo como verificado
+                    delete usuario.verificationCode; // Limpiar el código usado
+                    delete usuario.codeTimestamp; // Limpiar el timestamp
+                    guardarUsuariosRegistrados(usuariosRegistrados);
+                    showMessage("Correo verificado exitosamente.", "success");
+                    setTimeout(() => cancelarVerificacionCorreo(), 2000);
+                } else {
+                    showMessage("El código de verificación ha expirado. Por favor, solicita uno nuevo.", "error");
+                }
+            } else {
+                showMessage("Código de verificación incorrecto.", "error");
             }
         }
 
@@ -773,188 +942,363 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
-            codigoVerificacionActual = '';
-            emailParaVerificacion = '';
-            // emailParaConfirmar = ''; // Eliminado
-            // Lógica de cambio pendiente de email eliminada
             showMessage('Verificación de correo cancelada.', 'info');
         }
 
-        // Esta función ahora solo maneja la verificación del correo actual (no el cambio de email)
-        document.querySelector('#verificationEmailSection button.btn-primary').onclick = () => {
-            const enteredCode = document.getElementById('emailVerificationCode').value.trim();
+
+        // =========================================================================
+        // FLUJO DE CAMBIO DE CORREO (MODIFICADO PARA ENVÍO MANUAL)
+        // =========================================================================
+        function showChangeEmailFlow() {
+            hideAllSections();
+            document.getElementById('changeEmailSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Cambiar Correo Electrónico";
+            document.getElementById('newEmail').value = ''; // Limpiar campo del nuevo email
+            document.getElementById('sendNewEmailCodeBtn').disabled = false; // Habilitar botón de envío
+            showMessage('',''); // Limpiar mensajes previos
+        }
+
+        async function enviarCodigoNuevoCorreo() {
+            const newEmailInput = document.getElementById('newEmail');
+            newEmailToVerify = newEmailInput.value.trim();
+            const sendButton = document.getElementById('sendNewEmailCodeBtn');
             
-            if (enteredCode === codigoVerificacionActual) {
-                showMessage("¡Correo verificado exitosamente!", "success");
-                setTimeout(() => cancelarVerificacionCorreo(), 2000);
-            } else {
-                showMessage("Código incorrecto. Por favor, inténtelo de nuevo.", "error");
-                marcarError(document.getElementById('emailVerificationCode'), true);
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newEmailToVerify)) {
+                showMessage("Por favor, introduce una dirección de correo electrónico válida.", "error");
+                marcarError(newEmailInput, true);
+                return;
             }
-        };
+            marcarError(newEmailInput, false); // Limpiar error si estaba presente
 
+            // Verificar si el nuevo email ya está registrado por otro usuario
+            for (const emailKey in usuariosRegistrados) {
+                // Modificación aquí para asegurar que no compare con el propio email del usuario activo si es el mismo
+                if (emailKey !== usuarioActivo && usuariosRegistrados[emailKey].email === newEmailToVerify) {
+                    showMessage("Este correo electrónico ya está registrado por otra cuenta.", "error");
+                    marcarError(newEmailInput, true);
+                    return;
+                }
+            }
 
-        // --- Flujo para cambio de nombre de usuario (ejemplo de flujo con verificación) ---
-        async function showChangeUsernameFlow() {
-            hideAllSections();
-            document.getElementById('changeUsernameSection').classList.remove('hidden-section');
-            document.getElementById('mainTitle').textContent = "Cambiar Nombre de Usuario";
-            document.getElementById('newUsername').value = usuariosRegistrados[usuarioActivo].nombre || '';
+            sendButton.disabled = true;
+            showMessage('Enviando código al nuevo correo...', 'info');
+
+            const verificationCode = generateVerificationCode();
+            const templateParams = {
+                to_email: newEmailToVerify,
+                verification_code: verificationCode,
+            };
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID, templateParams);
+                // Almacenar el código y timestamp asociado al *nuevo* email en una variable temporal
+                // o en localStorage si se necesita persistencia entre recargas
+                localStorage.setItem('tempNewEmailCode', JSON.stringify({
+                    email: newEmailToVerify,
+                    code: verificationCode,
+                    timestamp: Date.now()
+                }));
+
+                showMessage(`Código enviado a ${newEmailToVerify}. Por favor, verifique su bandeja de entrada.`, 'success');
+                // Opcional: podrías cambiar a la sección de verificación directamente aquí
+                // showVerifyNewEmailSection(); 
+            } catch (error) {
+                console.error("Error al enviar el código al nuevo correo:", error);
+                showMessage('Error al enviar el código al nuevo correo. Revisa tu conexión y EmailJS.', 'error');
+            } finally {
+                sendButton.disabled = false;
+            }
         }
 
-        function cancelChangeUsername() {
-            hideAllSections();
-            document.getElementById('userProfileSection').classList.remove('hidden-section');
-            document.getElementById('securitySection').classList.remove('hidden-section');
-            document.getElementById('notificationsSection').classList.remove('hidden-section');
-            document.getElementById('accountManagementSection').classList.remove('hidden-section');
-            showMessage('Cambio de nombre de usuario cancelado.', 'info');
-        }
+        function verificarCodigoNuevoCorreo() {
+            const inputCode = document.getElementById('newEmailVerificationCode').value.trim();
+            const storedCodeData = JSON.parse(localStorage.getItem('tempNewEmailCode'));
 
-        async function iniciarCambioUsername() {
-            const newUsername = document.getElementById('newUsername').value.trim();
-            if (!newUsername) {
-                showMessage("El nuevo nombre de usuario no puede estar vacío.", "error");
-                marcarError(document.getElementById('newUsername'), true);
+            if (!inputCode) {
+                showMessage("Por favor, ingrese el código de verificación.", "warning");
                 return;
             }
 
-            if (newUsername === usuariosRegistrados[usuarioActivo].nombre) {
-                showMessage("El nuevo nombre de usuario es igual al actual.", "warning");
-                return;
-            }
+            if (storedCodeData && storedCodeData.code === inputCode && storedCodeData.email === newEmailToVerify) {
+                const now = Date.now();
+                const codeAge = now - storedCodeData.timestamp;
+                const TWO_MINUTES = 2 * 60 * 1000;
 
-            usernameParaCambio = newUsername; // Guarda el nuevo nombre de usuario temporalmente
-            codigoVerificacionActual = generarCodigoVerificacion(); // Generar un nuevo código
+                if (codeAge < TWO_MINUTES) {
+                    // Actualizar el correo del usuario activo
+                    const usuario = usuariosRegistrados[usuarioActivo];
+                    if (usuario) {
+                        // Guardar el nuevo correo bajo la clave antigua y luego eliminar la antigua
+                        const oldEmail = usuario.email;
+                        usuariosRegistrados[newEmailToVerify] = { ...usuario, email: newEmailToVerify };
+                        delete usuariosRegistrados[oldEmail];
+                        
+                        localStorage.setItem("usuarioActivo", newEmailToVerify); // Actualizar usuario activo en localStorage
+                        usuarioActivo = newEmailToVerify; // Actualizar la variable global
 
-            showMessage("Enviando código de verificación para cambio de nombre de usuario...", "info");
-            const emailSent = await enviarCodigoEmail(usuariosRegistrados[usuarioActivo].email, codigoVerificacionActual, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID);
-
-            if (emailSent) {
-                hideAllSections();
-                document.getElementById('verificationUsernameSection').classList.remove('hidden-section');
-                document.getElementById('mainTitle').textContent = "Verificar Cambio de Nombre de Usuario";
-                document.getElementById('usernameVerificationCode').value = '';
-                showMessage(`Se ha enviado un código a ${usuariosRegistrados[usuarioActivo].email}.`, "success");
-            } else {
-                showMessage("Error al iniciar el cambio de nombre de usuario. Intente de nuevo.", "error");
-            }
-        }
-
-        function verificarCodigoUsername() {
-            const enteredCode = document.getElementById('usernameVerificationCode').value.trim();
-            if (enteredCode === codigoVerificacionActual) {
-                if (usuariosRegistrados[usuarioActivo]) {
-                    usuariosRegistrados[usuarioActivo].nombre = usernameParaCambio;
-                    guardarUsuariosRegistrados(usuariosRegistrados);
-                    cargarDatosUsuario(); // Actualizar UI con el nuevo nombre
-                    showMessage("¡Nombre de usuario cambiado exitosamente!", "success");
-                    setTimeout(() => cancelarVerificacionUsername(), 2000);
+                        guardarUsuariosRegistrados(usuariosRegistrados);
+                        localStorage.removeItem('tempNewEmailCode'); // Limpiar el código temporal
+                        showMessage("Correo electrónico cambiado y verificado exitosamente.", "success");
+                        cargarDatosUsuario(); // Actualizar la UI
+                        setTimeout(() => cancelChangeEmail(), 2000);
+                    }
+                } else {
+                    showMessage("El código de verificación ha expirado. Por favor, solicita uno nuevo.", "error");
                 }
             } else {
-                showMessage("Código incorrecto. Intente de nuevo.", "error");
-                marcarError(document.getElementById('usernameVerificationCode'), true);
+                showMessage("Código de verificación incorrecto o no coincide con el correo.", "error");
             }
         }
 
-        function cancelarVerificacionUsername() {
+        function cancelChangeEmail() {
             hideAllSections();
             document.getElementById('userProfileSection').classList.remove('hidden-section');
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
-            codigoVerificacionActual = '';
-            usernameParaCambio = '';
-            showMessage('Cambio de nombre de usuario cancelado.', 'info');
+            showMessage('Cambio de correo cancelado.', 'info');
+            localStorage.removeItem('tempNewEmailCode'); // Limpiar cualquier código temporal
         }
 
+        // =========================================================================
+        // FLUJO DE RECUPERACIÓN DE CONTRASEÑA (MODIFICADO PARA ENVÍO MANUAL)
+        // =========================================================================
+        function showForgotPasswordFlow() {
+            hideAllSections();
+            document.getElementById('forgotPasswordEmailSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Recuperar Contraseña";
+            
+            // Asegurarse de que usuarioActivo y usuariosRegistrados estén actualizados
+            usuarioActivo = localStorage.getItem("usuarioActivo");
+            usuariosRegistrados = getUsuariosRegistrados();
 
-        // --- Flujo de cambio de correo (con verificación) --- ELIMINADO
-        // async function iniciarCambioCorreo(nuevoEmail) { ... }
+            const usuario = usuariosRegistrados[usuarioActivo]; // Asumiendo que el usuario ya está logueado para mostrar su email
+            if (usuario && usuario.email && usuario.email.trim() !== '') {
+                document.getElementById('forgotEmail').value = usuario.email;
+                emailUsuarioRecuperacion = usuario.email; // Almacenar el email para el envío del código
+                document.getElementById('sendRecoveryCodeBtn').disabled = false; // Habilitar botón de envío
+                showMessage('',''); // Limpiar mensajes previos
+            } else {
+                showMessage("No se pudo obtener una dirección de correo válida para recuperación de contraseña. Asegúrate de estar logueado y que tu perfil tenga un correo asociado.", "error");
+                document.getElementById('sendRecoveryCodeBtn').disabled = true; // Deshabilitar botón
+            }
+        }
 
+        async function enviarCodigoRecuperacion() {
+            const sendButton = document.getElementById('sendRecoveryCodeBtn');
+            // Re-verificar el email justo antes de enviar
+            if (!emailUsuarioRecuperacion || emailUsuarioRecuperacion.trim() === '') {
+                 showMessage("Error: La dirección de correo para recuperación está vacía. Recargue la página e intente de nuevo.", "error");
+                 sendButton.disabled = true;
+                 return;
+            }
 
-        // --- Funciones de Notificaciones ---
+            sendButton.disabled = true;
+            showMessage('Enviando código de recuperación...', 'info');
+
+            const recoveryCode = generateVerificationCode(); // Reutilizar la función de generación
+            const templateParams = {
+                to_email: emailUsuarioRecuperacion,
+                recovery_code: recoveryCode, // Usar 'recovery_code' como variable en la plantilla
+            };
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PASSWORD_RECOVERY_ID, templateParams);
+                
+                // Almacenar el código y timestamp de recuperación
+                const usuario = usuariosRegistrados[usuarioActivo];
+                if (usuario) {
+                    usuario.recoveryCode = recoveryCode;
+                    usuario.recoveryCodeTimestamp = Date.now();
+                    guardarUsuariosRegistrados(usuariosRegistrados);
+                    showMessage(`Código de recuperación enviado a ${emailUsuarioRecuperacion}.`, 'success');
+                }
+            } catch (error) {
+                console.error("Error al enviar el código de recuperación:", error);
+                showMessage('Error al enviar el código de recuperación. Por favor, revisa tu conexión y la configuración de EmailJS.', 'error');
+            } finally {
+                sendButton.disabled = false;
+            }
+        }
+
+        function verificarCodigoRecuperacion() {
+            const inputCode = document.getElementById('forgotVerificationCode').value.trim();
+            const usuario = usuariosRegistrados[usuarioActivo];
+
+            if (!inputCode) {
+                showMessage("Por favor, ingrese el código de verificación.", "warning");
+                return;
+            }
+
+            if (usuario && usuario.recoveryCode === inputCode) {
+                const now = Date.now();
+                const codeAge = now - usuario.recoveryCodeTimestamp;
+                const TWO_MINUTES = 2 * 60 * 1000;
+
+                if (codeAge < TWO_MINUTES) {
+                    showMessage("Código verificado. Ahora puedes establecer una nueva contraseña.", "success");
+                    // Cambiar a la sección para establecer nueva contraseña
+                    hideAllSections();
+                    document.getElementById('forgotPasswordResetSection').classList.remove('hidden-section');
+                    document.getElementById('mainTitle').textContent = "Establecer Nueva Contraseña";
+                    document.getElementById('resetNewPassword').value = ''; // Limpiar campos
+                    document.getElementById('resetConfirmNewPassword').value = '';
+                } else {
+                    showMessage("El código de recuperación ha expirado. Por favor, solicita uno nuevo.", "error");
+                }
+            } else {
+                showMessage("Código de recuperación incorrecto.", "error");
+            }
+        }
+
+        function establecerNuevaContrasena() {
+            const newPasswordInput = document.getElementById('resetNewPassword');
+            const confirmNewPasswordInput = document.getElementById('resetConfirmNewPassword');
+            const newPassword = newPasswordInput.value;
+            const confirmNewPassword = confirmNewPasswordInput.value;
+
+            let hasErrors = false;
+            document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+            showMessage('', '');
+
+            if (!newPassword || !confirmNewPassword) {
+                showMessage("Ambos campos de contraseña son obligatorios.", "error");
+                hasErrors = true;
+            } else if (!validarContrasena(newPassword)) {
+                marcarError(newPasswordInput, true);
+                showMessage(`La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`, "error");
+                hasErrors = true;
+            } else if (newPassword !== confirmNewPassword) {
+                marcarError(newPasswordInput, true);
+                marcarError(confirmNewPasswordInput, true);
+                showMessage("Las contraseñas no coinciden.", "error");
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return;
+            }
+
+            if (usuariosRegistrados[usuarioActivo]) {
+                usuariosRegistrados[usuarioActivo].clave = newPassword;
+                delete usuariosRegistrados[usuarioActivo].recoveryCode; // Limpiar código de recuperación
+                delete usuariosRegistrados[usuarioActivo].recoveryCodeTimestamp; // Limpiar timestamp
+                guardarUsuariosRegistrados(usuariosRegistrados);
+                showMessage("Contraseña restablecida con éxito. Inicia sesión con tu nueva contraseña.", "success");
+                setTimeout(() => {
+                    // Redirigir al usuario al Login después de un restablecimiento exitoso
+                    window.location.href = 'Login.html';
+                }, 2000);
+            } else {
+                showMessage("Error: No se encontró el usuario activo para restablecer la contraseña.", "error");
+            }
+        }
+
+        function cancelForgotPasswordFlow() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            showMessage('Recuperación de contraseña cancelada.', 'info');
+        }
+        function cancelForgotPasswordCodeVerification() {
+            cancelForgotPasswordFlow(); // Simplemente vuelve al inicio de recuperación
+        }
+        function cancelForgotPasswordReset() {
+            cancelForgotPasswordFlow(); // Simplemente vuelve al inicio de recuperación
+        }
+
+        // Funciones de Notificaciones
         function saveNotificationSettings() {
-            const emailChecked = document.getElementById('emailNotifications').checked;
-            const smsChecked = document.getElementById('smsNotifications').checked;
-            // Aquí enviarías estos ajustes a un servidor o los guardarías localmente
-            console.log(`Notificaciones por email: ${emailChecked}, Notificaciones por SMS: ${smsChecked}`);
+            // No se necesitan los datos de usuario aquí, solo los estados de los checkboxes
+            const emailNotifications = document.getElementById('emailNotifications').checked;
+            // La opción de SMS fue eliminada, así que ya no se maneja aquí.
+
+            // En un caso real, aquí enviarías estos ajustes a un servidor o los guardarías en el perfil del usuario.
+            // Por ahora, solo mostraremos un mensaje.
             showMessage("Ajustes de notificación guardados.", "success");
+            console.log("Notificaciones por Correo:", emailNotifications);
         }
 
-
-        // --- Funciones de Gestión de Cuenta ---
+        // Funciones de Gestión de Cuenta
         function cerrarSesion() {
-            showConfirmDialog('¿Estás seguro de que quieres cerrar sesión?', () => {
-                localStorage.removeItem("sesionIniciada");
-                localStorage.removeItem("usuarioActivo");
-                showMessage('Has cerrado sesión.', 'success');
-                setTimeout(() => window.location.href = 'index.html', 1500);
-            });
+            localStorage.removeItem("sesionIniciada");
+            localStorage.removeItem("usuarioActivo");
+            showMessage("Sesión cerrada. Redirigiendo...", "info");
+            setTimeout(() => window.location.href = 'Login.html', 1500); // Redirige al login
         }
 
         function eliminarCuenta() {
-            showConfirmDialog('¿Estás seguro de eliminar tu cuenta? Esta acción no se puede deshacer y perderás todos tus datos.', () => {
-                if (usuariosRegistrados[usuarioActivo]) {
+            showConfirmDialog("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.", () => {
+                if (usuarioActivo && usuariosRegistrados[usuarioActivo]) {
                     delete usuariosRegistrados[usuarioActivo];
                     guardarUsuariosRegistrados(usuariosRegistrados);
-
-                    // Limpiar datos asociados a la cuenta eliminada
-                    localStorage.removeItem(`carrito_${usuarioActivo}`);
-                    localStorage.removeItem(`historial_${usuarioActivo}`);
-
                     localStorage.removeItem("sesionIniciada");
                     localStorage.removeItem("usuarioActivo");
-
-                    showMessage('Tu cuenta ha sido eliminada. Redirigiendo al inicio.', 'success');
-                    setTimeout(() => window.location.href = 'index.html', 2000);
+                    showMessage("Cuenta eliminada exitosamente. Redirigiendo...", "success");
+                    setTimeout(() => window.location.href = 'Login.html', 2000); // Redirige al login
                 } else {
-                    showMessage("Error al eliminar la cuenta: Usuario no encontrado.", "error");
+                    showMessage("Error al eliminar la cuenta. No se encontró el usuario activo.", "error");
                 }
             });
         }
 
-        // --- Funciones de Diálogo de Confirmación ---
-        function showConfirmDialog(message, onConfirm, onCancel = () => {}) {
+        // Diálogo de Confirmación Genérico
+        function showConfirmDialog(message, onConfirmCallback) {
             const dialog = document.getElementById('confirmDialog');
-            const msgElement = document.getElementById('dialogMessage');
+            document.getElementById('dialogMessage').textContent = message;
+            
+            dialog.classList.add('show');
+
             const confirmBtn = document.getElementById('dialogConfirmBtn');
             const cancelBtn = document.getElementById('dialogCancelBtn');
 
-            msgElement.textContent = message;
-            dialog.classList.add('show');
-
-            // Limpiar listeners anteriores para evitar duplicados
-            confirmBtn.onclick = null;
-            cancelBtn.onclick = null;
-
-            confirmBtn.onclick = () => {
-                onConfirm();
+            const confirmHandler = () => {
+                onConfirmCallback();
                 dialog.classList.remove('show');
+                confirmBtn.removeEventListener('click', confirmHandler);
+                cancelBtn.removeEventListener('click', cancelHandler);
             };
-            cancelBtn.onclick = () => {
-                onCancel(); // Llamar a la función onCancel si se proporciona
+
+            const cancelHandler = () => {
                 dialog.classList.remove('show');
                 showMessage('Acción cancelada.', 'info');
+                confirmBtn.removeEventListener('click', confirmHandler);
+                cancelBtn.removeEventListener('click', cancelHandler);
             };
+
+            confirmBtn.addEventListener('click', confirmHandler);
+            cancelBtn.addEventListener('click', cancelHandler);
         }
 
-        // Control de navegación hacia atrás
+        // Generar un código de verificación aleatorio de 6 dígitos
+        function generateVerificationCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Función para ir atrás en la navegación o mostrar la sección principal
         function goBack() {
             const currentTitle = document.getElementById('mainTitle').textContent;
-            // const currentUserData = usuariosRegistrados[usuarioActivo]; // Ya no se necesita esta línea aquí
-
             if (currentTitle === "Editar Perfil") {
                 cancelProfileEdit();
             } else if (currentTitle === "Cambiar Contraseña") {
                 cancelChangePassword();
-            } else if (currentTitle === "Verificar Correo") { // Solo el flujo de verificación de correo actual
+            } else if (currentTitle === "Verificar Correo Actual") {
                 cancelarVerificacionCorreo();
-            } else if (currentTitle === "Verificar Cambio de Nombre de Usuario") {
-                cancelarVerificacionUsername();
-            } else if (currentTitle === "Cambiar Nombre de Usuario") {
-                cancelChangeUsername();
-            } else {
+            } else if (currentTitle === "Cambiar Correo Electrónico") {
+                cancelChangeEmail();
+            } else if (currentTitle === "Verificar Nuevo Correo Electrónico") {
+                cancelVerifyNewEmail();
+            } else if (currentTitle === "Recuperar Contraseña") { // NEW
+                cancelForgotPasswordFlow();
+            } else if (currentTitle === "Verificar Código de Recuperación") { // NEW
+                cancelForgotPasswordCodeVerification();
+            } else if (currentTitle === "Establecer Nueva Contraseña") { // NEW
+                cancelForgotPasswordReset();
+            }else {
                 history.back();
             }
         }
@@ -967,7 +1311,7 @@
                 // Si el elemento activo es un botón
                 if (activeElement && activeElement.tagName === 'BUTTON') {
                     activeElement.click();
-                    event.preventDefault(); // Evita el comportamiento predeterminado del Enter
+                    event.preventDefault();
                 }
                 
                 // Si el elemento activo es un div o span con un onclick y tabindex
