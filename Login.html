@@ -595,7 +595,8 @@
             }
 
             const dominio = correo.split('@')[1].toLowerCase();
-            const dominiosPermitidos = ['gmail.com', 'icloud.com', 'hotmail.com'];
+            // MODIFICACIÓN: Se añadió 'flashbuyx.com' a la lista de dominios permitidos
+            const dominiosPermitidos = ['gmail.com', 'icloud.com', 'hotmail.com', 'flashbuyx.com'];
             const correccionesDominio = {
                 'gamil.com': 'gmail.com', 'gmial.com': 'gmail.com', 'gmailcom': 'gmail.com',
                 'iclud.com': 'icloud.com', 'icloudcom': 'icloud.com',
@@ -855,9 +856,12 @@
                     marcarError(claveInput, true);
                 } else {
                     try {
+                        const isDeveloperUser = (email === 'developer@flashbuyx.com'); // Define your developer email here
+
                         localStorage.setItem("sesionIniciada", JSON.stringify({
                             nombre: usuariosRegistrados[email].nombre,
-                            correo: email
+                            correo: email,
+                            isDeveloper: isDeveloperUser // Store developer status
                         }));
                         localStorage.setItem("usuarioActivo", email);
 

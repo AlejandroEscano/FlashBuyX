@@ -358,6 +358,36 @@
             border-color: var(--error-color);
         }
 
+        /* NEW: Estilos para la sección de opciones de desarrollador */
+        #developerOptionsSection .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #developerOptionsSection .form-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        #developerOptionsSection .form-group label {
+            margin-bottom: 0;
+            font-weight: 400;
+            color: var(--text-color-dark);
+            font-size: 1rem;
+            flex-grow: 1;
+        }
+
+        #developerOptionsSection .form-group input[type="checkbox"] {
+            width: auto;
+            margin-left: 1rem;
+            transform: scale(1.2); /* Hacer el checkbox un poco más grande */
+        }
+        /* Fin NEW */
+
         /* Media Queries */
         /* Tabletas y escritorios pequeños */
         @media (min-width: 768px) {
@@ -566,7 +596,13 @@
             <button class="btn-secondary" onclick="cancelForgotPasswordReset()" tabindex="0">Cancelar</button>
         </section>
 
-
+        <section id="developerOptionsSection" class="section hidden-section">
+            <h3 class="section-title">Opciones de Desarrollador</h3>
+            <p style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-color-medium);">
+                Estas opciones son solo para propósitos de desarrollo y prueba.
+            </p>
+            <button class="btn-delete" onclick="confirmResetAllData()" tabindex="0">Restablecer Todos los Datos (Developer)</button>
+            </section>
         <section id="notificationsSection" class="section">
             <h3 class="section-title">Notificaciones</h3>
             <div class="form-group">
@@ -626,10 +662,14 @@
             // Asegúrate de que usuarioActivo y usuariosRegistrados estén cargados ANTES de cargar los datos de UI
             usuarioActivo = localStorage.getItem("usuarioActivo"); // Re-obtener por si acaso
             usuariosRegistrados = getUsuariosRegistrados(); // Re-obtener por si acaso
-            cargarDatosUsuario();
-            // Inicializar opciones de notificación (ejemplo)
-            document.getElementById('emailNotifications').checked = true;
-            // La opción de SMS ha sido eliminada, por lo que no la inicializamos
+            cargarDatosUsuario(); // Inicializar opciones de notificación (ejemplo)
+            document.getElementById('emailNotifications').checked = true; // La opción de SMS ha sido eliminada, por lo que no la inicializamos
+
+            // NEW: Verificar si se debe mostrar la sección de desarrollador al cargar
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('dev') === 'true') {
+                showDeveloperOptions();
+            }
         });
 
         // Rutas SVG para los iconos de ojo (copiadas de Login.html para consistencia)
@@ -673,7 +713,6 @@
             // Asegurarse de que usuarioActivo y usuariosRegistrados estén actualizados
             usuarioActivo = localStorage.getItem("usuarioActivo");
             usuariosRegistrados = getUsuariosRegistrados();
-
             if (usuarioActivo && usuariosRegistrados[usuarioActivo]) {
                 const usuario = usuariosRegistrados[usuarioActivo];
                 document.getElementById('displayNombre').value = usuario.nombre;
@@ -700,6 +739,8 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            // NEW: Ocultar sección de desarrollador al cancelar edición
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
             showMessage('Edición de perfil cancelada.', 'info');
             cargarDatosUsuario(); // Recargar para asegurar que los campos muestren los datos originales
         }
@@ -719,7 +760,6 @@
             showMessage('', ''); // Limpiar cualquier mensaje anterior
 
             let hasErrors = false;
-
             if (!newNombre || !newApellido) {
                 showMessage("Todos los campos (nombre, apellido) son obligatorios.", "error");
                 if (!newNombre) marcarError(editNombreInput, true);
@@ -766,35 +806,9 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            // NEW: Ocultar sección de desarrollador al cancelar cambio de contraseña
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
             showMessage('Cambio de contraseña cancelado.', 'info');
-        }
-
-        function validarContrasena(password) {
-            return password.length >= MIN_PASSWORD_LENGTH;
-        }
-
-        function marcarError(input, cond) {
-            if (cond) {
-                input.classList.add("error");
-                return true;
-            } else {
-                input.classList.remove("error");
-                return false;
-            }
-        }
-
-        function togglePasswordVisibility(inputId) {
-            const passwordInput = document.getElementById(inputId);
-            const icon = passwordInput.nextElementSibling.querySelector('i');
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = "password";
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
         }
 
         function changePassword() {
@@ -806,30 +820,32 @@
             const newPassword = newPasswordInput.value;
             const confirmNewPassword = confirmNewPasswordInput.value;
 
-            let hasErrors = false;
-
-            document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+            // Limpiar errores previos
+            currentPasswordInput.classList.remove('error');
+            newPasswordInput.classList.remove('error');
+            confirmNewPasswordInput.classList.remove('error');
             showMessage('', '');
+
+            let hasErrors = false;
 
             if (!currentPassword || !newPassword || !confirmNewPassword) {
                 showMessage("Todos los campos de contraseña son obligatorios.", "error");
+                if (!currentPassword) marcarError(currentPasswordInput, true);
+                if (!newPassword) marcarError(newPasswordInput, true);
+                if (!confirmNewPassword) marcarError(confirmNewPasswordInput, true);
                 hasErrors = true;
-            } else if (usuariosRegistrados[usuarioActivo].clave !== currentPassword) {
-                marcarError(currentPasswordInput, true);
-                showMessage("La contraseña actual es incorrecta.", "error");
-                hasErrors = true;
-            } else if (!validarContrasena(newPassword)) {
-                marcarError(newPasswordInput, true);
+            }
+
+            if (newPassword.length < MIN_PASSWORD_LENGTH) {
                 showMessage(`La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`, "error");
+                marcarError(newPasswordInput, true);
                 hasErrors = true;
-            } else if (newPassword !== confirmNewPassword) {
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                showMessage("La nueva contraseña y la confirmación no coinciden.", "error");
                 marcarError(newPasswordInput, true);
                 marcarError(confirmNewPasswordInput, true);
-                showMessage("Las nuevas contraseñas no coinciden.", "error");
-                hasErrors = true;
-            } else if (newPassword === currentPassword) {
-                marcarError(newPasswordInput, true);
-                showMessage("La nueva contraseña no puede ser igual a la actual.", "warning");
                 hasErrors = true;
             }
 
@@ -837,102 +853,63 @@
                 return;
             }
 
-            if (usuariosRegistrados[usuarioActivo]) {
-                usuariosRegistrados[usuarioActivo].clave = newPassword;
+            if (usuariosRegistrados[usuarioActivo] && usuariosRegistrados[usuarioActivo].password === currentPassword) {
+                usuariosRegistrados[usuarioActivo].password = newPassword;
                 guardarUsuariosRegistrados(usuariosRegistrados);
                 showMessage("Contraseña cambiada con éxito.", "success");
                 setTimeout(() => cancelChangePassword(), 2000);
             } else {
-                showMessage("Error: No se encontró el usuario activo.", "error");
+                showMessage("Contraseña actual incorrecta.", "error");
+                marcarError(currentPasswordInput, true);
             }
         }
 
-        // =========================================================================
-        // FLUJO DE VERIFICACIÓN DE CORREO ACTUAL (MODIFICADO PARA ENVÍO MANUAL Y MEJOR VERIFICACIÓN)
-        // =========================================================================
+        // --- Flujo de Verificación de Correo Electrónico Actual ---
         function iniciarVerificacionCorreo() {
             hideAllSections();
             document.getElementById('verificationEmailSection').classList.remove('hidden-section');
-            document.getElementById('mainTitle').textContent = "Verificar Correo Actual";
-            
-            // Asegurarse de que usuarioActivo y usuariosRegistrados estén actualizados
-            usuarioActivo = localStorage.getItem("usuarioActivo");
-            usuariosRegistrados = getUsuariosRegistrados();
-
-            const usuario = usuariosRegistrados[usuarioActivo];
-            if (usuario && usuario.email && usuario.email.trim() !== '') { // Asegurarse de que el email no esté vacío
-                emailParaVerificacion = usuario.email;
-                document.getElementById('emailToVerifyDisplay').textContent = emailParaVerificacion;
-                document.getElementById('emailVerificationCode').value = ''; // Limpiar campo de código
-                document.getElementById('sendVerificationCodeBtn').disabled = false; // Habilitar botón de envío
-                showMessage('',''); // Limpiar mensajes previos
-            } else {
-                showMessage("No se pudo obtener una dirección de correo válida para verificación. Asegúrate de estar logueado y que tu perfil tenga un correo asociado.", "error");
-                document.getElementById('sendVerificationCodeBtn').disabled = true; // Deshabilitar botón si no hay email
-            }
+            document.getElementById('mainTitle').textContent = "Verificar Correo Electrónico Actual";
+            emailParaVerificacion = usuariosRegistrados[usuarioActivo].email;
+            document.getElementById('emailToVerifyDisplay').textContent = emailParaVerificacion;
+            document.getElementById('emailVerificationCode').value = ''; // Limpiar campo de código
+            showMessage('', ''); // Limpiar mensajes
         }
 
         async function enviarCodigoVerificacionActual() {
-            const sendButton = document.getElementById('sendVerificationCodeBtn');
-            // Re-verificar el email justo antes de enviar
-            if (!emailParaVerificacion || emailParaVerificacion.trim() === '') {
-                 showMessage("Error: La dirección de correo para verificación está vacía. Recargue la página e intente de nuevo.", "error");
-                 sendButton.disabled = true;
-                 return;
-            }
-
-            sendButton.disabled = true;
-            showMessage('Enviando código de verificación...', 'info');
-
-            const verificationCode = generateVerificationCode();
-            const templateParams = {
-                to_email: emailParaVerificacion,
-                verification_code: verificationCode,
-            };
-
-            // ! DEBUGGING: Imprimir el valor de emailParaVerificacion justo antes de send
-            console.log("Valor de emailParaVerificacion justo antes de send:", emailParaVerificacion); 
-
+            showMessage("Enviando código...", "info");
             try {
-                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID, templateParams);
-                usuariosRegistrados[usuarioActivo].verificationCode = verificationCode;
-                usuariosRegistrados[usuarioActivo].codeTimestamp = Date.now();
-                guardarUsuariosRegistrados(usuariosRegistrados);
-                showMessage(`Código enviado a ${emailParaVerificacion}.`, 'success');
+                const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID, {
+                    user_email: emailParaVerificacion,
+                    verification_code: generarCodigoVerificacion(),
+                });
+                console.log('EmailJS response:', response);
+                showMessage("Código de verificación enviado a tu correo actual.", "success");
             } catch (error) {
-                console.error("Error al enviar el código de verificación:", error);
-                showMessage('Error al enviar el código de verificación. Por favor, revisa tu conexión y la configuración de EmailJS.', 'error');
-            } finally {
-                sendButton.disabled = false; // Re-habilitar botón
+                console.error('Error al enviar el correo con EmailJS:', error);
+                showMessage("Error al enviar el código de verificación. Inténtalo de nuevo.", "error");
             }
         }
 
         function verificarCodigoCorreo() {
             const inputCode = document.getElementById('emailVerificationCode').value.trim();
-            const usuario = usuariosRegistrados[usuarioActivo];
+            const storedCode = localStorage.getItem('lastVerificationCode');
+
+            document.getElementById('emailVerificationCode').classList.remove('error');
+            showMessage('', '');
 
             if (!inputCode) {
-                showMessage("Por favor, ingrese el código de verificación.", "warning");
+                showMessage("Por favor, introduce el código de verificación.", "error");
+                marcarError(document.getElementById('emailVerificationCode'), true);
                 return;
             }
 
-            if (usuario && usuario.verificationCode === inputCode) {
-                const now = Date.now();
-                const codeAge = now - usuario.codeTimestamp;
-                const TWO_MINUTES = 2 * 60 * 1000;
-
-                if (codeAge < TWO_MINUTES) {
-                    usuario.verifiedEmail = true; // Marcar el correo como verificado
-                    delete usuario.verificationCode; // Limpiar el código usado
-                    delete usuario.codeTimestamp; // Limpiar el timestamp
-                    guardarUsuariosRegistrados(usuariosRegistrados);
-                    showMessage("Correo verificado exitosamente.", "success");
-                    setTimeout(() => cancelarVerificacionCorreo(), 2000);
-                } else {
-                    showMessage("El código de verificación ha expirado. Por favor, solicita uno nuevo.", "error");
-                }
+            if (inputCode === storedCode) {
+                showMessage("Correo electrónico verificado con éxito.", "success");
+                localStorage.removeItem('lastVerificationCode'); // Limpiar código
+                setTimeout(() => cancelarVerificacionCorreo(), 2000);
             } else {
-                showMessage("Código de verificación incorrecto.", "error");
+                showMessage("Código de verificación incorrecto. Inténtalo de nuevo.", "error");
+                marcarError(document.getElementById('emailVerificationCode'), true);
             }
         }
 
@@ -942,113 +919,89 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
+             // NEW: Ocultar sección de desarrollador al cancelar verificación de correo
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
             showMessage('Verificación de correo cancelada.', 'info');
         }
 
-
-        // =========================================================================
-        // FLUJO DE CAMBIO DE CORREO (MODIFICADO PARA ENVÍO MANUAL)
-        // =========================================================================
+        // --- Flujo de Cambio de Correo Electrónico ---
         function showChangeEmailFlow() {
             hideAllSections();
             document.getElementById('changeEmailSection').classList.remove('hidden-section');
             document.getElementById('mainTitle').textContent = "Cambiar Correo Electrónico";
-            document.getElementById('newEmail').value = ''; // Limpiar campo del nuevo email
-            document.getElementById('sendNewEmailCodeBtn').disabled = false; // Habilitar botón de envío
-            showMessage('',''); // Limpiar mensajes previos
+            document.getElementById('newEmail').value = '';
+            document.getElementById('newEmailVerificationCode').value = '';
+            showMessage('', '');
         }
 
         async function enviarCodigoNuevoCorreo() {
             const newEmailInput = document.getElementById('newEmail');
             newEmailToVerify = newEmailInput.value.trim();
-            const sendButton = document.getElementById('sendNewEmailCodeBtn');
-            
-            // Validar formato de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(newEmailToVerify)) {
-                showMessage("Por favor, introduce una dirección de correo electrónico válida.", "error");
+
+            newEmailInput.classList.remove('error');
+            showMessage('', '');
+
+            if (!newEmailToVerify || !isValidEmail(newEmailToVerify)) {
+                showMessage("Por favor, introduce un nuevo correo electrónico válido.", "error");
                 marcarError(newEmailInput, true);
                 return;
             }
-            marcarError(newEmailInput, false); // Limpiar error si estaba presente
 
-            // Verificar si el nuevo email ya está registrado por otro usuario
-            for (const emailKey in usuariosRegistrados) {
-                // Modificación aquí para asegurar que no compare con el propio email del usuario activo si es el mismo
-                if (emailKey !== usuarioActivo && usuariosRegistrados[emailKey].email === newEmailToVerify) {
+            // Verificar si el nuevo correo ya está registrado por otro usuario
+            const usuarios = getUsuariosRegistrados();
+            for (const key in usuarios) {
+                if (usuarios[key].email === newEmailToVerify && key !== usuarioActivo) {
                     showMessage("Este correo electrónico ya está registrado por otra cuenta.", "error");
                     marcarError(newEmailInput, true);
                     return;
                 }
             }
 
-            sendButton.disabled = true;
-            showMessage('Enviando código al nuevo correo...', 'info');
-
-            const verificationCode = generateVerificationCode();
-            const templateParams = {
-                to_email: newEmailToVerify,
-                verification_code: verificationCode,
-            };
-
+            showMessage("Enviando código...", "info");
             try {
-                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID, templateParams);
-                // Almacenar el código y timestamp asociado al *nuevo* email en una variable temporal
-                // o en localStorage si se necesita persistencia entre recargas
-                localStorage.setItem('tempNewEmailCode', JSON.stringify({
-                    email: newEmailToVerify,
-                    code: verificationCode,
-                    timestamp: Date.now()
-                }));
-
-                showMessage(`Código enviado a ${newEmailToVerify}. Por favor, verifique su bandeja de entrada.`, 'success');
-                // Opcional: podrías cambiar a la sección de verificación directamente aquí
-                // showVerifyNewEmailSection(); 
+                const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODE_VERIFICATION_ID, {
+                    user_email: newEmailToVerify,
+                    verification_code: generarCodigoVerificacion(),
+                });
+                console.log('EmailJS response:', response);
+                showMessage(`Código enviado a ${newEmailToVerify}. Por favor, verifícalo.`, "success");
+                // Una vez enviado el código, puedes pasar a la sección de verificación (opcional, o el usuario lo ingresa en la misma sección)
             } catch (error) {
-                console.error("Error al enviar el código al nuevo correo:", error);
-                showMessage('Error al enviar el código al nuevo correo. Revisa tu conexión y EmailJS.', 'error');
-            } finally {
-                sendButton.disabled = false;
+                console.error('Error al enviar el correo con EmailJS:', error);
+                showMessage("Error al enviar el código de verificación. Inténtalo de nuevo.", "error");
             }
         }
 
         function verificarCodigoNuevoCorreo() {
             const inputCode = document.getElementById('newEmailVerificationCode').value.trim();
-            const storedCodeData = JSON.parse(localStorage.getItem('tempNewEmailCode'));
+            const storedCode = localStorage.getItem('lastVerificationCode');
+
+            document.getElementById('newEmailVerificationCode').classList.remove('error');
+            showMessage('', '');
 
             if (!inputCode) {
-                showMessage("Por favor, ingrese el código de verificación.", "warning");
+                showMessage("Por favor, introduce el código de verificación.", "error");
+                marcarError(document.getElementById('newEmailVerificationCode'), true);
                 return;
             }
 
-            if (storedCodeData && storedCodeData.code === inputCode && storedCodeData.email === newEmailToVerify) {
-                const now = Date.now();
-                const codeAge = now - storedCodeData.timestamp;
-                const TWO_MINUTES = 2 * 60 * 1000;
+            if (inputCode === storedCode) {
+                // Actualizar el correo electrónico del usuario activo
+                if (usuariosRegistrados[usuarioActivo]) {
+                    const oldEmail = usuariosRegistrados[usuarioActivo].email;
+                    usuariosRegistrados[newEmailToVerify] = { ...usuariosRegistrados[usuarioActivo], email: newEmailToVerify };
+                    delete usuariosRegistrados[oldEmail]; // Eliminar la entrada antigua
+                    localStorage.setItem("usuarioActivo", newEmailToVerify); // Actualizar usuario activo
+                    guardarUsuariosRegistrados(usuariosRegistrados);
 
-                if (codeAge < TWO_MINUTES) {
-                    // Actualizar el correo del usuario activo
-                    const usuario = usuariosRegistrados[usuarioActivo];
-                    if (usuario) {
-                        // Guardar el nuevo correo bajo la clave antigua y luego eliminar la antigua
-                        const oldEmail = usuario.email;
-                        usuariosRegistrados[newEmailToVerify] = { ...usuario, email: newEmailToVerify };
-                        delete usuariosRegistrados[oldEmail];
-                        
-                        localStorage.setItem("usuarioActivo", newEmailToVerify); // Actualizar usuario activo en localStorage
-                        usuarioActivo = newEmailToVerify; // Actualizar la variable global
-
-                        guardarUsuariosRegistrados(usuariosRegistrados);
-                        localStorage.removeItem('tempNewEmailCode'); // Limpiar el código temporal
-                        showMessage("Correo electrónico cambiado y verificado exitosamente.", "success");
-                        cargarDatosUsuario(); // Actualizar la UI
-                        setTimeout(() => cancelChangeEmail(), 2000);
-                    }
-                } else {
-                    showMessage("El código de verificación ha expirado. Por favor, solicita uno nuevo.", "error");
+                    showMessage("Correo electrónico cambiado y verificado con éxito.", "success");
+                    localStorage.removeItem('lastVerificationCode'); // Limpiar código
+                    cargarDatosUsuario(); // Recargar datos en la UI
+                    setTimeout(() => cancelChangeEmail(), 2000);
                 }
             } else {
-                showMessage("Código de verificación incorrecto o no coincide con el correo.", "error");
+                showMessage("Código de verificación incorrecto. Inténtalo de nuevo.", "error");
+                marcarError(document.getElementById('newEmailVerificationCode'), true);
             }
         }
 
@@ -1058,122 +1011,142 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
-            showMessage('Cambio de correo cancelado.', 'info');
-            localStorage.removeItem('tempNewEmailCode'); // Limpiar cualquier código temporal
+            // NEW: Ocultar sección de desarrollador al cancelar cambio de email
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
+            showMessage('Cambio de correo electrónico cancelado.', 'info');
         }
 
-        // =========================================================================
-        // FLUJO DE RECUPERACIÓN DE CONTRASEÑA (MODIFICADO PARA ENVÍO MANUAL)
-        // =========================================================================
+        function cancelVerifyNewEmail() {
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            // NEW: Ocultar sección de desarrollador al cancelar verificación de nuevo email
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
+            showMessage('Verificación de nuevo correo electrónico cancelada.', 'info');
+        }
+
+        // --- Flujo de Recuperación de Contraseña ---
         function showForgotPasswordFlow() {
             hideAllSections();
             document.getElementById('forgotPasswordEmailSection').classList.remove('hidden-section');
             document.getElementById('mainTitle').textContent = "Recuperar Contraseña";
-            
-            // Asegurarse de que usuarioActivo y usuariosRegistrados estén actualizados
-            usuarioActivo = localStorage.getItem("usuarioActivo");
-            usuariosRegistrados = getUsuariosRegistrados();
-
-            const usuario = usuariosRegistrados[usuarioActivo]; // Asumiendo que el usuario ya está logueado para mostrar su email
-            if (usuario && usuario.email && usuario.email.trim() !== '') {
-                document.getElementById('forgotEmail').value = usuario.email;
-                emailUsuarioRecuperacion = usuario.email; // Almacenar el email para el envío del código
-                document.getElementById('sendRecoveryCodeBtn').disabled = false; // Habilitar botón de envío
-                showMessage('',''); // Limpiar mensajes previos
-            } else {
-                showMessage("No se pudo obtener una dirección de correo válida para recuperación de contraseña. Asegúrate de estar logueado y que tu perfil tenga un correo asociado.", "error");
-                document.getElementById('sendRecoveryCodeBtn').disabled = true; // Deshabilitar botón
-            }
+            // Pre-llenar el campo de correo con el email activo (si existe)
+            document.getElementById('forgotEmail').value = usuariosRegistrados[usuarioActivo] ? usuariosRegistrados[usuarioActivo].email : '';
+            document.getElementById('forgotVerificationCode').value = '';
+            showMessage('', '');
         }
 
         async function enviarCodigoRecuperacion() {
-            const sendButton = document.getElementById('sendRecoveryCodeBtn');
-            // Re-verificar el email justo antes de enviar
-            if (!emailUsuarioRecuperacion || emailUsuarioRecuperacion.trim() === '') {
-                 showMessage("Error: La dirección de correo para recuperación está vacía. Recargue la página e intente de nuevo.", "error");
-                 sendButton.disabled = true;
-                 return;
+            emailUsuarioRecuperacion = document.getElementById('forgotEmail').value.trim();
+            const forgotEmailInput = document.getElementById('forgotEmail');
+
+            forgotEmailInput.classList.remove('error');
+            showMessage('', '');
+
+            if (!emailUsuarioRecuperacion || !isValidEmail(emailUsuarioRecuperacion)) {
+                showMessage("Por favor, introduce un correo electrónico válido para la recuperación.", "error");
+                marcarError(forgotEmailInput, true);
+                return;
             }
 
-            sendButton.disabled = true;
-            showMessage('Enviando código de recuperación...', 'info');
+            // Verificar si el correo existe en los usuarios registrados
+            const userExists = Object.values(usuariosRegistrados).some(user => user.email === emailUsuarioRecuperacion);
+            if (!userExists) {
+                showMessage("No hay una cuenta registrada con este correo electrónico.", "error");
+                marcarError(forgotEmailInput, true);
+                return;
+            }
 
-            const recoveryCode = generateVerificationCode(); // Reutilizar la función de generación
-            const templateParams = {
-                to_email: emailUsuarioRecuperacion,
-                recovery_code: recoveryCode, // Usar 'recovery_code' como variable en la plantilla
-            };
-
+            showMessage("Enviando código de recuperación...", "info");
             try {
-                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PASSWORD_RECOVERY_ID, templateParams);
-                
-                // Almacenar el código y timestamp de recuperación
-                const usuario = usuariosRegistrados[usuarioActivo];
-                if (usuario) {
-                    usuario.recoveryCode = recoveryCode;
-                    usuario.recoveryCodeTimestamp = Date.now();
-                    guardarUsuariosRegistrados(usuariosRegistrados);
-                    showMessage(`Código de recuperación enviado a ${emailUsuarioRecuperacion}.`, 'success');
-                }
+                const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PASSWORD_RECOVERY_ID, {
+                    user_email: emailUsuarioRecuperacion,
+                    recovery_code: generarCodigoVerificacion(), // Reutilizar la función de generación de código
+                });
+                console.log('EmailJS response (password recovery):', response);
+                showMessage(`Código de recuperación enviado a ${emailUsuarioRecuperacion}.`, "success");
+                // Mostrar la sección de verificación de código de recuperación
+                setTimeout(() => showForgotPasswordCodeVerification(), 1000);
             } catch (error) {
-                console.error("Error al enviar el código de recuperación:", error);
-                showMessage('Error al enviar el código de recuperación. Por favor, revisa tu conexión y la configuración de EmailJS.', 'error');
-            } finally {
-                sendButton.disabled = false;
+                console.error('Error al enviar el correo de recuperación con EmailJS:', error);
+                showMessage("Error al enviar el código de recuperación. Inténtalo de nuevo.", "error");
             }
+        }
+
+        function showForgotPasswordCodeVerification() {
+            hideAllSections();
+            document.getElementById('forgotPasswordCodeSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Verificar Código de Recuperación";
+            document.getElementById('forgotEmailDisplay').textContent = emailUsuarioRecuperacion;
+            document.getElementById('forgotVerificationCode').value = ''; // Limpiar campo de código
+            showMessage('', '');
         }
 
         function verificarCodigoRecuperacion() {
             const inputCode = document.getElementById('forgotVerificationCode').value.trim();
-            const usuario = usuariosRegistrados[usuarioActivo];
+            const storedCode = localStorage.getItem('lastVerificationCode');
+
+            document.getElementById('forgotVerificationCode').classList.remove('error');
+            showMessage('', '');
 
             if (!inputCode) {
-                showMessage("Por favor, ingrese el código de verificación.", "warning");
+                showMessage("Por favor, introduce el código de recuperación.", "error");
+                marcarError(document.getElementById('forgotVerificationCode'), true);
                 return;
             }
 
-            if (usuario && usuario.recoveryCode === inputCode) {
-                const now = Date.now();
-                const codeAge = now - usuario.recoveryCodeTimestamp;
-                const TWO_MINUTES = 2 * 60 * 1000;
-
-                if (codeAge < TWO_MINUTES) {
-                    showMessage("Código verificado. Ahora puedes establecer una nueva contraseña.", "success");
-                    // Cambiar a la sección para establecer nueva contraseña
-                    hideAllSections();
-                    document.getElementById('forgotPasswordResetSection').classList.remove('hidden-section');
-                    document.getElementById('mainTitle').textContent = "Establecer Nueva Contraseña";
-                    document.getElementById('resetNewPassword').value = ''; // Limpiar campos
-                    document.getElementById('resetConfirmNewPassword').value = '';
-                } else {
-                    showMessage("El código de recuperación ha expirado. Por favor, solicita uno nuevo.", "error");
-                }
+            if (inputCode === storedCode) {
+                showMessage("Código verificado. Ahora puedes establecer una nueva contraseña.", "success");
+                localStorage.removeItem('lastVerificationCode'); // Limpiar código
+                setTimeout(() => showForgotPasswordReset(), 1000);
             } else {
-                showMessage("Código de recuperación incorrecto.", "error");
+                showMessage("Código de recuperación incorrecto. Inténtalo de nuevo.", "error");
+                marcarError(document.getElementById('forgotVerificationCode'), true);
             }
         }
 
-        function establecerNuevaContrasena() {
-            const newPasswordInput = document.getElementById('resetNewPassword');
-            const confirmNewPasswordInput = document.getElementById('resetConfirmNewPassword');
-            const newPassword = newPasswordInput.value;
-            const confirmNewPassword = confirmNewPasswordInput.value;
+        function showForgotPasswordReset() {
+            hideAllSections();
+            document.getElementById('forgotPasswordResetSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Establecer Nueva Contraseña";
+            document.getElementById('resetNewPassword').value = '';
+            document.getElementById('resetConfirmNewPassword').value = '';
+            showMessage('', '');
+        }
 
-            let hasErrors = false;
-            document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+        function establecerNuevaContrasena() {
+            const resetNewPasswordInput = document.getElementById('resetNewPassword');
+            const resetConfirmNewPasswordInput = document.getElementById('resetConfirmNewPassword');
+
+            const newPassword = resetNewPasswordInput.value;
+            const confirmNewPassword = resetConfirmNewPasswordInput.value;
+
+            // Limpiar errores previos
+            resetNewPasswordInput.classList.remove('error');
+            resetConfirmNewPasswordInput.classList.remove('error');
             showMessage('', '');
 
+            let hasErrors = false;
+
             if (!newPassword || !confirmNewPassword) {
-                showMessage("Ambos campos de contraseña son obligatorios.", "error");
+                showMessage("Todos los campos de nueva contraseña son obligatorios.", "error");
+                if (!newPassword) marcarError(resetNewPasswordInput, true);
+                if (!confirmNewPassword) marcarError(resetConfirmNewPasswordInput, true);
                 hasErrors = true;
-            } else if (!validarContrasena(newPassword)) {
-                marcarError(newPasswordInput, true);
+            }
+
+            if (newPassword.length < MIN_PASSWORD_LENGTH) {
                 showMessage(`La nueva contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`, "error");
+                marcarError(resetNewPasswordInput, true);
                 hasErrors = true;
-            } else if (newPassword !== confirmNewPassword) {
-                marcarError(newPasswordInput, true);
-                marcarError(confirmNewPasswordInput, true);
-                showMessage("Las contraseñas no coinciden.", "error");
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                showMessage("La nueva contraseña y la confirmación no coinciden.", "error");
+                marcarError(resetNewPasswordInput, true);
+                marcarError(resetConfirmNewPasswordInput, true);
                 hasErrors = true;
             }
 
@@ -1181,18 +1154,22 @@
                 return;
             }
 
-            if (usuariosRegistrados[usuarioActivo]) {
-                usuariosRegistrados[usuarioActivo].clave = newPassword;
-                delete usuariosRegistrados[usuarioActivo].recoveryCode; // Limpiar código de recuperación
-                delete usuariosRegistrados[usuarioActivo].recoveryCodeTimestamp; // Limpiar timestamp
-                guardarUsuariosRegistrados(usuariosRegistrados);
-                showMessage("Contraseña restablecida con éxito. Inicia sesión con tu nueva contraseña.", "success");
-                setTimeout(() => {
-                    // Redirigir al usuario al Login después de un restablecimiento exitoso
-                    window.location.href = 'Login.html';
-                }, 2000);
+            // Encontrar el usuario por el email de recuperación
+            let userFound = false;
+            for (const key in usuariosRegistrados) {
+                if (usuariosRegistrados[key].email === emailUsuarioRecuperacion) {
+                    usuariosRegistrados[key].password = newPassword;
+                    guardarUsuariosRegistrados(usuariosRegistrados);
+                    userFound = true;
+                    break;
+                }
+            }
+
+            if (userFound) {
+                showMessage("Contraseña restablecida con éxito. Puedes iniciar sesión con tu nueva contraseña.", "success");
+                setTimeout(() => window.location.href = 'Login.html', 2000); // Redirigir al login
             } else {
-                showMessage("Error: No se encontró el usuario activo para restablecer la contraseña.", "error");
+                showMessage("Error: No se pudo encontrar el usuario para restablecer la contraseña.", "error");
             }
         }
 
@@ -1202,91 +1179,146 @@
             document.getElementById('securitySection').classList.remove('hidden-section');
             document.getElementById('notificationsSection').classList.remove('hidden-section');
             document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            // NEW: Ocultar sección de desarrollador al cancelar recuperación de contraseña
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
             showMessage('Recuperación de contraseña cancelada.', 'info');
         }
+
         function cancelForgotPasswordCodeVerification() {
-            cancelForgotPasswordFlow(); // Simplemente vuelve al inicio de recuperación
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            // NEW: Ocultar sección de desarrollador al cancelar verificación de código de recuperación
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
+            showMessage('Verificación de código de recuperación cancelada.', 'info');
         }
+
         function cancelForgotPasswordReset() {
-            cancelForgotPasswordFlow(); // Simplemente vuelve al inicio de recuperación
+            hideAllSections();
+            document.getElementById('userProfileSection').classList.remove('hidden-section');
+            document.getElementById('securitySection').classList.remove('hidden-section');
+            document.getElementById('notificationsSection').classList.remove('hidden-section');
+            document.getElementById('accountManagementSection').classList.remove('hidden-section');
+            // NEW: Ocultar sección de desarrollador al cancelar restablecimiento de contraseña
+            document.getElementById('developerOptionsSection').classList.add('hidden-section');
+            showMessage('Restablecimiento de contraseña cancelado.', 'info');
         }
 
-        // Funciones de Notificaciones
+
+        // Funciones de notificación
         function saveNotificationSettings() {
-            // No se necesitan los datos de usuario aquí, solo los estados de los checkboxes
             const emailNotifications = document.getElementById('emailNotifications').checked;
-            // La opción de SMS fue eliminada, así que ya no se maneja aquí.
-
-            // En un caso real, aquí enviarías estos ajustes a un servidor o los guardarías en el perfil del usuario.
-            // Por ahora, solo mostraremos un mensaje.
-            showMessage("Ajustes de notificación guardados.", "success");
-            console.log("Notificaciones por Correo:", emailNotifications);
+            // Aquí guardarías las preferencias en localStorage o en un servidor
+            if (usuariosRegistrados[usuarioActivo]) {
+                usuariosRegistrados[usuarioActivo].emailNotifications = emailNotifications;
+                guardarUsuariosRegistrados(usuariosRegistrados);
+                showMessage("Ajustes de notificación guardados.", "success");
+            } else {
+                showMessage("Error al guardar los ajustes de notificación.", "error");
+            }
         }
 
-        // Funciones de Gestión de Cuenta
+        // Funciones de gestión de cuenta
         function cerrarSesion() {
             localStorage.removeItem("sesionIniciada");
             localStorage.removeItem("usuarioActivo");
-            showMessage("Sesión cerrada. Redirigiendo...", "info");
-            setTimeout(() => window.location.href = 'Login.html', 1500); // Redirige al login
+            showMessage("Sesión cerrada correctamente.", "success");
+            setTimeout(() => window.location.href = 'Login.html', 1000);
         }
 
         function eliminarCuenta() {
             showConfirmDialog("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.", () => {
-                if (usuarioActivo && usuariosRegistrados[usuarioActivo]) {
+                if (usuariosRegistrados[usuarioActivo]) {
                     delete usuariosRegistrados[usuarioActivo];
                     guardarUsuariosRegistrados(usuariosRegistrados);
                     localStorage.removeItem("sesionIniciada");
                     localStorage.removeItem("usuarioActivo");
-                    showMessage("Cuenta eliminada exitosamente. Redirigiendo...", "success");
-                    setTimeout(() => window.location.href = 'Login.html', 2000); // Redirige al login
-                } else {
-                    showMessage("Error al eliminar la cuenta. No se encontró el usuario activo.", "error");
+                    showMessage("Tu cuenta ha sido eliminada permanentemente.", "success");
+                    setTimeout(() => window.location.href = 'Login.html', 2000);
                 }
             });
         }
 
-        // Diálogo de Confirmación Genérico
-        function showConfirmDialog(message, onConfirmCallback) {
-            const dialog = document.getElementById('confirmDialog');
+        // Funciones de utilidad
+        function generarCodigoVerificacion() {
+            const code = Math.floor(100000 + Math.random() * 900000).toString(); // Código de 6 dígitos
+            localStorage.setItem('lastVerificationCode', code); // Guardar temporalmente el código
+            console.log("Generated Verification Code (for dev/test):", code); // Para propósitos de depuración
+            return code;
+        }
+
+        function isValidEmail(email) {
+            // Expresión regular simple para validación de email
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const iconContainer = input.nextElementSibling;
+            if (input.type === "password") {
+                input.type = "text";
+                iconContainer.innerHTML = `<i class="fas fa-eye-slash"></i>`;
+            } else {
+                input.type = "password";
+                iconContainer.innerHTML = `<i class="fas fa-eye"></i>`;
+            }
+        }
+
+        function marcarError(element, isError) {
+            if (isError) {
+                element.classList.add('error');
+            } else {
+                element.classList.remove('error');
+            }
+        }
+
+        // --- Diálogos de Confirmación ---
+        let confirmActionCallback = null;
+
+        function showConfirmDialog(message, callback) {
             document.getElementById('dialogMessage').textContent = message;
-            
-            dialog.classList.add('show');
-
-            const confirmBtn = document.getElementById('dialogConfirmBtn');
-            const cancelBtn = document.getElementById('dialogCancelBtn');
-
-            const confirmHandler = () => {
-                onConfirmCallback();
-                dialog.classList.remove('show');
-                confirmBtn.removeEventListener('click', confirmHandler);
-                cancelBtn.removeEventListener('click', cancelHandler);
-            };
-
-            const cancelHandler = () => {
-                dialog.classList.remove('show');
-                showMessage('Acción cancelada.', 'info');
-                confirmBtn.removeEventListener('click', confirmHandler);
-                cancelBtn.removeEventListener('click', cancelHandler);
-            };
-
-            confirmBtn.addEventListener('click', confirmHandler);
-            cancelBtn.addEventListener('click', cancelHandler);
+            document.getElementById('confirmDialog').classList.add('show');
+            confirmActionCallback = callback;
         }
 
-        // Generar un código de verificación aleatorio de 6 dígitos
-        function generateVerificationCode() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
+        function hideConfirmDialog() {
+            document.getElementById('confirmDialog').classList.remove('show');
+            confirmActionCallback = null;
         }
 
-        // Función para ir atrás en la navegación o mostrar la sección principal
+        document.getElementById('dialogConfirmBtn').addEventListener('click', () => {
+            if (confirmActionCallback) {
+                confirmActionCallback();
+            }
+            hideConfirmDialog();
+        });
+
+        document.getElementById('dialogCancelBtn').addEventListener('click', () => {
+            hideConfirmDialog();
+            showMessage('Operación cancelada.', 'info'); // Opcional: mostrar un mensaje de cancelación
+        });
+
+        // Manejo global de la tecla Esc para cerrar diálogos
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                if (document.getElementById('confirmDialog').classList.contains('show')) {
+                    hideConfirmDialog();
+                }
+            }
+        });
+
+        // --- Navegación y flecha de retroceso ---
         function goBack() {
             const currentTitle = document.getElementById('mainTitle').textContent;
+            
             if (currentTitle === "Editar Perfil") {
                 cancelProfileEdit();
             } else if (currentTitle === "Cambiar Contraseña") {
                 cancelChangePassword();
-            } else if (currentTitle === "Verificar Correo Actual") {
+            } else if (currentTitle === "Verificar Correo Electrónico Actual") {
                 cancelarVerificacionCorreo();
             } else if (currentTitle === "Cambiar Correo Electrónico") {
                 cancelChangeEmail();
@@ -1298,7 +1330,14 @@
                 cancelForgotPasswordCodeVerification();
             } else if (currentTitle === "Establecer Nueva Contraseña") { // NEW
                 cancelForgotPasswordReset();
-            }else {
+            } else if (currentTitle === "Opciones de Desarrollador") { // NEW
+                hideAllSections();
+                document.getElementById('userProfileSection').classList.remove('hidden-section');
+                document.getElementById('securitySection').classList.remove('hidden-section');
+                document.getElementById('notificationsSection').classList.remove('hidden-section');
+                document.getElementById('accountManagementSection').classList.remove('hidden-section');
+                document.getElementById('mainTitle').textContent = "Configuración de Cuenta";
+            } else {
                 history.back();
             }
         }
@@ -1321,6 +1360,29 @@
                 }
             }
         });
+
+        // NEW: Funciones de Opciones de Desarrollador
+        function showDeveloperOptions() {
+            hideAllSections();
+            document.getElementById('developerOptionsSection').classList.remove('hidden-section');
+            document.getElementById('mainTitle').textContent = "Opciones de Desarrollador";
+            showMessage("Advertencia: Las opciones de desarrollador pueden eliminar datos y afectar el comportamiento de la aplicación.", "warning");
+        }
+
+        function confirmResetAllData() {
+            showConfirmDialog("Esta acción eliminará TODOS los datos de usuario y sesión de tu navegador (localStorage). ¿Estás seguro?", () => {
+                resetAllData();
+            });
+        }
+
+        function resetAllData() {
+            console.warn("RESTABLECIENDO TODOS LOS DATOS DE USUARIO Y SESIÓN POR SOLICITUD DE DESARROLLADOR.");
+            localStorage.clear();
+            showMessage("Todos los datos han sido restablecidos. Redirigiendo...", "success");
+            // Opcional: Recargar la página o redirigir a Login.html
+            setTimeout(() => window.location.href = 'Login.html', 1500);
+        }
+
     </script>
 </body>
 </html>
