@@ -21,6 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         /* Estilos CSS */
         :root {
@@ -114,7 +115,7 @@
         input[type="text"],
         input[type="email"],
         input[type="password"],
-        input[type="date"],
+        input[type="number"], /* Añadido para los nuevos campos de fecha */
         select {
             width: 100%;
             padding: 0.75rem 1rem; /* Adjusted for better consistency */
@@ -133,9 +134,8 @@
         }
 
         /* Adjustment for general inputs not inside password-input-wrapper */
-        input:not(.password-input-wrapper input),
-        select,
-        input[type="date"] {
+        input:not(.password-input-wrapper input):not(.date-input), /* Excluir .date-input */
+        select {
             margin-bottom: var(--spacing-unit);
         }
 
@@ -145,16 +145,14 @@
         }
 
         input:focus,
-        select:focus,
-        input[type="date"]:focus {
+        select:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2); /* Sombra de foco azul de configuracion.html */
         }
 
         input.error-input,
-        select.error-input,
-        input[type="date"].error-input {
+        select.error-input {
             border-color: var(--error-color);
             background-color: rgba(231, 76, 60, 0.05);
         }
@@ -176,7 +174,7 @@
         .btn-primary:hover { /* Renombrado de btn-submit */
             background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra al hover */
+            box-shadow: 0 44px 8px rgba(0,0,0,0.15); /* Sombra al hover */
         }
         .toggle {
             background: none;
@@ -190,41 +188,11 @@
             box-shadow: none; /* Asegurar que no tenga sombra si es un enlace o texto */
         }
         .toggle:hover { color: var(--primary-dark); }
-        .message {
-            margin-top: calc(var(--spacing-unit) * 0.5); /* Reduced margin-top for better visibility */
-            margin-bottom: var(--spacing-unit); /* Add some margin below the message */
-            font-size: 0.95rem; /* Ajustado */
-            font-weight: 500; /* Ajustado */
-            padding: 0.75rem 1rem; /* Ajustado padding */
-            border-radius: 8px; /* Más redondeado */
-            display: none;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid; /* Añadir borde */
-            transition: all 0.3s ease-in-out;
-            box-shadow: none; /* Mensajes sin sombra */
-        }
-        .message.error {
-            color: var(--error-color);
-            background-color: rgba(231, 76, 60, 0.1); /* Color con opacidad */
-            border-color: var(--error-color); /* Borde de color de error */
-            text-shadow: none; /* Sin sombra de texto */
-        }
-        .message.success {
-            color: var(--success-color);
-            background-color: rgba(56, 142, 60, 0.1); /* Color con opacidad */
-            border-color: var(--success-color); /* Borde de color de éxito */
-            text-shadow: none; /* Sin sombra de texto */
-        }
         .campo-registro { display: none; }
         .campo-registro.mostrar {
             display: block;
         }
-        /* New: Ensure the date input itself is block when the .campo-registro is shown */
-        .campo-registro.mostrar input[type="date"] {
-            display: block !important;
-        }
+        /* No se necesita una regla específica para Flatpickr aquí */
 
         .social-row {
             display: flex;
@@ -329,6 +297,26 @@
         .toggle-password:hover {
             color: var(--primary-color);
         }
+
+        /* NEW: Styles for the date input group */
+        .date-input-group {
+            display: flex;
+            gap: 10px; /* Space between day, month, year inputs */
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .date-input-group input {
+            flex: 1; /* Make them take equal space */
+            text-align: center;
+            /* Remove spin buttons for number inputs in WebKit browsers */
+            -moz-appearance: textfield; /* Hide arrows in Firefox */
+        }
+
+        .date-input-group input::-webkit-outer-spin-button,
+        .date-input-group input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -345,7 +333,11 @@
 
             <input type="email" id="correo" placeholder="Correo Electrónico" required />
 
-            <input type="date" id="regFechaNacimiento" class="campo-registro" placeholder="Fecha de Nacimiento" />
+            <div class="campo-registro date-input-group" id="regFechaNacimientoGroup">
+                <input type="number" id="regDia" placeholder="Día" min="1" max="31" class="date-input" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" />
+                <input type="number" id="regMes" placeholder="Mes" min="1" max="12" class="date-input" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" />
+                <input type="number" id="regAno" placeholder="Año" min="1900" max="2025" class="date-input" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="4" />
+            </div>
 
             <div class="password-input-wrapper" id="claveWrapper">
                 <input type="password" id="clave" name="clave_acceso" placeholder="Contraseña" required />
@@ -386,7 +378,6 @@
 
         <div class="message" id="mensaje"></div>
     </div>
-
     <script>
         let modoRegistro = false;
         let modoRestablecer = false;
@@ -487,7 +478,13 @@
             const claveWrapper = document.getElementById("claveWrapper");
             const confirmClaveWrapper = document.getElementById("confirmClaveWrapper");
             const claveInput = document.getElementById("clave");
-            const fechaNacimientoInput = document.getElementById("regFechaNacimiento"); // Get the new input
+            
+            // NUEVO: Obtener el grupo de inputs de fecha
+            const fechaNacimientoGroup = document.getElementById("regFechaNacimientoGroup");
+            const regDiaInput = document.getElementById("regDia");
+            const regMesInput = document.getElementById("regMes");
+            const regAnoInput = document.getElementById("regAno");
+
 
             // Always hide verification code group by default, then show if needed
             const verificationCodeGroup = document.getElementById("verificationCodeGroup");
@@ -495,13 +492,19 @@
             document.getElementById('verificationCode').required = false;
 
             // Oculta los campos de registro por defecto
-            document.querySelectorAll(".campo-registro").forEach(input => {
-                input.classList.remove("mostrar");
+            document.querySelectorAll(".campo-registro").forEach(element => {
+                element.classList.remove("mostrar");
                 // También asegúrate de que no sean requeridos por defecto
-                if (input.id === 'regFechaNacimiento' || input.id === 'regNombre' || input.id === 'regApellido') {
-                    input.required = false;
+                if (element.id === 'regNombre' || element.id === 'regApellido') {
+                    element.required = false;
                 }
             });
+
+            // NUEVO: Asegurarse de que los campos de fecha no sean requeridos por defecto
+            if (regDiaInput) regDiaInput.required = false;
+            if (regMesInput) regMesInput.required = false;
+            if (regAnoInput) regAnoInput.required = false;
+
 
             // Oculta la confirmación de clave por defecto
             if (confirmClaveWrapper) {
@@ -522,13 +525,21 @@
 
                 document.getElementById('regNombre').required = true;
                 document.getElementById('regApellido').required = true;
-                if (fechaNacimientoInput) fechaNacimientoInput.required = true; // Hazlo requerido
+                
+                // NUEVO: Hacer los campos de fecha requeridos y mostrarlos
+                if (fechaNacimientoGroup) {
+                    fechaNacimientoGroup.classList.add("mostrar");
+                    fechaNacimientoGroup.style.display = 'flex'; // Asegura que se muestre como flex
+                }
+                if (regDiaInput) regDiaInput.required = true;
+                if (regMesInput) regMesInput.required = true;
+                if (regAnoInput) regAnoInput.required = true;
+                
                 claveInput.required = true;
                 if (document.getElementById('confirmClave')) document.getElementById('confirmClave').required = true;
 
                 document.getElementById('regNombre').classList.add("mostrar");
                 document.getElementById('regApellido').classList.add("mostrar");
-                if (fechaNacimientoInput) fechaNacimientoInput.classList.add("mostrar"); // Muéstralo
 
 
             } else if (modoRestablecer) {
@@ -546,6 +557,11 @@
                 claveInput.required = false;
                 if (confirmClaveWrapper) confirmClaveWrapper.style.display = 'none';
 
+                // Asegura que los campos de fecha estén ocultos
+                if (fechaNacimientoGroup) {
+                    fechaNacimientoGroup.style.display = 'none';
+                }
+
             } else if (modoVerificacion) {
                 formTitle.innerText = "Verificar Código";
                 mainForm.style.display = 'none';
@@ -555,6 +571,11 @@
 
                 verificationCodeGroup.classList.add("mostrar");
                 document.getElementById('verificationCode').required = true;
+
+                // Asegura que los campos de fecha estén ocultos
+                if (fechaNacimientoGroup) {
+                    fechaNacimientoGroup.style.display = 'none';
+                }
 
             } else { // Modo Iniciar Sesión (Default)
                 formTitle.innerText = "Iniciar Sesión";
@@ -569,6 +590,11 @@
 
                 document.getElementById("correo").style.display = 'block';
                 document.getElementById("correo").required = true;
+
+                // NUEVA LÍNEA: Asegura que los campos de fecha estén ocultos en modo inicio de sesión
+                if (fechaNacimientoGroup) {
+                    fechaNacimientoGroup.style.display = 'none';
+                }
             }
 
             // Restablecer visibilidad de contraseñas y sus iconos a la vista predeterminada (ojo abierto y SIN tachar si está oculta)
@@ -587,7 +613,10 @@
         function limpiarCampos() {
             document.getElementById("regNombre").value = "";
             document.getElementById("regApellido").value = "";
-            document.getElementById("regFechaNacimiento").value = ""; // Limpiar este campo
+            // NUEVO: Limpiar los tres campos de fecha
+            document.getElementById("regDia").value = "";
+            document.getElementById("regMes").value = "";
+            document.getElementById("regAno").value = "";
             // El correo NO se limpia aquí para permitir que se mantenga al volver de verificación a restablecer
             document.getElementById("correo").value = ""; // Limpiar el correo cuando se cambia de modo (login/registro)
             document.getElementById("clave").value = "";
@@ -625,6 +654,32 @@
             const regex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/;
             return regex.test(texto);
         }
+
+        // NUEVO: Función para validar la fecha compuesta por día, mes y año
+        function validarFechaCompleta(day, month, year) {
+            // Convertir a números
+            const d = parseInt(day, 10);
+            const m = parseInt(month, 10);
+            const y = parseInt(year, 10);
+
+            // Validar si son números válidos
+            if (isNaN(d) || isNaN(m) || isNaN(y)) {
+                return false;
+            }
+
+            // Validar rangos básicos
+            if (m < 1 || m > 12 || d < 1 || d > 31 || y < 1900 || y > new Date().getFullYear()) {
+                return false;
+            }
+
+            // Crear un objeto Date para validar el día en el mes y año
+            const date = new Date(y, m - 1, d); // Meses en JS son 0-indexados
+
+            // Comprobar si el día, mes y año coinciden con la fecha creada
+            // Esto maneja automáticamente meses con menos días (ej. Febrero 30)
+            return date.getFullYear() === y && date.getMonth() === (m - 1) && date.getDate() === d;
+        }
+
 
         function marcarError(input, cond) {
             if (cond) {
@@ -676,17 +731,21 @@
             const nombreInput = document.getElementById("regNombre");
             const apellidoInput = document.getElementById("regApellido");
             const correoInput = document.getElementById("correo");
-            const fechaNacimientoInput = document.getElementById("regFechaNacimiento"); // Get the new input
+            
+            // NUEVO: Obtener los campos de día, mes y año
+            const regDiaInput = document.getElementById("regDia");
+            const regMesInput = document.getElementById("regMes");
+            const regAnoInput = document.getElementById("regAno");
+
             const claveInput = document.getElementById("clave");
             const confirmClaveInput = document.getElementById("confirmClave");
 
             let hasErrors = false;
-            document.querySelectorAll("input, select").forEach(input => input.classList.remove("error-input")); // Incluye selects
-            mostrarMensaje('', ''); // Clear message at the start of action handling
+            document.querySelectorAll("input, select").forEach(input => input.classList.remove("error-input"));
+            mostrarMensaje('', '');
             let firstErrorMessage = "";
 
             if (modoVerificacion) {
-                // Este bloque es ahora manejado por verificarCodigo()
                 return;
             }
 
@@ -716,12 +775,10 @@
                     mostrarMensaje("Enviando solicitud de restablecimiento...", "success");
                     console.log("Correo registrado. Intentando enviar email a:", email);
 
-                    emailToVerify = email; // Almacena el correo para el paso de verificación
+                    emailToVerify = email;
 
-                    // --- INICIO: Lógica para generar y guardar el código aleatorio ---
                     const newVerificationCode = generarCodigoVerificacion();
-                    // Establece una expiración, por ejemplo, 10 minutos (600,000 milisundos)
-                    const expirationTime = Date.now() + (10 * 60 * 1000); // 10 minutos desde ahora
+                    const expirationTime = Date.now() + (10 * 60 * 1000);
 
                     localStorage.setItem('tempVerificationCode', JSON.stringify({
                         code: newVerificationCode,
@@ -729,20 +786,16 @@
                         expiresAt: expirationTime
                     }));
                     console.log("Código de verificación generado y guardado temporalmente:", newVerificationCode, "expira en:", new Date(expirationTime));
-                    // --- FIN: Lógica para generar y guardar el código aleatorio ---
 
-
-                    // Parámetros para la plantilla de EmailJS
                     const templateParams = {
-                        to_email: email, // Correo del destinatario
-                        verification_code: newVerificationCode // Pasa el código generado aleatoriamente
+                        to_email: email,
+                        verification_code: newVerificationCode
                     };
                     console.log("Parámetros a enviar a EmailJS:", templateParams);
 
                     try {
                         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
 
-                        // Transición al modo de verificación después de enviar el correo
                         modoRestablecer = false;
                         modoVerificacion = true;
                         updateFormVisibility();
@@ -762,14 +815,12 @@
                 return;
             }
 
-            // --- Lógica para REGISTRO e INICIO DE SESIÓN ---
-
             if (modoRegistro) {
                 if (!nombreInput.value.trim()) {
                     marcarError(nombreInput, true);
                     hasErrors = true;
                     if (!firstErrorMessage) firstErrorMessage = "Por favor, ingresa tu nombre.";
-                } else if (!validarSoloLetras(nombreInput.value.trim())) { // Nueva validación para nombre
+                } else if (!validarSoloLetras(nombreInput.value.trim())) {
                     marcarError(nombreInput, true);
                     hasErrors = true;
                     if (!firstErrorMessage) firstErrorMessage = "El nombre solo debe contener letras.";
@@ -779,18 +830,32 @@
                     marcarError(apellidoInput, true);
                     hasErrors = true;
                     if (!firstErrorMessage) firstErrorMessage = "Por favor, ingresa tu apellido.";
-                } else if (!validarSoloLetras(apellidoInput.value.trim())) { // Nueva validación para apellido
+                } else if (!validarSoloLetras(apellidoInput.value.trim())) {
                     marcarError(apellidoInput, true);
                     hasErrors = true;
                     if (!firstErrorMessage) firstErrorMessage = "El apellido solo debe contener letras.";
                 }
+                
+                // NUEVO: Validación de los campos de día, mes y año
+                const day = regDiaInput.value.trim();
+                const month = regMesInput.value.trim();
+                const year = regAnoInput.value.trim();
 
-                if (fechaNacimientoInput && fechaNacimientoInput.required && !fechaNacimientoInput.value.trim()) { // Valida el nuevo campo
-                    marcarError(fechaNacimientoInput, true);
+                if (!day || !month || !year) {
+                    // Marcar todos los campos si alguno está vacío
+                    marcarError(regDiaInput, !day);
+                    marcarError(regMesInput, !month);
+                    marcarError(regAnoInput, !year);
                     hasErrors = true;
-                    if (!firstErrorMessage) firstErrorMessage = "Por favor, ingresa tu fecha de nacimiento.";
-                } else if (fechaNacimientoInput && fechaNacimientoInput.value.trim()) {
-                    const dob = new Date(fechaNacimientoInput.value);
+                    if (!firstErrorMessage) firstErrorMessage = "Por favor, completa tu fecha de nacimiento (Día/Mes/Año).";
+                } else if (!validarFechaCompleta(day, month, year)) {
+                    marcarError(regDiaInput, true);
+                    marcarError(regMesInput, true);
+                    marcarError(regAnoInput, true);
+                    hasErrors = true;
+                    if (!firstErrorMessage) firstErrorMessage = "Fecha de nacimiento inválida. Por favor, revisa Día, Mes y Año.";
+                } else {
+                    const dob = new Date(year, month - 1, day);
                     const today = new Date();
                     let age = today.getFullYear() - dob.getFullYear();
                     const monthDifference = today.getMonth() - dob.getMonth();
@@ -801,7 +866,9 @@
                     }
 
                     if (age < 18) {
-                        marcarError(fechaNacimientoInput, true);
+                        marcarError(regDiaInput, true);
+                        marcarError(regMesInput, true);
+                        marcarError(regAnoInput, true);
                         hasErrors = true;
                         if (!firstErrorMessage) firstErrorMessage = "Debes ser mayor de 18 años para registrarte.";
                     }
@@ -845,16 +912,17 @@
                     mostrarMensaje("Este correo ya está registrado. Por favor, inicia sesión.", "error");
                     marcarError(correoInput, true);
                 } else {
+                    // CONCATENAR LA FECHA DE NACIMIENTO
+                    const fechaNacimiento = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                     usuariosRegistrados[email] = {
                         nombre: nombreInput.value.trim(),
                         apellido: apellidoInput.value.trim(),
-                        fechaNacimiento: fechaNacimientoInput.value.trim(), // Almacena la fecha de nacimiento
+                        fechaNacimiento: fechaNacimiento, // Guarda la fecha en formato YYYY-MM-DD
                         clave: password,
                         email: email
                     };
                     guardarUsuariosRegistrados(usuariosRegistrados);
                     mostrarMensaje("Registro exitoso. ¡Bienvenido!", "success");
-                    // Delay before switching form only if registration was successful
                     setTimeout(() => alternarFormulario(), 1500);
                 }
             } else { // Modo Iniciar Sesión
@@ -864,12 +932,12 @@
                     marcarError(claveInput, true);
                 } else {
                     try {
-                        const isDeveloperUser = (email === 'developer@flashbuyx.com'); // Define your developer email here
+                        const isDeveloperUser = (email === 'developer@flashbuyx.com');
 
                         localStorage.setItem("sesionIniciada", JSON.stringify({
                             nombre: usuariosRegistrados[email].nombre,
                             correo: email,
-                            isDeveloper: isDeveloperUser // Store developer status
+                            isDeveloper: isDeveloperUser
                         }));
                         localStorage.setItem("usuarioActivo", email);
 
@@ -886,7 +954,7 @@
 
         async function verificarCodigo() {
             const verificationCodeInput = document.getElementById("verificationCode");
-            const code = verificationCodeInput.value.trim();
+            const code = verificationCodeInput.value.trim(); // Corregido 'verificationCodeCodeInput' a 'verificationCodeInput'
 
             document.querySelectorAll("input").forEach(input => input.classList.remove("error-input"));
             mostrarMensaje('', '');
@@ -910,7 +978,7 @@
             if (currentTime > storedCodeData.expiresAt) {
                 marcarError(verificationCodeInput, true);
                 mostrarMensaje("El código ha expirado. Por favor, solicita uno nuevo.", "error");
-                localStorage.removeItem('tempVerificationCode'); // Limpiar código expirado
+                localStorage.removeItem('tempVerificationCode');
                 console.warn("Código expirado.");
                 return;
             }
@@ -918,13 +986,11 @@
             if (code === storedCodeData.code) {
                 mostrarMensaje("Código verificado exitosamente. Redirigiendo para establecer nueva contraseña...", "success");
 
-                // Limpia el código de localStorage una vez verificado, por seguridad.
                 localStorage.removeItem('tempVerificationCode');
 
-                // Redirige a la página de restablecimiento de contraseña, pasando el email verificado
                 setTimeout(() => {
                     window.location.href = `Restablecer Contraseña.html?email=${encodeURIComponent(emailToVerify)}`;
-                }, 2000); // Redirige después de 2 segundos para que el usuario vea el mensaje de éxito
+                }, 2000);
 
             } else {
                 marcarError(verificationCodeInput, true);
@@ -935,78 +1001,35 @@
 
         function loginSocial(provider) {
             mostrarMensaje(`Redirigiendo a ${provider} para autenticar...`, "success");
-            // Aquí iría la lógica real para autenticación con Google/iCloud (OAuth)
-            // que es más compleja y requeriría APIs del lado del servidor.
         }
 
-        // --- Función para mejorar el placeholder del input type="date" ---
-        function setupDateInputPlaceholder() {
-            const dateInput = document.getElementById('regFechaNacimiento');
-            if (dateInput) {
-                // Al cargar, si no hay valor, establecer tipo a 'text' para mostrar placeholder
-                if (!dateInput.value) {
-                    dateInput.type = 'text';
-                    dateInput.placeholder = 'Fecha de Nacimiento';
-                }
-
-                // Al enfocar, cambiar a 'date' para que aparezca el selector
-                dateInput.addEventListener('focus', () => {
-                    dateInput.type = 'date';
-                });
-
-                // Al desenfocar, si el campo está vacío, volver a 'text' para mostrar placeholder
-                dateInput.addEventListener('blur', () => {
-                    if (!dateInput.value) {
-                        dateInput.type = 'text';
-                        dateInput.placeholder = 'Fecha de Nacimiento';
-                    }
-                });
-            }
-        }
-
-        // --- Manejo global de la tecla Enter ---
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 const activeElement = document.activeElement;
 
-                // Si el elemento activo es un botón, haz clic en él
                 if (activeElement && activeElement.tagName === 'BUTTON') {
-                    activeElement.click();
-                    event.preventDefault(); // Evita el comportamiento predeterminado del Enter (por ejemplo, envío de formulario duplicado)
-                }
-
-                // Si el elemento activo es un enlace (<a>) que tiene un tabindex
-                // y, por lo tanto, es interactivo
-                if (activeElement && activeElement.tagName === 'A' && activeElement.hasAttribute('tabindex')) {
                     activeElement.click();
                     event.preventDefault();
                 }
-
-                // Si el elemento activo es un div o span con un onclick y tabindex
-                // y, por lo tanto, es interactivo
+                
                 if (activeElement && (activeElement.tagName === 'DIV' || activeElement.tagName === 'SPAN') && activeElement.hasAttribute('tabindex') && activeElement.onclick) {
                     activeElement.click();
                     event.preventDefault();
                 }
 
-                // Lógica específica para el campo de verificación de código:
-                // Si está activo el input de verificación y se presiona Enter,
-                // que dispare la función de verificar código.
                 if (activeElement && activeElement.id === 'verificationCode') {
-                    document.querySelector('#verificationCodeGroup .btn-primary').click(); // Simula clic en el botón "Verificar Código"
+                    document.querySelector('#verificationCodeGroup .btn-primary').click();
                     event.preventDefault();
                 }
             }
         });
 
-        // Se ejecuta cuando la página se carga
         window.onload = () => {
             modoRegistro = false;
             modoRestablecer = false;
             modoVerificacion = false;
             updateFormVisibility();
-            setupDateInputPlaceholder(); // Llama a la nueva función al cargar la página
-
+            
             // Revisa si ya hay una sesión activa y redirige
             const sesion = JSON.parse(localStorage.getItem("sesionIniciada"));
             const usuarioActivoCorreo = localStorage.getItem("usuarioActivo");
@@ -1015,7 +1038,6 @@
             if (sesion && usuarioActivoCorreo && usuarios[usuarioActivoCorreo]) {
                 window.location.href = "index.html";
             } else {
-                // Limpia la sesión si no es válida o si el usuario no existe en el almacenamiento
                 localStorage.removeItem("sesionIniciada");
                 localStorage.removeItem("usuarioActivo");
             }
