@@ -128,6 +128,8 @@
             appearance: none;
             /* Ensure input itself takes full height of wrapper for consistent positioning */
             height: 100%; /* Make input fill its wrapper vertically */
+            min-height: 44px; /* Asegura un tamaño mínimo para mejor interacción móvil */
+            line-height: normal; /* Restablece line-height para compatibilidad */
         }
 
         /* Adjustment for general inputs not inside password-input-wrapper */
@@ -216,7 +218,13 @@
             text-shadow: none; /* Sin sombra de texto */
         }
         .campo-registro { display: none; }
-        .campo-registro.mostrar { display: block; }
+        .campo-registro.mostrar {
+            display: block;
+        }
+        /* New: Ensure the date input itself is block when the .campo-registro is shown */
+        .campo-registro.mostrar input[type="date"] {
+            display: block !important;
+        }
 
         .social-row {
             display: flex;
@@ -931,6 +939,31 @@
             // que es más compleja y requeriría APIs del lado del servidor.
         }
 
+        // --- Función para mejorar el placeholder del input type="date" ---
+        function setupDateInputPlaceholder() {
+            const dateInput = document.getElementById('regFechaNacimiento');
+            if (dateInput) {
+                // Al cargar, si no hay valor, establecer tipo a 'text' para mostrar placeholder
+                if (!dateInput.value) {
+                    dateInput.type = 'text';
+                    dateInput.placeholder = 'Fecha de Nacimiento';
+                }
+
+                // Al enfocar, cambiar a 'date' para que aparezca el selector
+                dateInput.addEventListener('focus', () => {
+                    dateInput.type = 'date';
+                });
+
+                // Al desenfocar, si el campo está vacío, volver a 'text' para mostrar placeholder
+                dateInput.addEventListener('blur', () => {
+                    if (!dateInput.value) {
+                        dateInput.type = 'text';
+                        dateInput.placeholder = 'Fecha de Nacimiento';
+                    }
+                });
+            }
+        }
+
         // --- Manejo global de la tecla Enter ---
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
@@ -972,6 +1005,7 @@
             modoRestablecer = false;
             modoVerificacion = false;
             updateFormVisibility();
+            setupDateInputPlaceholder(); // Llama a la nueva función al cargar la página
 
             // Revisa si ya hay una sesión activa y redirige
             const sesion = JSON.parse(localStorage.getItem("sesionIniciada"));
